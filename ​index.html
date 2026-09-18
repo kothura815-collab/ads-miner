@@ -10,6 +10,15 @@
   <!-- Adsgram SDK -->
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
+  <!-- ADSTERRA POPUNDER SCRIPTS -->
+  <script src="https://mammothsubway.com/32/52/16/325216e9af97d6458aab9e4e7a74d73b.js"></script>
+  <script src="https://mammothsubway.com/46/ec/32/46ec32efbfe5ecbef2bb3c462cc4c9ba.js"></script>
+
+  <!-- RICHADS SCRIPTS (Push, Popunder & In-Page Push) -->
+  <script type="module" src="https://richinfo.co/richpartners/push/js/rp-cl-ob.js?pubid=1021768&siteid=407470&niche=33" async data-cfasync="false"></script>
+  <script src="https://richinfo.co/richpartners/pops/js/richads-pu-ob.js" data-pubid="1021768" data-siteid="407469" async data-cfasync="false"></script>
+  <script src="https://richinfo.co/richpartners/in-page/js/richads-ob.js?pubid=1021768&siteid=407471" async></script>
+
   <style>
     :root {
       --bg-color: #0f172a;
@@ -143,7 +152,7 @@
     
     <!-- Top Native Banner -->
     <div class="native-banner-card" id="topNativeBanner">
-      <span>[ Ads Miner - Native Banner Placement ]</span>
+      <span>[ Ads Miner - Multi-Ad Network Rotation ]</span>
     </div>
 
     <!-- Balance Dashboard -->
@@ -175,7 +184,7 @@
       </p>
     </div>
 
-    <!-- VIP Mega Booster (Complete all steps to claim) -->
+    <!-- VIP Mega Booster -->
     <div class="card" style="text-align: center; border: 1px solid rgba(245, 158, 11, 0.4);">
       <h3 style="margin-bottom: 6px; font-size: 15px; color: var(--warning-color);">VIP Mega Booster</h3>
       <p id="miningStatusText" style="font-size: 11px; color: var(--text-sub); margin-bottom: 10px;">
@@ -193,7 +202,7 @@
       <div class="task-item">
         <div>
           <h4 style="font-size: 13px;">Process Step 1</h4>
-          <p style="font-size: 10px; color: var(--text-sub);">Adsterra Flow</p>
+          <p style="font-size: 10px; color: var(--text-sub);">Adsterra Flow 1</p>
         </div>
         <div style="display: flex; align-items: center; gap: 6px;">
           <span class="task-counter" id="task1Count">0/20</span>
@@ -204,7 +213,7 @@
       <div class="task-item">
         <div>
           <h4 style="font-size: 13px;">Process Step 2</h4>
-          <p style="font-size: 10px; color: var(--text-sub);">RichAds Combo</p>
+          <p style="font-size: 10px; color: var(--text-sub);">Adsterra Flow 2</p>
         </div>
         <div style="display: flex; align-items: center; gap: 6px;">
           <span class="task-counter" id="task2Count">0/20</span>
@@ -215,10 +224,10 @@
       <div class="task-item">
         <div>
           <h4 style="font-size: 13px;">Process Step 3</h4>
-          <p style="font-size: 10px; color: var(--text-sub);">Hilltop Multi-Step</p>
+          <p style="font-size: 10px; color: var(--text-sub);">HilltopAds Direct Flow</p>
         </div>
         <div style="display: flex; align-items: center; gap: 6px;">
-          <span class="task-counter" id="task3Count">0/15</span>
+          <span class="task-counter" id="task3Count">0/20</span>
           <button class="btn btn-primary" style="padding: 6px 10px; width: auto; font-size: 12px;" onclick="startTask(3)">Start</button>
         </div>
       </div>
@@ -226,10 +235,10 @@
       <div class="task-item">
         <div>
           <h4 style="font-size: 13px;">Process Step 4</h4>
-          <p style="font-size: 10px; color: var(--text-sub);">Direct Link Matrix</p>
+          <p style="font-size: 10px; color: var(--text-sub);">RichAds Push & Pop Matrix</p>
         </div>
         <div style="display: flex; align-items: center; gap: 6px;">
-          <span class="task-counter" id="task4Count">0/20</span>
+          <span class="task-counter" id="task4Count">0/15</span>
           <button class="btn btn-primary" style="padding: 6px 10px; width: auto; font-size: 12px;" onclick="startTask(4)">Start</button>
         </div>
       </div>
@@ -237,7 +246,7 @@
       <div class="task-item">
         <div>
           <h4 style="font-size: 13px;">Process Step 5</h4>
-          <p style="font-size: 10px; color: var(--text-sub);">Monetag & Video Mix</p>
+          <p style="font-size: 10px; color: var(--text-sub);">Adsgram Video & Task Mix</p>
         </div>
         <div style="display: flex; align-items: center; gap: 6px;">
           <span class="task-counter" id="task5Count">0/10</span>
@@ -246,7 +255,7 @@
       </div>
     </div>
 
-    <!-- SHARE & REFERRAL SECTION -->
+    <!-- SHARE SECTION -->
     <div class="card" style="margin-top: 16px;">
       <h4 style="font-size: 13px;">Share Ads Miner & Invite Friends</h4>
       <p style="font-size: 11px; color: var(--text-sub); margin-bottom: 8px;">Earn lifetime points commission.</p>
@@ -259,21 +268,19 @@
   </div>
 
   <script>
-    // ADS NETWORKS CONFIGURATION (Ad Network Link များ ထည့်ရန်)
+    // ADS NETWORKS CONFIGURATION
     const ADS_CONFIG = {
-      adsterra_sml_1: "https://www.google.com",
-      adsterra_sml_2: "https://www.google.com",
-      adsterra_popunder: "https://www.google.com",
-      richads_dl: "https://www.google.com",
-      hilltop_dl: "https://www.google.com",
-      monetag_sml: "https://www.google.com",
-      adsgram_block_id: "YOUR_ADSGRAM_BLOCK_ID"
+      adsterra_link_1: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475",
+      adsterra_link_2: "https://mammothsubway.com/itfyrwwjg?key=217fba5c43a13211147abc040716814d",
+      hilltop_dl: "https://plump-plastic.com/ZjLmfX",
+      adsgram_reward_id: "48592",
+      adsgram_interstitial_id: "48593",
+      adsgram_task_id: "task-48595"
     };
 
     const tg = window.Telegram?.WebApp;
     if (tg) { tg.expand(); }
 
-    // State Hydration
     let state = {
       balance: parseFloat(localStorage.getItem('balance')) || 450,
       task1: parseInt(localStorage.getItem('task1')) || 0,
@@ -288,7 +295,7 @@
       lastWithdrawDate: localStorage.getItem('lastWithdrawDate') || ""
     };
 
-    const LIMITS = { t1: 20, t2: 20, t3: 15, t4: 20, t5: 10 };
+    const LIMITS = { t1: 20, t2: 20, t3: 20, t4: 15, t5: 10 };
     const MAX_DAILY_WITHDRAW = 500;
 
     function initUser() {
@@ -340,11 +347,9 @@
       localStorage.setItem('lastWithdrawDate', state.lastWithdrawDate);
     }
 
-    // PROCESS WITHDRAWAL LOGIC
     function processWithdrawal() {
       const walletInput = document.getElementById('tonWallet').value.trim();
       const ptsInput = parseInt(document.getElementById('withdrawPts').value);
-      const username = document.getElementById('tgUsername').value;
 
       if (!walletInput || walletInput.length < 10) {
         alert("Please enter a valid TON Wallet address!");
@@ -380,7 +385,7 @@
     }
 
     function shareToTelegram() {
-      const shareUrl = `https://t.me/your_bot_username?start=${encodeURIComponent(state.savedUsername)}`;
+      const shareUrl = `https://t.me/ads_miner_official_bot?start=${encodeURIComponent(state.savedUsername)}`;
       const text = "Join Ads Miner! Earn TON & Points by completing daily tasks.";
       
       if (tg && tg.openTelegramLink) {
@@ -394,38 +399,37 @@
       if (tg && tg.openLink) { tg.openLink(url); } else { window.open(url, '_blank'); }
     }
 
-    function triggerAdsgram(callback) {
+    function triggerAdsgram(blockId, callback) {
       if (window.Adsgram) {
-        const AdController = window.Adsgram.init({ blockId: ADS_CONFIG.adsgram_block_id });
+        const AdController = window.Adsgram.init({ blockId: blockId });
         AdController.show().then(() => { if (callback) callback(); }).catch(() => { if (callback) callback(); });
       } else { if (callback) callback(); }
     }
 
     function startTask(taskNum) {
       if (taskNum === 1 && state.task1 < LIMITS.t1) {
-        openAdLink(ADS_CONFIG.adsterra_sml_1);
-        setTimeout(() => { openAdLink(ADS_CONFIG.adsterra_popunder); }, 1000);
-        setTimeout(() => {
-          openAdLink(ADS_CONFIG.adsterra_sml_2);
-          triggerAdsgram(() => { state.task1++; saveState(); updateUI(); });
-        }, 3000);
+        openAdLink(ADS_CONFIG.adsterra_link_1);
+        state.task1++; saveState(); updateUI();
       }
       else if (taskNum === 2 && state.task2 < LIMITS.t2) {
-        openAdLink(ADS_CONFIG.richads_dl);
-        setTimeout(() => {
-          triggerAdsgram(() => { state.task2++; saveState(); updateUI(); });
-        }, 2000);
+        openAdLink(ADS_CONFIG.adsterra_link_2);
+        state.task2++; saveState(); updateUI();
       }
       else if (taskNum === 3 && state.task3 < LIMITS.t3) {
         openAdLink(ADS_CONFIG.hilltop_dl);
         state.task3++; saveState(); updateUI();
       }
       else if (taskNum === 4 && state.task4 < LIMITS.t4) {
-        openAdLink(ADS_CONFIG.monetag_sml);
+        // RichAds Popunder / In-Page Push Automatic Trigger
         state.task4++; saveState(); updateUI();
       }
       else if (taskNum === 5 && state.task5 < LIMITS.t5) {
-        triggerAdsgram(() => { state.task5++; saveState(); updateUI(); });
+        // Adsgram Rotation (Reward, Interstitial & Task)
+        let selectedBlockId = ADS_CONFIG.adsgram_reward_id;
+        if (state.task5 % 3 === 1) selectedBlockId = ADS_CONFIG.adsgram_interstitial_id;
+        if (state.task5 % 3 === 2) selectedBlockId = ADS_CONFIG.adsgram_task_id;
+
+        triggerAdsgram(selectedBlockId, () => { state.task5++; saveState(); updateUI(); });
       }
     }
 
@@ -456,7 +460,7 @@
         saveState(); updateUI();
         alert("100 PTS Mega Bonus Claimed!");
       } else {
-        state.miningEndTime = Date.now() + (24 * 60 * 60 * 1000); // 24-Hour Cooldown for 100 PTS
+        state.miningEndTime = Date.now() + (24 * 60 * 60 * 1000);
         saveState(); updateUI();
       }
     }
