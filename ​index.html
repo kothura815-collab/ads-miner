@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Ads Miner</title>
+  
+  <!-- Telegram WebApp SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <!-- Adsgram SDK -->
+  <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --accent-color: #38bdf8;
+      --accent-green: #22c55e;
+      --warning-color: #f59e0b;
+      --danger-color: #ef4444;
+      --text-main: #f8fafc;
+      --text-sub: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+      padding: 16px;
+    }
+
+    .native-banner-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px dashed rgba(56, 189, 248, 0.4);
+      border-radius: 10px;
+      padding: 10px;
+      text-align: center;
+      margin-bottom: 16px;
+      font-size: 11px;
+      color: var(--text-sub);
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    }
+
+    .balance-title {
+      font-size: 12px;
+      color: var(--text-sub);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .balance-amount {
+      font-size: 32px;
+      font-weight: bold;
+      color: var(--accent-color);
+      margin: 4px 0;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn-primary { background-color: var(--accent-color); color: #0f172a; }
+    .btn-success { background-color: var(--accent-green); color: #ffffff; }
+    .btn-warning { background-color: var(--warning-color); color: #000; }
+    .btn-disabled { background-color: #334155; color: #64748b; cursor: not-allowed; }
+
+    .input-field {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #334155;
+      background: #0f172a;
+      color: #fff;
+      font-size: 13px;
+      margin-top: 6px;
+      margin-bottom: 10px;
+    }
+
+    .input-field:disabled {
+      background: #1e293b;
+      color: #94a3b8;
+      border-color: #1e293b;
+    }
+
+    .task-list { display: flex; flex-direction: column; gap: 10px; }
+    .task-item {
+      background: var(--card-bg);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .task-counter {
+      font-size: 11px;
+      font-weight: bold;
+      color: var(--accent-color);
+      background: rgba(56, 189, 248, 0.1);
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- Top Native Banner -->
+    <div class="native-banner-card" id="topNativeBanner">
+      <span>[ Ads Miner - Native Banner Placement ]</span>
+    </div>
+
+    <!-- Balance Dashboard -->
+    <div class="card">
+      <div class="balance-title">Total Balance</div>
+      <div class="balance-amount"><span id="userBalance">0.0000</span> PTS</div>
+      <p style="font-size: 11px; color: var(--text-sub);">Reserved System Fund: 300 PTS | Min Cashout: 150 PTS</p>
+    </div>
+
+    <!-- WITHDRAWAL SECTION -->
+    <div class="card" style="border: 1px solid rgba(34, 197, 94, 0.3);">
+      <h3 style="font-size: 15px; margin-bottom: 8px;">Withdraw (TON Wallet)</h3>
+      
+      <label style="font-size: 11px; color: var(--text-sub);">Telegram Username:</label>
+      <input type="text" id="tgUsername" class="input-field" placeholder="@username" readonly />
+
+      <label style="font-size: 11px; color: var(--text-sub);">TON (Gram) Wallet Address:</label>
+      <input type="text" id="tonWallet" class="input-field" placeholder="Enter TON Wallet (e.g. EQD...)" />
+
+      <label style="font-size: 11px; color: var(--text-sub);">Points to Cashout (Min 150 PTS, Max 500 PTS/Day):</label>
+      <input type="number" id="withdrawPts" class="input-field" placeholder="150" min="150" max="500" />
+
+      <button id="withdrawBtn" class="btn btn-success" onclick="processWithdrawal()">
+        <span>Withdraw to TON</span>
+        <span>Submit</span>
+      </button>
+      <p style="font-size: 10px; color: var(--text-sub); margin-top: 6px; text-align: center;">
+        Note: Wallet details will be permanently locked after first withdrawal.
+      </p>
+    </div>
+
+    <!-- VIP Mega Booster (Complete all steps to claim) -->
+    <div class="card" style="text-align: center; border: 1px solid rgba(245, 158, 11, 0.4);">
+      <h3 style="margin-bottom: 6px; font-size: 15px; color: var(--warning-color);">VIP Mega Booster</h3>
+      <p id="miningStatusText" style="font-size: 11px; color: var(--text-sub); margin-bottom: 10px;">
+        Complete all 5 Process Steps below to Unlock Mega Booster Chest.
+      </p>
+      <button id="miningBtn" class="btn btn-disabled" onclick="claimOrStartMining()" disabled>
+        <span id="miningBtnText">Complete All Steps First</span>
+        <span id="miningTimer">00:00:00</span>
+      </button>
+    </div>
+
+    <!-- Process List Section -->
+    <h3 style="margin: 14px 0 8px 0; font-size: 14px;">Daily Process Steps</h3>
+    <div class="task-list">
+      <div class="task-item">
+        <div>
+          <h4 style="font-size: 13px;">Process Step 1</h4>
+          <p style="font-size: 10px; color: var(--text-sub);">Adsterra Flow</p>
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <span class="task-counter" id="task1Count">0/20</span>
+          <button class="btn btn-primary" style="padding: 6px 10px; width: auto; font-size: 12px;" onclick="startTask(1)">Start</button>
+        </div>
+      </div>
+
+      <div class="task-item">
+        <div>
+          <h4 style="font-size: 13px;">Process Step 2</h4>
+          <p style="font-size: 10px; color: var(--text-sub);">RichAds Combo</p>
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <span class="task-counter" id="task2Count">0/20</span>
+          <button class="btn btn-primary" style="padding: 6px 10px; width: auto; font-size: 12px;" onclick="startTask(2)">Start</button>
+        </div>
+      </div>
+
+      <div class="task-item">
+        <div>
+          <h4 style="font-size: 13px;">Process Step 3</h4>
+          <p style="font-size: 10px; color: var(--text-sub);">Hilltop Multi-Step</p>
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <span class="task-counter" id="task3Count">0/15</span>
+          <button class="btn btn-primary" style="padding: 6px 10px; width: auto; font-size: 12px;" onclick="startTask(3)">Start</button>
+        </div>
+      </div>
+
+      <div class="task-item">
+        <div>
+          <h4 style="font-size: 13px;">Process Step 4</h4>
+          <p style="font-size: 10px; color: var(--text-sub);">Direct Link Matrix</p>
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <span class="task-counter" id="task4Count">0/20</span>
+          <button class="btn btn-primary" style="padding: 6px 10px; width: auto; font-size: 12px;" onclick="startTask(4)">Start</button>
+        </div>
+      </div>
+
+      <div class="task-item">
+        <div>
+          <h4 style="font-size: 13px;">Process Step 5</h4>
+          <p style="font-size: 10px; color: var(--text-sub);">Monetag & Video Mix</p>
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <span class="task-counter" id="task5Count">0/10</span>
+          <button class="btn btn-primary" style="padding: 6px 10px; width: auto; font-size: 12px;" onclick="startTask(5)">Start</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SHARE & REFERRAL SECTION -->
+    <div class="card" style="margin-top: 16px;">
+      <h4 style="font-size: 13px;">Share Ads Miner & Invite Friends</h4>
+      <p style="font-size: 11px; color: var(--text-sub); margin-bottom: 8px;">Earn lifetime points commission.</p>
+      <button class="btn btn-warning" onclick="shareToTelegram()">
+        <span>Share to Telegram Chat</span>
+        <span>Share Link</span>
+      </button>
+    </div>
+
+  </div>
+
+  <script>
+    // ADS NETWORKS CONFIGURATION (Ad Network Link များ ထည့်ရန်)
+    const ADS_CONFIG = {
+      adsterra_sml_1: "https://www.google.com",
+      adsterra_sml_2: "https://www.google.com",
+      adsterra_popunder: "https://www.google.com",
+      richads_dl: "https://www.google.com",
+      hilltop_dl: "https://www.google.com",
+      monetag_sml: "https://www.google.com",
+      adsgram_block_id: "YOUR_ADSGRAM_BLOCK_ID"
+    };
+
+    const tg = window.Telegram?.WebApp;
+    if (tg) { tg.expand(); }
+
+    // State Hydration
+    let state = {
+      balance: parseFloat(localStorage.getItem('balance')) || 450,
+      task1: parseInt(localStorage.getItem('task1')) || 0,
+      task2: parseInt(localStorage.getItem('task2')) || 0,
+      task3: parseInt(localStorage.getItem('task3')) || 0,
+      task4: parseInt(localStorage.getItem('task4')) || 0,
+      task5: parseInt(localStorage.getItem('task5')) || 0,
+      miningEndTime: parseInt(localStorage.getItem('miningEndTime')) || 0,
+      savedWallet: localStorage.getItem('savedWallet') || "",
+      savedUsername: localStorage.getItem('savedUsername') || (tg?.initDataUnsafe?.user?.username ? `@${tg.initDataUnsafe.user.username}` : ""),
+      dailyWithdrawn: parseFloat(localStorage.getItem('dailyWithdrawn')) || 0,
+      lastWithdrawDate: localStorage.getItem('lastWithdrawDate') || ""
+    };
+
+    const LIMITS = { t1: 20, t2: 20, t3: 15, t4: 20, t5: 10 };
+    const MAX_DAILY_WITHDRAW = 500;
+
+    function initUser() {
+      const usernameInput = document.getElementById('tgUsername');
+      const walletInput = document.getElementById('tonWallet');
+
+      if (state.savedUsername) {
+        usernameInput.value = state.savedUsername;
+      } else {
+        usernameInput.value = "@GuestUser";
+      }
+
+      if (state.savedWallet) {
+        walletInput.value = state.savedWallet;
+        walletInput.disabled = true;
+      }
+
+      const today = new Date().toDateString();
+      if (state.lastWithdrawDate !== today) {
+        state.dailyWithdrawn = 0;
+        state.lastWithdrawDate = today;
+        saveState();
+      }
+      updateUI();
+    }
+
+    function updateUI() {
+      document.getElementById('userBalance').innerText = state.balance.toFixed(0);
+      document.getElementById('task1Count').innerText = `${state.task1}/${LIMITS.t1}`;
+      document.getElementById('task2Count').innerText = `${state.task2}/${LIMITS.t2}`;
+      document.getElementById('task3Count').innerText = `${state.task3}/${LIMITS.t3}`;
+      document.getElementById('task4Count').innerText = `${state.task4}/${LIMITS.t4}`;
+      document.getElementById('task5Count').innerText = `${state.task5}/${LIMITS.t5}`;
+
+      checkMiningStatus();
+    }
+
+    function saveState() {
+      localStorage.setItem('balance', state.balance);
+      localStorage.setItem('task1', state.task1);
+      localStorage.setItem('task2', state.task2);
+      localStorage.setItem('task3', state.task3);
+      localStorage.setItem('task4', state.task4);
+      localStorage.setItem('task5', state.task5);
+      localStorage.setItem('miningEndTime', state.miningEndTime);
+      localStorage.setItem('savedWallet', state.savedWallet);
+      localStorage.setItem('savedUsername', state.savedUsername);
+      localStorage.setItem('dailyWithdrawn', state.dailyWithdrawn);
+      localStorage.setItem('lastWithdrawDate', state.lastWithdrawDate);
+    }
+
+    // PROCESS WITHDRAWAL LOGIC
+    function processWithdrawal() {
+      const walletInput = document.getElementById('tonWallet').value.trim();
+      const ptsInput = parseInt(document.getElementById('withdrawPts').value);
+      const username = document.getElementById('tgUsername').value;
+
+      if (!walletInput || walletInput.length < 10) {
+        alert("Please enter a valid TON Wallet address!");
+        return;
+      }
+
+      if (isNaN(ptsInput) || ptsInput < 150) {
+        alert("Minimum withdrawal is 150 PTS!");
+        return;
+      }
+
+      if ((state.dailyWithdrawn + ptsInput) > MAX_DAILY_WITHDRAW) {
+        alert(`Daily Withdrawal Limit Exceeded! You can only withdraw up to ${MAX_DAILY_WITHDRAW - state.dailyWithdrawn} PTS more today.`);
+        return;
+      }
+
+      if ((state.balance - ptsInput) < 300) {
+        alert("Insufficient Balance! You must keep at least 300 PTS reserved in your account.");
+        return;
+      }
+
+      if (!state.savedWallet) {
+        state.savedWallet = walletInput;
+        document.getElementById('tonWallet').disabled = true;
+      }
+
+      state.balance -= ptsInput;
+      state.dailyWithdrawn += ptsInput;
+      saveState();
+      updateUI();
+
+      alert(`Withdrawal Request Submitted!\n${ptsInput} PTS deducted. Request saved.`);
+    }
+
+    function shareToTelegram() {
+      const shareUrl = `https://t.me/your_bot_username?start=${encodeURIComponent(state.savedUsername)}`;
+      const text = "Join Ads Miner! Earn TON & Points by completing daily tasks.";
+      
+      if (tg && tg.openTelegramLink) {
+        tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(text)}`);
+      } else {
+        window.open(`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(text)}`, '_blank');
+      }
+    }
+
+    function openAdLink(url) {
+      if (tg && tg.openLink) { tg.openLink(url); } else { window.open(url, '_blank'); }
+    }
+
+    function triggerAdsgram(callback) {
+      if (window.Adsgram) {
+        const AdController = window.Adsgram.init({ blockId: ADS_CONFIG.adsgram_block_id });
+        AdController.show().then(() => { if (callback) callback(); }).catch(() => { if (callback) callback(); });
+      } else { if (callback) callback(); }
+    }
+
+    function startTask(taskNum) {
+      if (taskNum === 1 && state.task1 < LIMITS.t1) {
+        openAdLink(ADS_CONFIG.adsterra_sml_1);
+        setTimeout(() => { openAdLink(ADS_CONFIG.adsterra_popunder); }, 1000);
+        setTimeout(() => {
+          openAdLink(ADS_CONFIG.adsterra_sml_2);
+          triggerAdsgram(() => { state.task1++; saveState(); updateUI(); });
+        }, 3000);
+      }
+      else if (taskNum === 2 && state.task2 < LIMITS.t2) {
+        openAdLink(ADS_CONFIG.richads_dl);
+        setTimeout(() => {
+          triggerAdsgram(() => { state.task2++; saveState(); updateUI(); });
+        }, 2000);
+      }
+      else if (taskNum === 3 && state.task3 < LIMITS.t3) {
+        openAdLink(ADS_CONFIG.hilltop_dl);
+        state.task3++; saveState(); updateUI();
+      }
+      else if (taskNum === 4 && state.task4 < LIMITS.t4) {
+        openAdLink(ADS_CONFIG.monetag_sml);
+        state.task4++; saveState(); updateUI();
+      }
+      else if (taskNum === 5 && state.task5 < LIMITS.t5) {
+        triggerAdsgram(() => { state.task5++; saveState(); updateUI(); });
+      }
+    }
+
+    function checkMiningStatus() {
+      const allCompleted = (state.task1 >= LIMITS.t1 && state.task2 >= LIMITS.t2 && 
+                            state.task3 >= LIMITS.t3 && state.task4 >= LIMITS.t4 && state.task5 >= LIMITS.t5);
+      const btn = document.getElementById('miningBtn');
+      const btnText = document.getElementById('miningBtnText');
+      const timerDisplay = document.getElementById('miningTimer');
+      const now = Date.now();
+
+      if (state.miningEndTime > now) {
+        btn.className = "btn btn-disabled"; btn.disabled = true; btnText.innerText = "Booster Cooldown Active...";
+      } else if (state.miningEndTime > 0 && now >= state.miningEndTime) {
+        btn.className = "btn btn-success"; btn.disabled = false; btnText.innerText = "Claim Mega Bonus (+100 PTS)"; timerDisplay.innerText = "";
+      } else if (allCompleted) {
+        btn.className = "btn btn-primary"; btn.disabled = false; btnText.innerText = "Unlock & Claim Mega Bonus"; timerDisplay.innerText = "";
+      } else {
+        btn.className = "btn btn-disabled"; btn.disabled = true; btnText.innerText = "Complete All Steps First"; timerDisplay.innerText = "";
+      }
+    }
+
+    function claimOrStartMining() {
+      const now = Date.now();
+      if (state.miningEndTime > 0 && now >= state.miningEndTime) {
+        state.balance += 100; state.miningEndTime = 0;
+        state.task1 = 0; state.task2 = 0; state.task3 = 0; state.task4 = 0; state.task5 = 0;
+        saveState(); updateUI();
+        alert("100 PTS Mega Bonus Claimed!");
+      } else {
+        state.miningEndTime = Date.now() + (24 * 60 * 60 * 1000); // 24-Hour Cooldown for 100 PTS
+        saveState(); updateUI();
+      }
+    }
+
+    setInterval(() => {
+      const now = Date.now();
+      if (state.miningEndTime > now) {
+        const diff = state.miningEndTime - now;
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        document.getElementById('miningTimer').innerText = 
+          `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      }
+    }, 1000);
+
+    initUser();
+  </script>
+</body>
+</html>
