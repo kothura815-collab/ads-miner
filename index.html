@@ -347,7 +347,8 @@
       localStorage.setItem('lastWithdrawDate', state.lastWithdrawDate);
     }
 
-    function processWithdrawal() {
+    // CONNECTED WITHDRAW FUNCTION (POST TO TELEGRAM CHANNEL)
+    async function processWithdrawal() {
       const walletInput = document.getElementById('tonWallet').value.trim();
       const ptsInput = parseInt(document.getElementById('withdrawPts').value);
 
@@ -371,17 +372,38 @@
         return;
       }
 
-      if (!state.savedWallet) {
-        state.savedWallet = walletInput;
-        document.getElementById('tonWallet').disabled = true;
+      // Send log to Telegram Channel via Vercel Serverless Function
+      try {
+        const response = await fetch('/api/withdraw', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: state.savedUsername,
+            wallet: walletInput,
+            amount: ptsInput
+          })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          if (!state.savedWallet) {
+            state.savedWallet = walletInput;
+            document.getElementById('tonWallet').disabled = true;
+          }
+
+          state.balance -= ptsInput;
+          state.dailyWithdrawn += ptsInput;
+          saveState();
+          updateUI();
+
+          alert(`Withdrawal Request Submitted!\n${ptsInput} PTS deducted. Recorded to Withdraw History.`);
+        } else {
+          alert("Withdrawal Failed: " + (result.error || "Server Error"));
+        }
+      } catch (err) {
+        alert("Network Error! Please try again.");
       }
-
-      state.balance -= ptsInput;
-      state.dailyWithdrawn += ptsInput;
-      saveState();
-      updateUI();
-
-      alert(`Withdrawal Request Submitted!\n${ptsInput} PTS deducted. Request saved.`);
     }
 
     function shareToTelegram() {
