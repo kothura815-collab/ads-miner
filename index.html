@@ -270,15 +270,15 @@
       </p>
     </div>
 
-    <!-- VIP Mega Booster -->
+    <!-- VIP Mega Booster (Locked until all 4-in-1 Daily Ads are completed) -->
     <div class="card" style="text-align: center; border: 1px solid rgba(245, 158, 11, 0.4);">
       <h3 style="margin-bottom: 6px; font-size: 15px; color: var(--warning-color);">VIP Mega Booster</h3>
       <p id="miningStatusText" style="font-size: 11px; color: var(--text-sub); margin-bottom: 10px;">
-        Click below every 6 hours to execute VIP Task (+100 Points for full watch / +90 Points for skip).
+        Complete all 4-in-1 Daily Ads below (90/90 clicks) to unlock this button.
       </p>
-      <button id="miningBtn" class="btn btn-primary" onclick="claimVipBooster()">
-        <span id="miningBtnText">Claim VIP Mega Booster</span>
-        <span id="miningTimer">00:00:00</span>
+      <button id="miningBtn" class="btn btn-disabled" onclick="claimVipBooster()" disabled>
+        <span id="miningBtnText">Complete All 4-in-1 Ads First</span>
+        <span id="miningTimer"></span>
       </button>
     </div>
 
@@ -527,7 +527,39 @@
       showModal("Withdrawal Submitted", `Withdrawal request for ${ptsInput} Ads Point sent successfully to TON Wallet:\n${state.savedWallet}`);
     }
 
-    // VIP MEGA BOOSTER (+100 / +90 REWARD WITH 6HR COOLDOWN)
+    // VIP MEGA BOOSTER CHECK (LOCKED UNTIL ALL 4 DAILY TASKS ARE FINISHED)
+    function checkVipStatus() {
+      const btn = document.getElementById('miningBtn');
+      const btnText = document.getElementById('miningBtnText');
+      const timerDisplay = document.getElementById('miningTimer');
+      const now = Date.now();
+
+      // Check if all 4 Daily Ads are completed
+      const allDailyCompleted = (state.task1 >= LIMITS.t1 && 
+                                  state.task2 >= LIMITS.t2 && 
+                                  state.task3 >= LIMITS.t3 && 
+                                  state.task4 >= LIMITS.t4);
+
+      if (state.vipCooldownEnd > now) {
+        // Cooldown State
+        btn.className = "btn btn-disabled";
+        btn.disabled = true;
+        btnText.innerText = "6hr Cooldown Active";
+      } else if (allDailyCompleted) {
+        // All Daily Tasks Completed -> UNLOCK (Blue Active Button)
+        btn.className = "btn btn-primary";
+        btn.disabled = false;
+        btnText.innerText = "Claim VIP Booster (+100 Pts)";
+        timerDisplay.innerText = "";
+      } else {
+        // Daily Tasks Pending -> LOCKED (Disabled State)
+        btn.className = "btn btn-disabled";
+        btn.disabled = true;
+        btnText.innerText = "Complete All 4-in-1 Ads First";
+        timerDisplay.innerText = "";
+      }
+    }
+
     function claimVipBooster() {
       const now = Date.now();
       if (state.vipCooldownEnd > now) return;
@@ -560,24 +592,6 @@
           }
         }
       );
-    }
-
-    function checkVipStatus() {
-      const btn = document.getElementById('miningBtn');
-      const btnText = document.getElementById('miningBtnText');
-      const timerDisplay = document.getElementById('miningTimer');
-      const now = Date.now();
-
-      if (state.vipCooldownEnd > now) {
-        btn.className = "btn btn-disabled";
-        btn.disabled = true;
-        btnText.innerText = "Cooldown Active";
-      } else {
-        btn.className = "btn btn-primary";
-        btn.disabled = false;
-        btnText.innerText = "Claim VIP Booster (+100 Pts)";
-        timerDisplay.innerText = "";
-      }
     }
 
     // 4-IN-1 DAILY ADS CHAIN CONTROLLER
@@ -630,7 +644,7 @@
             } else {
               clearInterval(interval);
               closeModal();
-              // STEP 5: Open Direct Link & Smart Link
+              // STEP 5: Open Direct Link 1 & Smart Link 2
               openAdLink(ADS_CONFIG.smart_link_1);
               openAdLink(ADS_CONFIG.smart_link_2);
               chainStage = 5;
@@ -667,8 +681,9 @@
 
     function proceedChainStep3() {
       chainStage = 3;
-      // STEP 3: Direct Link 2
+      // STEP 3: Direct Link 2 AND Popunder open simultaneously
       openAdLink(ADS_CONFIG.adsterra_link_2);
+      openAdLink(ADS_CONFIG.hilltop_dl);
     }
 
     function proceedChainStep7() {
@@ -716,7 +731,7 @@
         const h = Math.floor(diff / (1000 * 60 * 60));
         const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const s = Math.floor((diff % (1000 * 60)) / 1000);
-        document.getElementById('miningTimer').innerText = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        document.getElementById('miningTimer').innerText = ` (${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')})`;
       } else {
         checkVipStatus();
       }
@@ -725,4 +740,4 @@
     initUser();
   </script>
 </body>
-        </html>
+</html>
