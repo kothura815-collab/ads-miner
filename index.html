@@ -270,7 +270,7 @@
       </p>
     </div>
 
-    <!-- VIP Mega Booster (Locked until all 4-in-1 Daily Ads are completed) -->
+    <!-- VIP Mega Booster -->
     <div class="card" style="text-align: center; border: 1px solid rgba(245, 158, 11, 0.4);">
       <h3 style="margin-bottom: 6px; font-size: 15px; color: var(--warning-color);">VIP Mega Booster</h3>
       <p id="miningStatusText" style="font-size: 11px; color: var(--text-sub); margin-bottom: 10px;">
@@ -356,7 +356,7 @@
   </div>
 
   <script>
-    // AD CONFIGURATIONS
+    // AD CONFIGURATIONS (Fixed blockId format)
     const ADS_CONFIG = {
       adsterra_link_1: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475",
       adsterra_link_2: "https://mammothsubway.com/itfyrwwjg?key=217fba5c43a13211147abc040716814d",
@@ -365,7 +365,7 @@
       smart_link_2: "https://plump-plastic.com/ZjLmfX",
       adsgram_reward_id: "48592",
       adsgram_interstitial_id: "int-48593",
-      adsgram_task_id: "task-48595"
+      adsgram_task_id: "48595" // Removed 'task-' prefix as per Adsgram specification
     };
 
     const tg = window.Telegram?.WebApp;
@@ -740,4 +740,4 @@
     initUser();
   </script>
 </body>
-</html>
+  </html>
