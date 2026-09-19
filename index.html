@@ -10,7 +10,7 @@
   <!-- Adsgram SDK -->
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
-  <!-- ADSTERRA POPUNDER & SOCIAL BAR SCRIPTS -->
+  <!-- ADSTERRA POPUNDER, SOCIAL BAR & DIRECT LINKS -->
   <script src="https://mammothsubway.com/32/52/16/325216e9af97d6458aab9e4e7a74d73b.js"></script>
   <script src="https://mammothsubway.com/46/ec/32/46ec32efbfe5ecbef2bb3c462cc4c9ba.js"></script>
 
@@ -26,6 +26,7 @@
       --accent-color: #38bdf8;
       --accent-green: #22c55e;
       --warning-color: #f59e0b;
+      --danger-color: #ef4444;
       --text-main: #f8fafc;
       --text-sub: #94a3b8;
     }
@@ -36,6 +37,7 @@
       padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       user-select: none;
+      -webkit-user-select: none;
     }
 
     body {
@@ -144,6 +146,7 @@
       border-radius: 6px;
     }
 
+    /* CENTERED MODAL NOTIFICATION */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -191,9 +194,41 @@
       cursor: pointer;
       width: 100%;
     }
+
+    /* OFFLINE SCREEN OVERLAY */
+    #offlineOverlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(15, 23, 42, 0.98);
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 100000;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .offline-card {
+      border: 2px solid var(--danger-color);
+      background: rgba(239, 68, 68, 0.1);
+      padding: 24px;
+      border-radius: 16px;
+      max-width: 340px;
+    }
   </style>
 </head>
 <body>
+
+  <!-- OFFLINE FULL OVERLAY BANNER -->
+  <div id="offlineOverlay">
+    <div class="offline-card">
+      <h2 style="color: var(--danger-color); font-size: 18px; margin-bottom: 8px;">No Internet Connection</h2>
+      <p style="font-size: 13px; color: #cbd5e1; line-height: 1.5;">
+        အင်တာနက်လိုင်း ချိတ်ဆက်မှု မရှိသေးပါ။ ကျေးဇူးပြု၍ Internet Connection ကို ပြန်လည်စစ်ဆေးပါ။
+      </p>
+    </div>
+  </div>
 
   <div class="container">
     
@@ -204,7 +239,7 @@
     <!-- Balance Dashboard -->
     <div class="card">
       <div class="balance-title">Total Balance</div>
-      <div class="balance-amount"><span id="userBalance">0</span> Ads Point</div>
+      <div class="balance-amount"><span id="userBalance">0.0</span> Ads Point</div>
       <p style="font-size: 11px; color: var(--text-sub);">Reserved System Fund: 300 Ads Point | Min Cashout: 150 Ads Point</p>
     </div>
 
@@ -212,21 +247,26 @@
     <div class="card" style="border: 1px solid rgba(34, 197, 94, 0.3);">
       <h3 style="font-size: 15px; margin-bottom: 8px;">Withdraw (TON Wallet)</h3>
       
-      <label style="font-size: 11px; color: var(--text-sub);">Telegram Username:</label>
-      <input type="text" id="tgUsername" class="input-field" placeholder="@username" readonly />
+      <label style="font-size: 11px; color: var(--text-sub);">Telegram Username / Name:</label>
+      <input type="text" id="tgUsername" class="input-field" placeholder="@username or Name" />
 
-      <label style="font-size: 11px; color: var(--text-sub);">TON Wallet Address:</label>
-      <input type="text" id="tonWallet" class="input-field" placeholder="Enter TON Wallet (e.g. EQD...)" />
+      <label style="font-size: 11px; color: var(--text-sub);">Gram (TON) Wallet Address:</label>
+      <input type="text" id="tonWallet" class="input-field" placeholder="Enter TON Wallet Address (e.g. EQD...)" />
 
-      <label style="font-size: 11px; color: var(--text-sub);">Points to Cashout (Min 150 Ads Point, Max 500 Ads Point/Day):</label>
-      <input type="number" id="withdrawPts" class="input-field" placeholder="150" min="150" max="500" />
+      <label style="font-size: 11px; color: var(--text-sub);">Points to Cashout (Min 150 Ads Point):</label>
+      <input type="number" id="withdrawPts" class="input-field" placeholder="150" min="150" />
+
+      <button id="saveWalletBtn" class="btn btn-warning" style="margin-bottom: 8px;" onclick="saveAndLockWallet()">
+        <span>Save & Lock Details</span>
+        <span>Save</span>
+      </button>
 
       <button id="withdrawBtn" class="btn btn-success" onclick="processWithdrawal()">
         <span>Withdraw to TON</span>
         <span>Submit</span>
       </button>
       <p style="font-size: 10px; color: var(--text-sub); margin-top: 6px; text-align: center;">
-        Note: Wallet details will be permanently locked after first withdrawal.
+        Note: Wallet details will be permanently saved.
       </p>
     </div>
 
@@ -234,73 +274,62 @@
     <div class="card" style="text-align: center; border: 1px solid rgba(245, 158, 11, 0.4);">
       <h3 style="margin-bottom: 6px; font-size: 15px; color: var(--warning-color);">VIP Mega Booster</h3>
       <p id="miningStatusText" style="font-size: 11px; color: var(--text-sub); margin-bottom: 10px;">
-        Complete all 85 Process Steps below to Unlock VIP CPA Chest (+100 Ads Point).
+        Click below every 6 hours to execute VIP Task (+100 Points for full watch / +90 Points for skip).
       </p>
-      <button id="miningBtn" class="btn btn-disabled" onclick="claimOrStartMining()" disabled>
-        <span id="miningBtnText">Complete All Steps First</span>
+      <button id="miningBtn" class="btn btn-primary" onclick="claimVipBooster()">
+        <span id="miningBtnText">Claim VIP Mega Booster</span>
         <span id="miningTimer">00:00:00</span>
       </button>
     </div>
 
-    <!-- Process List Section (85 Clicks) -->
+    <!-- 4-in-1 Daily Ads (Total 90) -->
     <div style="display: flex; justify-content: space-between; align-items: center; margin: 14px 0 8px 0;">
-      <h3 style="font-size: 14px;">4-in-1 Daily Tasks (Total 85)</h3>
+      <h3 style="font-size: 14px;">4-in-1 Daily Ads</h3>
       <span style="font-size: 11px; color: var(--accent-color);" id="resetTimer">Reset in: --:--:--</span>
     </div>
 
     <div class="task-list">
       <div class="task-item">
         <div>
-          <h4 style="font-size: 13px;">Task 1</h4>
-          <p style="font-size: 10px; color: var(--text-sub);">Ad Chain Flow 1</p>
+          <h4 style="font-size: 13px;">Ads 1</h4>
+          <p style="font-size: 10px; color: var(--text-sub);">Multi-Flow Chain 1</p>
         </div>
         <div style="display: flex; align-items: center; gap: 6px;">
-          <span class="task-counter" id="task1Count">0/20</span>
-          <button class="btn btn-primary" style="padding: 6px 10px; width: auto; font-size: 12px;" onclick="startChainTask(1, event)">Start Chain</button>
+          <span class="task-counter" id="task1Count">0/30</span>
+          <button class="btn btn-primary" style="padding: 6px 10px; width: auto; font-size: 12px;" onclick="startChainTask(1, event)">Start</button>
         </div>
       </div>
 
       <div class="task-item">
         <div>
-          <h4 style="font-size: 13px;">Task 2</h4>
-          <p style="font-size: 10px; color: var(--text-sub);">Ad Chain Flow 2</p>
+          <h4 style="font-size: 13px;">Ads 2</h4>
+          <p style="font-size: 10px; color: var(--text-sub);">Multi-Flow Chain 2</p>
         </div>
         <div style="display: flex; align-items: center; gap: 6px;">
-          <span class="task-counter" id="task2Count">0/20</span>
-          <button class="btn btn-primary" style="padding: 6px 10px; width: auto; font-size: 12px;" onclick="startChainTask(2, event)">Start Chain</button>
+          <span class="task-counter" id="task2Count">0/25</span>
+          <button class="btn btn-primary" style="padding: 6px 10px; width: auto; font-size: 12px;" onclick="startChainTask(2, event)">Start</button>
         </div>
       </div>
 
       <div class="task-item">
         <div>
-          <h4 style="font-size: 13px;">Task 3</h4>
-          <p style="font-size: 10px; color: var(--text-sub);">Ad Chain Flow 3</p>
+          <h4 style="font-size: 13px;">Ads 3</h4>
+          <p style="font-size: 10px; color: var(--text-sub);">Multi-Flow Chain 3</p>
         </div>
         <div style="display: flex; align-items: center; gap: 6px;">
           <span class="task-counter" id="task3Count">0/20</span>
-          <button class="btn btn-primary" style="padding: 6px 10px; width: auto; font-size: 12px;" onclick="startChainTask(3, event)">Start Chain</button>
+          <button class="btn btn-primary" style="padding: 6px 10px; width: auto; font-size: 12px;" onclick="startChainTask(3, event)">Start</button>
         </div>
       </div>
 
       <div class="task-item">
         <div>
-          <h4 style="font-size: 13px;">Task 4</h4>
-          <p style="font-size: 10px; color: var(--text-sub);">Ad Chain Flow 4</p>
+          <h4 style="font-size: 13px;">Ads 4</h4>
+          <p style="font-size: 10px; color: var(--text-sub);">Multi-Flow Chain 4</p>
         </div>
         <div style="display: flex; align-items: center; gap: 6px;">
           <span class="task-counter" id="task4Count">0/15</span>
-          <button class="btn btn-primary" style="padding: 6px 10px; width: auto; font-size: 12px;" onclick="startChainTask(4, event)">Start Chain</button>
-        </div>
-      </div>
-
-      <div class="task-item">
-        <div>
-          <h4 style="font-size: 13px;">Task 5</h4>
-          <p style="font-size: 10px; color: var(--text-sub);">Ad Chain Flow 5</p>
-        </div>
-        <div style="display: flex; align-items: center; gap: 6px;">
-          <span class="task-counter" id="task5Count">0/10</span>
-          <button class="btn btn-primary" style="padding: 6px 10px; width: auto; font-size: 12px;" onclick="startChainTask(5, event)">Start Chain</button>
+          <button class="btn btn-primary" style="padding: 6px 10px; width: auto; font-size: 12px;" onclick="startChainTask(4, event)">Start</button>
         </div>
       </div>
     </div>
@@ -308,7 +337,7 @@
     <!-- SHARE SECTION -->
     <div class="card" style="margin-top: 16px;">
       <h4 style="font-size: 13px;">Share Ads Miner</h4>
-      <p style="font-size: 11px; color: var(--text-sub); margin-bottom: 8px;">Earn lifetime points commission.</p>
+      <p style="font-size: 11px; color: var(--text-sub); margin-bottom: 8px;">Share to earn random 0.1 to 1.5 Ads Point every time!</p>
       <button class="btn btn-warning" onclick="shareToTelegram()">
         <span>Share to Telegram Chat</span>
         <span>Share Link</span>
@@ -317,19 +346,23 @@
 
   </div>
 
+  <!-- CENTERED NOTIFICATION MODAL -->
   <div class="modal-overlay" id="customModal">
     <div class="modal-box">
       <div class="modal-title" id="modalTitle">Notification</div>
       <div class="modal-msg" id="modalMsg">Message goes here...</div>
-      <button class="modal-btn" onclick="closeModal()">OK</button>
+      <button class="modal-btn" id="modalBtn" onclick="closeModal()">OK</button>
     </div>
   </div>
 
   <script>
+    // AD CONFIGURATIONS
     const ADS_CONFIG = {
       adsterra_link_1: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475",
       adsterra_link_2: "https://mammothsubway.com/itfyrwwjg?key=217fba5c43a13211147abc040716814d",
       hilltop_dl: "https://plump-plastic.com/ZjLmfX",
+      smart_link_1: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475",
+      smart_link_2: "https://plump-plastic.com/ZjLmfX",
       adsgram_reward_id: "48592",
       adsgram_interstitial_id: "int-48593",
       adsgram_task_id: "task-48595"
@@ -338,76 +371,88 @@
     const tg = window.Telegram?.WebApp;
     if (tg) { tg.expand(); }
 
+    // APP STATE MANAGEMENT
     let state = {
       balance: parseFloat(localStorage.getItem('balance')) || 0,
       task1: parseInt(localStorage.getItem('task1')) || 0,
       task2: parseInt(localStorage.getItem('task2')) || 0,
       task3: parseInt(localStorage.getItem('task3')) || 0,
       task4: parseInt(localStorage.getItem('task4')) || 0,
-      task5: parseInt(localStorage.getItem('task5')) || 0,
-      next6HrReset: parseInt(localStorage.getItem('next6HrReset')) || (Date.now() + 6 * 60 * 60 * 1000),
-      mining24HrEnd: parseInt(localStorage.getItem('mining24HrEnd')) || 0,
+      vipCooldownEnd: parseInt(localStorage.getItem('vipCooldownEnd')) || 0,
       savedWallet: localStorage.getItem('savedWallet') || "",
-      savedUsername: localStorage.getItem('savedUsername') || (tg?.initDataUnsafe?.user?.username ? `@${tg.initDataUnsafe.user.username}` : ""),
-      dailyWithdrawn: parseFloat(localStorage.getItem('dailyWithdrawn')) || 0,
-      lastWithdrawDate: localStorage.getItem('lastWithdrawDate') || ""
+      savedUsername: localStorage.getItem('savedUsername') || (tg?.initDataUnsafe?.user?.username ? `@${tg.initDataUnsafe.user.username}` : "")
     };
 
-    const LIMITS = { t1: 20, t2: 20, t3: 20, t4: 15, t5: 10 };
-    const MAX_DAILY_WITHDRAW = 500;
+    const LIMITS = { t1: 30, t2: 25, t3: 20, t4: 15 };
 
     let activeChainTask = null;
     let chainStage = 0;
     let lastClickTime = 0;
-    let stageStartTime = 0;
 
-    function showModal(title, text) {
+    // ANTI-HACKING & DEVTOOLS BLOCKER
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+      if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) || (e.ctrlKey && e.key === 'U')) {
+        e.preventDefault();
+      }
+    });
+
+    // NETWORK OFFLINE MONITORING
+    function updateOnlineStatus() {
+      const offlineOverlay = document.getElementById('offlineOverlay');
+      if (!navigator.onLine) {
+        offlineOverlay.style.display = 'flex';
+      } else {
+        offlineOverlay.style.display = 'none';
+      }
+    }
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+
+    function showModal(title, text, callback) {
       document.getElementById('modalTitle').innerText = title;
       document.getElementById('modalMsg').innerText = text;
       document.getElementById('customModal').style.display = 'flex';
+      
+      const modalBtn = document.getElementById('modalBtn');
+      modalBtn.onclick = function() {
+        closeModal();
+        if (callback) callback();
+      };
     }
 
     function closeModal() {
       document.getElementById('customModal').style.display = 'none';
     }
 
+    function getRandomReward(min, max) {
+      return (Math.random() * (max - min) + min).toFixed(2);
+    }
+
     function initUser() {
+      updateOnlineStatus();
       const usernameInput = document.getElementById('tgUsername');
       const walletInput = document.getElementById('tonWallet');
 
-      if (state.savedUsername) {
-        usernameInput.value = state.savedUsername;
-      } else {
-        usernameInput.value = "@GuestUser";
-      }
-
+      if (state.savedUsername) usernameInput.value = state.savedUsername;
       if (state.savedWallet) {
         walletInput.value = state.savedWallet;
+        usernameInput.disabled = true;
         walletInput.disabled = true;
+        document.getElementById('saveWalletBtn').style.display = 'none';
       }
 
-      check6HrReset();
       updateUI();
     }
 
-    function check6HrReset() {
-      const now = Date.now();
-      if (now >= state.next6HrReset) {
-        state.task1 = 0; state.task2 = 0; state.task3 = 0; state.task4 = 0; state.task5 = 0;
-        state.next6HrReset = now + (6 * 60 * 60 * 1000);
-        saveState();
-      }
-    }
-
     function updateUI() {
-      document.getElementById('userBalance').innerText = state.balance.toFixed(0);
+      document.getElementById('userBalance').innerText = state.balance.toFixed(2);
       document.getElementById('task1Count').innerText = `${state.task1}/${LIMITS.t1}`;
       document.getElementById('task2Count').innerText = `${state.task2}/${LIMITS.t2}`;
       document.getElementById('task3Count').innerText = `${state.task3}/${LIMITS.t3}`;
       document.getElementById('task4Count').innerText = `${state.task4}/${LIMITS.t4}`;
-      document.getElementById('task5Count').innerText = `${state.task5}/${LIMITS.t5}`;
 
-      checkMiningStatus();
+      checkVipStatus();
     }
 
     function saveState() {
@@ -416,107 +461,53 @@
       localStorage.setItem('task2', state.task2);
       localStorage.setItem('task3', state.task3);
       localStorage.setItem('task4', state.task4);
-      localStorage.setItem('task5', state.task5);
-      localStorage.setItem('next6HrReset', state.next6HrReset);
-      localStorage.setItem('mining24HrEnd', state.mining24HrEnd);
+      localStorage.setItem('vipCooldownEnd', state.vipCooldownEnd);
       localStorage.setItem('savedWallet', state.savedWallet);
       localStorage.setItem('savedUsername', state.savedUsername);
-      localStorage.setItem('dailyWithdrawn', state.dailyWithdrawn);
-      localStorage.setItem('lastWithdrawDate', state.lastWithdrawDate);
     }
 
     function openAdLink(url) {
       if (tg && tg.openLink) { tg.openLink(url); } else { window.open(url, '_blank'); }
     }
 
-    function triggerAdsgram(blockId, callback) {
+    function triggerAdsgram(blockId, onSuccess, onError) {
       if (window.Adsgram) {
         const AdController = window.Adsgram.init({ blockId: blockId });
-        AdController.show().then(() => { if (callback) callback(); }).catch(() => { if (callback) callback(); });
-      } else { if (callback) callback(); }
+        AdController.show()
+          .then(() => { if (onSuccess) onSuccess(); })
+          .catch((err) => { if (onError) onError(err); });
+      } else {
+        if (onError) onError("SDK_NOT_LOADED");
+      }
     }
 
-    // ANTI-BOT & ANTI-AUTOCLICKER CHAIN CONTROLLER
-    function startChainTask(taskNum, e) {
-      const now = Date.now();
+    // SAVE & LOCK WALLET
+    function saveAndLockWallet() {
+      const uName = document.getElementById('tgUsername').value.trim();
+      const wAddr = document.getElementById('tonWallet').value.trim();
 
-      // Detection 1: Trusted Event Check (Blocks script-simulated clicks)
-      if (e && !e.isTrusted) {
-        showModal("Security Warning", "Bot detected! Automated clicks are not allowed.");
+      if (!uName || !wAddr) {
+        showModal("Error", "Please fill in both Username and Gram (TON) Wallet Address!");
         return;
       }
 
-      // Detection 2: Time Interval Rate Limit (Must wait 2.5s between clicks)
-      if (now - lastClickTime < 2500) {
-        showModal("Anti-Bot Protection", "Clicks are too fast! Please slow down.");
-        return;
-      }
-      lastClickTime = now;
+      state.savedUsername = uName;
+      state.savedWallet = wAddr;
+      saveState();
 
-      if (taskNum === 1 && state.task1 >= LIMITS.t1) return;
-      if (taskNum === 2 && state.task2 >= LIMITS.t2) return;
-      if (taskNum === 3 && state.task3 >= LIMITS.t3) return;
-      if (taskNum === 4 && state.task4 >= LIMITS.t4) return;
-      if (taskNum === 5 && state.task5 >= LIMITS.t5) return;
+      document.getElementById('tgUsername').disabled = true;
+      document.getElementById('tonWallet').disabled = true;
+      document.getElementById('saveWalletBtn').style.display = 'none';
 
-      activeChainTask = taskNum;
-      chainStage = 1;
-      stageStartTime = Date.now();
-
-      openAdLink(ADS_CONFIG.adsterra_link_1);
+      showModal("Saved", "Wallet details permanently saved and locked!");
     }
 
-    // AUTOMATIC CHAIN STEPPER WITH ANTI-FAST SKIP CONTROL
-    window.addEventListener('focus', () => {
-      const timeSpent = Date.now() - stageStartTime;
+    // WITHDRAW PROCESS
+    function processWithdrawal() {
+      const ptsInput = parseFloat(document.getElementById('withdrawPts').value);
 
-      if (activeChainTask !== null) {
-        // Detection 3: Minimum Ad Viewing Duration (Minimum 2 seconds)
-        if (timeSpent < 2000) {
-          activeChainTask = null;
-          chainStage = 0;
-          showModal("Security Verification", "Task skipped! Please view ads properly without fast-closing.");
-          return;
-        }
-
-        stageStartTime = Date.now();
-
-        if (chainStage === 1) {
-          chainStage = 2;
-          setTimeout(() => { openAdLink(ADS_CONFIG.hilltop_dl); }, 400);
-        } else if (chainStage === 2) {
-          chainStage = 3;
-          setTimeout(() => { openAdLink(ADS_CONFIG.adsterra_link_2); }, 400);
-        } else if (chainStage === 3) {
-          chainStage = 4;
-          setTimeout(() => {
-            let selectedBlockId = ADS_CONFIG.adsgram_reward_id;
-            if (activeChainTask % 2 === 0) selectedBlockId = ADS_CONFIG.adsgram_interstitial_id;
-
-            triggerAdsgram(selectedBlockId, () => {
-              if (activeChainTask === 1) state.task1++;
-              else if (activeChainTask === 2) state.task2++;
-              else if (activeChainTask === 3) state.task3++;
-              else if (activeChainTask === 4) state.task4++;
-              else if (activeChainTask === 5) state.task5++;
-
-              state.balance += 1; // Reward 1 Ads Point per Chain
-              activeChainTask = null;
-              chainStage = 0;
-              saveState();
-              updateUI();
-            });
-          }, 500);
-        }
-      }
-    });
-
-    async function processWithdrawal() {
-      const walletInput = document.getElementById('tonWallet').value.trim();
-      const ptsInput = parseInt(document.getElementById('withdrawPts').value);
-
-      if (!walletInput || walletInput.length < 10) {
-        showModal("Invalid Wallet", "Please enter a valid TON Wallet address!");
+      if (!state.savedWallet) {
+        showModal("Error", "Please click 'Save & Lock Details' before attempting withdrawal!");
         return;
       }
 
@@ -525,51 +516,183 @@
         return;
       }
 
-      if ((state.dailyWithdrawn + ptsInput) > MAX_DAILY_WITHDRAW) {
-        showModal("Limit Exceeded", `Daily Withdrawal Limit Exceeded! You can only withdraw up to ${MAX_DAILY_WITHDRAW - state.dailyWithdrawn} Ads Point more today.`);
-        return;
-      }
-
       if ((state.balance - ptsInput) < 300) {
-        showModal("Insufficient Fund", "Insufficient Balance! You must keep at least 300 Ads Point reserved in your account.");
+        showModal("Insufficient Fund", "You must maintain at least 300 Ads Point reserved in your account balance.");
         return;
       }
 
-      try {
-        const response = await fetch('/api/withdraw', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            username: state.savedUsername,
-            wallet: walletInput,
-            amount: ptsInput
-          })
-        });
+      state.balance -= ptsInput;
+      saveState();
+      updateUI();
+      showModal("Withdrawal Submitted", `Withdrawal request for ${ptsInput} Ads Point sent successfully to TON Wallet:\n${state.savedWallet}`);
+    }
 
-        const result = await response.json();
+    // VIP MEGA BOOSTER (+100 / +90 REWARD WITH 6HR COOLDOWN)
+    function claimVipBooster() {
+      const now = Date.now();
+      if (state.vipCooldownEnd > now) return;
 
-        if (result.success) {
-          if (!state.savedWallet) {
-            state.savedWallet = walletInput;
-            document.getElementById('tonWallet').disabled = true;
-          }
-
-          state.balance -= ptsInput;
-          state.dailyWithdrawn += ptsInput;
+      triggerAdsgram(
+        ADS_CONFIG.adsgram_task_id,
+        () => {
+          // Full Watch - Ads exist and completed
+          state.balance += 100;
+          state.vipCooldownEnd = Date.now() + (6 * 60 * 60 * 1000);
           saveState();
           updateUI();
-
-          showModal("Withdrawal Successful", `Withdrawal Request Submitted!\n${ptsInput} Ads Point deducted. Recorded to Withdraw History Channel.`);
-        } else {
-          showModal("Withdrawal Failed", result.error || "Server Error");
+          showModal("VIP Bonus Claimed", "Full Ads Watched! +100 Ads Point added.");
+        },
+        (err) => {
+          if (err === "SDK_NOT_LOADED" || err?.error || err === "NO_ADS") {
+            // Ads absent or error -> Skip with full +100
+            state.balance += 100;
+            state.vipCooldownEnd = Date.now() + (6 * 60 * 60 * 1000);
+            saveState();
+            updateUI();
+            showModal("VIP Bonus Claimed", "No Ads Available right now. Skipped and awarded full +100 Ads Point!");
+          } else {
+            // User closed/cancelled ads early -> Award +90
+            state.balance += 90;
+            state.vipCooldownEnd = Date.now() + (6 * 60 * 60 * 1000);
+            saveState();
+            updateUI();
+            showModal("VIP Partial Bonus", "Ads closed early. +90 Ads Point added.");
+          }
         }
-      } catch (err) {
-        showModal("Network Error", "Unable to process request. Please try again.");
+      );
+    }
+
+    function checkVipStatus() {
+      const btn = document.getElementById('miningBtn');
+      const btnText = document.getElementById('miningBtnText');
+      const timerDisplay = document.getElementById('miningTimer');
+      const now = Date.now();
+
+      if (state.vipCooldownEnd > now) {
+        btn.className = "btn btn-disabled";
+        btn.disabled = true;
+        btnText.innerText = "Cooldown Active";
+      } else {
+        btn.className = "btn btn-primary";
+        btn.disabled = false;
+        btnText.innerText = "Claim VIP Booster (+100 Pts)";
+        timerDisplay.innerText = "";
       }
     }
 
+    // 4-IN-1 DAILY ADS CHAIN CONTROLLER
+    function startChainTask(taskNum, e) {
+      const now = Date.now();
+
+      if (e && !e.isTrusted) {
+        showModal("Security Warning", "Automated clickers are blocked!");
+        return;
+      }
+
+      if (now - lastClickTime < 2000) {
+        showModal("Anti-Bot Protection", "Clicks too fast! Please slow down.");
+        return;
+      }
+      lastClickTime = now;
+
+      if (taskNum === 1 && state.task1 >= LIMITS.t1) return;
+      if (taskNum === 2 && state.task2 >= LIMITS.t2) return;
+      if (taskNum === 3 && state.task3 >= LIMITS.t3) return;
+      if (taskNum === 4 && state.task4 >= LIMITS.t4) return;
+
+      activeChainTask = taskNum;
+      chainStage = 1;
+
+      // STEP 1: Direct Link 1
+      openAdLink(ADS_CONFIG.adsterra_link_1);
+    }
+
+    // CHAIN STEPPER ON WINDOW FOCUS
+    window.addEventListener('focus', () => {
+      if (activeChainTask !== null) {
+        if (chainStage === 1) {
+          chainStage = 2;
+          // STEP 2: Adsgram SDK
+          triggerAdsgram(
+            ADS_CONFIG.adsgram_reward_id,
+            () => { proceedChainStep3(); },
+            () => { proceedChainStep3(); }
+          );
+        } else if (chainStage === 3) {
+          chainStage = 4;
+          // STEP 4: Waiting 10s Timer
+          showModal("Processing Task", "Please wait 10 seconds for verification...", null);
+          let count = 10;
+          const interval = setInterval(() => {
+            count--;
+            if (count > 0) {
+              document.getElementById('modalMsg').innerText = `Please wait ${count} seconds for verification...`;
+            } else {
+              clearInterval(interval);
+              closeModal();
+              // STEP 5: Open Direct Link & Smart Link
+              openAdLink(ADS_CONFIG.smart_link_1);
+              openAdLink(ADS_CONFIG.smart_link_2);
+              chainStage = 5;
+            }
+          }, 1000);
+        } else if (chainStage === 5) {
+          chainStage = 6;
+          // STEP 6: Adsgram Interstitial SDK
+          triggerAdsgram(
+            ADS_CONFIG.adsgram_interstitial_id,
+            () => { proceedChainStep7(); },
+            () => { proceedChainStep7(); }
+          );
+        } else if (chainStage === 7) {
+          chainStage = 8;
+          // STEP 8: Processing 5s then Done
+          showModal("Finalizing", "Processing 5s...", null);
+          let count = 5;
+          const interval = setInterval(() => {
+            count--;
+            if (count > 0) {
+              document.getElementById('modalMsg').innerText = `Processing ${count}s...`;
+            } else {
+              clearInterval(interval);
+              const reward = parseFloat(getRandomReward(0.1, 1.5));
+              showModal("Task Completed", `Click Complete! Earned +${reward} Ads Point.`, () => {
+                finishTaskChain(reward);
+              });
+            }
+          }, 1000);
+        }
+      }
+    });
+
+    function proceedChainStep3() {
+      chainStage = 3;
+      // STEP 3: Direct Link 2
+      openAdLink(ADS_CONFIG.adsterra_link_2);
+    }
+
+    function proceedChainStep7() {
+      chainStage = 7;
+      // STEP 7: Popunder / Push Ad Link Trigger
+      openAdLink(ADS_CONFIG.hilltop_dl);
+    }
+
+    function finishTaskChain(reward) {
+      if (activeChainTask === 1) state.task1++;
+      else if (activeChainTask === 2) state.task2++;
+      else if (activeChainTask === 3) state.task3++;
+      else if (activeChainTask === 4) state.task4++;
+
+      state.balance += reward;
+      activeChainTask = null;
+      chainStage = 0;
+      saveState();
+      updateUI();
+    }
+
+    // SHARE FUNCTION (RANDOM 0.1 TO 1.5 REWARD)
     function shareToTelegram() {
-      const shareUrl = `https://t.me/ads_miner_official_bot?start=${encodeURIComponent(state.savedUsername)}`;
+      const shareUrl = `https://t.me/ads_miner_official_bot?start=${encodeURIComponent(state.savedUsername || 'Guest')}`;
       const text = "Join Ads Miner! Earn TON & Ads Point by completing daily tasks.";
       
       if (tg && tg.openTelegramLink) {
@@ -577,66 +700,29 @@
       } else {
         window.open(`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(text)}`, '_blank');
       }
+
+      const reward = parseFloat(getRandomReward(0.1, 1.5));
+      state.balance += reward;
+      saveState();
+      updateUI();
+      showModal("Share Reward", `Thank you for sharing! You received +${reward} Ads Point.`);
     }
 
-    function checkMiningStatus() {
-      const allCompleted = (state.task1 >= LIMITS.t1 && state.task2 >= LIMITS.t2 && 
-                            state.task3 >= LIMITS.t3 && state.task4 >= LIMITS.t4 && state.task5 >= LIMITS.t5);
-      const btn = document.getElementById('miningBtn');
-      const btnText = document.getElementById('miningBtnText');
-      const timerDisplay = document.getElementById('miningTimer');
-      const now = Date.now();
-
-      if (state.mining24HrEnd > now) {
-        btn.className = "btn btn-disabled"; btn.disabled = true; 
-        btnText.innerText = "24hr Cooldown Active...";
-      } else if (allCompleted) {
-        btn.className = "btn btn-primary"; btn.disabled = false; 
-        btnText.innerText = "Unlock CPA Task (+100 Ads Point)"; timerDisplay.innerText = "";
-      } else {
-        btn.className = "btn btn-disabled"; btn.disabled = true; 
-        btnText.innerText = "Complete All Steps First"; timerDisplay.innerText = "";
-      }
-    }
-
-    function claimOrStartMining() {
-      const allCompleted = (state.task1 >= LIMITS.t1 && state.task2 >= LIMITS.t2 && 
-                            state.task3 >= LIMITS.t3 && state.task4 >= LIMITS.t4 && state.task5 >= LIMITS.t5);
-
-      if (allCompleted) {
-        triggerAdsgram(ADS_CONFIG.adsgram_task_id, () => {
-          state.balance += 100;
-          state.mining24HrEnd = Date.now() + (24 * 60 * 60 * 1000);
-          saveState();
-          updateUI();
-          showModal("VIP Bonus Claimed", "CPA Task Completed! 100 Ads Point Mega Bonus Added to your balance.");
-        });
-      }
-    }
-
+    // VIP TIMER TICKER
     setInterval(() => {
       const now = Date.now();
-
-      if (state.next6HrReset > now) {
-        const diff = state.next6HrReset - now;
-        const h = Math.floor(diff / (1000 * 60 * 60));
-        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const s = Math.floor((diff % (1000 * 60)) / 1000);
-        document.getElementById('resetTimer').innerText = `Reset in: ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-      } else {
-        check6HrReset();
-      }
-
-      if (state.mining24HrEnd > now) {
-        const diff = state.mining24HrEnd - now;
+      if (state.vipCooldownEnd > now) {
+        const diff = state.vipCooldownEnd - now;
         const h = Math.floor(diff / (1000 * 60 * 60));
         const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const s = Math.floor((diff % (1000 * 60)) / 1000);
         document.getElementById('miningTimer').innerText = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      } else {
+        checkVipStatus();
       }
     }, 1000);
 
     initUser();
   </script>
 </body>
-</html>
+        </html>
