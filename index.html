@@ -285,51 +285,8 @@
       <span style="font-size: 11px; color: var(--accent-color);" id="cooldownNotice">Ready</span>
     </div>
 
-    <div class="task-list">
-      <div class="task-item">
-        <div>
-          <h4 style="font-size: 13px;">Adsterra Direct Flow</h4>
-          <p style="font-size: 10px; color: var(--text-sub);">High eCPM Link 1</p>
-        </div>
-        <div style="display: flex; align-items: center; gap: 6px;">
-          <span class="task-counter" id="task1Count">0/15</span>
-          <button class="btn btn-primary" id="btnTask1" style="padding: 6px 10px; width: auto; font-size: 12px;" onclick="startTaskFlow(1)">Start</button>
-        </div>
-      </div>
-
-      <div class="task-item">
-        <div>
-          <h4 style="font-size: 13px;">HilltopAds Engine</h4>
-          <p style="font-size: 10px; color: var(--text-sub);">Popunder Flow 2</p>
-        </div>
-        <div style="display: flex; align-items: center; gap: 6px;">
-          <span class="task-counter" id="task2Count">0/15</span>
-          <button class="btn btn-primary" id="btnTask2" style="padding: 6px 10px; width: auto; font-size: 12px;" onclick="startTaskFlow(2)">Start</button>
-        </div>
-      </div>
-
-      <div class="task-item">
-        <div>
-          <h4 style="font-size: 13px;">RichAds Engine</h4>
-          <p style="font-size: 10px; color: var(--text-sub);">Push Ad Flow 3</p>
-        </div>
-        <div style="display: flex; align-items: center; gap: 6px;">
-          <span class="task-counter" id="task3Count">0/15</span>
-          <button class="btn btn-primary" id="btnTask3" style="padding: 6px 10px; width: auto; font-size: 12px;" onclick="startTaskFlow(3)">Start</button>
-        </div>
-      </div>
-
-      <div class="task-item">
-        <div>
-          <h4 style="font-size: 13px;">Adsgram Video Task</h4>
-          <p style="font-size: 10px; color: var(--text-sub);">Official Telegram Ad</p>
-        </div>
-        <div style="display: flex; align-items: center; gap: 6px;">
-          <span class="task-counter" id="task4Count">0/10</span>
-          <button class="btn btn-primary" id="btnTask4" style="padding: 6px 10px; width: auto; font-size: 12px;" onclick="startTaskFlow(4)">Start</button>
-        </div>
-      </div>
-    </div>
+    <!-- DYNAMIC TASK LIST CONTAINER -->
+    <div class="task-list" id="taskListContainer"></div>
 
   </div>
 
@@ -343,15 +300,23 @@
   </div>
 
   <script>
-    // FIXED ADSGRAM IDS (String Clean Format)
+    // UPDATED CONFIG WITH NEW ADSGRAM BLOCK IDS
     const CONFIG = {
       adsterra_link: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475",
       hilltop_link: "https://plump-plastic.com/ZjLmfX",
-      adsgram_reward_id: "48592",
-      adsgram_interstitial_id: "48593", // Fixed: Numbers only
-      adsgram_task_id: "48595",
+      adsgram_reward_id: "49532",
+      adsgram_interstitial_id: "49533",
+      adsgram_task_id: "49534",
       history_channel: "@AltaHub_ads_withdraw_history"
     };
+
+    // TASK DATA DEFINITIONS (Managed dynamically via JS)
+    const TASK_DATA = [
+      { id: 1, title: "Adsterra Direct Flow", desc: "High eCPM Link 1", limit: 15 },
+      { id: 2, title: "HilltopAds Engine", desc: "Popunder Flow 2", limit: 15 },
+      { id: 3, title: "RichAds Engine", desc: "Push Ad Flow 3", limit: 15 },
+      { id: 4, title: "Adsgram Video Task", desc: "Official Telegram Ad", limit: 10 }
+    ];
 
     const tg = window.Telegram?.WebApp;
     if (tg) tg.expand();
@@ -370,7 +335,29 @@
 
     const LIMITS = { t1: 15, t2: 15, t3: 15, t4: 10 };
     let currentActiveTask = null;
-    let isProcessing = false;
+
+    // RENDER TASKS DYNAMICALLY FROM JS
+    function renderTasks() {
+      const container = document.getElementById('taskListContainer');
+      container.innerHTML = '';
+
+      TASK_DATA.forEach(task => {
+        const currentCount = state[`t${task.id}`];
+        const taskHtml = `
+          <div class="task-item">
+            <div>
+              <h4 style="font-size: 13px;">${task.title}</h4>
+              <p style="font-size: 10px; color: var(--text-sub);">${task.desc}</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span class="task-counter" id="task${task.id}Count">${currentCount}/${task.limit}</span>
+              <button class="btn btn-primary" id="btnTask${task.id}" style="padding: 6px 10px; width: auto; font-size: 12px;" onclick="startTaskFlow(${task.id})">Start</button>
+            </div>
+          </div>
+        `;
+        container.innerHTML += taskHtml;
+      });
+    }
 
     function saveState() {
       localStorage.setItem('balance', state.balance);
@@ -386,10 +373,13 @@
 
     function updateUI() {
       document.getElementById('userBalance').innerText = state.balance.toFixed(2);
-      document.getElementById('task1Count').innerText = `${state.t1}/${LIMITS.t1}`;
-      document.getElementById('task2Count').innerText = `${state.t2}/${LIMITS.t2}`;
-      document.getElementById('task3Count').innerText = `${state.t3}/${LIMITS.t3}`;
-      document.getElementById('task4Count').innerText = `${state.t4}/${LIMITS.t4}`;
+      
+      TASK_DATA.forEach(task => {
+        const counterEl = document.getElementById(`task${task.id}Count`);
+        if (counterEl) {
+          counterEl.innerText = `${state[`t${task.id}`]}/${task.limit}`;
+        }
+      });
 
       checkVipState();
     }
@@ -415,7 +405,6 @@
       document.getElementById('customModal').style.display = 'none';
     }
 
-    // TASK EXECUTION WITH 15s INTERVAL COOLDOWN
     function startTaskFlow(taskNum) {
       const now = Date.now();
       if (now < state.cooldownEnd) {
@@ -424,19 +413,14 @@
         return;
       }
 
-      if (taskNum === 1 && state.t1 >= LIMITS.t1) return;
-      if (taskNum === 2 && state.t2 >= LIMITS.t2) return;
-      if (taskNum === 3 && state.t3 >= LIMITS.t3) return;
-      if (taskNum === 4 && state.t4 >= LIMITS.t4) return;
+      const task = TASK_DATA.find(t => t.id === taskNum);
+      if (state[`t${taskNum}`] >= task.limit) return;
 
       currentActiveTask = taskNum;
-      isProcessing = true;
 
-      // STEP 1: Direct Link Open
       if (taskNum === 1 || taskNum === 3) openAdLink(CONFIG.adsterra_link);
       else if (taskNum === 2) openAdLink(CONFIG.hilltop_link);
 
-      // STEP 2: Trigger Social Bar & Processing Timer (10s)
       showModal("Processing Ad", "Please wait 10 seconds while ad loads...", false);
 
       let timer = 10;
@@ -447,13 +431,12 @@
         } else {
           clearInterval(interval);
 
-          // STEP 3: Adsgram Show
           if (window.Adsgram) {
             const blockId = (taskNum === 4) ? CONFIG.adsgram_reward_id : CONFIG.adsgram_interstitial_id;
             const AdController = window.Adsgram.init({ blockId: blockId });
             AdController.show()
               .then(() => finishTask(taskNum))
-              .catch(() => finishTask(taskNum)); // Fail-safe credit
+              .catch(() => finishTask(taskNum));
           } else {
             finishTask(taskNum);
           }
@@ -462,24 +445,18 @@
     }
 
     function finishTask(taskNum) {
-      if (taskNum === 1) state.t1++;
-      if (taskNum === 2) state.t2++;
-      if (taskNum === 3) state.t3++;
-      if (taskNum === 4) state.t4++;
+      state[`t${taskNum}`]++;
 
       const reward = parseFloat((Math.random() * (1.2 - 0.3) + 0.3).toFixed(2));
       state.balance += reward;
       
-      // 15 SECONDS MANDATORY INTERVAL COOLDOWN
       state.cooldownEnd = Date.now() + (15 * 1000);
       saveState();
       updateUI();
-      isProcessing = false;
 
       showModal("Task Completed", `Success! +${reward} Ads Point added.`);
     }
 
-    // 4-HOUR VIP RESET LOGIC
     function checkVipState() {
       const allDone = (state.t1 >= LIMITS.t1 && state.t2 >= LIMITS.t2 && state.t3 >= LIMITS.t3 && state.t4 >= LIMITS.t4);
       const now = Date.now();
@@ -506,17 +483,26 @@
     }
 
     function claimVipBooster() {
+      if (window.Adsgram) {
+        const AdController = window.Adsgram.init({ blockId: CONFIG.adsgram_task_id });
+        AdController.show()
+          .then(() => processVipClaim())
+          .catch(() => processVipClaim());
+      } else {
+        processVipClaim();
+      }
+    }
+
+    function processVipClaim() {
       state.balance += 100;
-      // Reset All Daily Tasks
       state.t1 = 0; state.t2 = 0; state.t3 = 0; state.t4 = 0;
-      // Lock for 4 hours
       state.vipCooldown = Date.now() + (4 * 60 * 60 * 1000);
       saveState();
+      renderTasks();
       updateUI();
       showModal("VIP Bonus Claimed!", "100 Ads Point added. All task limits have been reset for the next cycle!");
     }
 
-    // WITHDRAW & SAVE WALLET
     function saveAndLockWallet() {
       const u = document.getElementById('tgUsername').value.trim();
       const w = document.getElementById('tonWallet').value.trim();
@@ -558,7 +544,8 @@
       showModal("Withdrawal Submitted", `Sent ${pts} Ads Point cashout request to History Channel ${CONFIG.history_channel}`);
     }
 
-    // INIT
+    // INITIALIZATION
+    renderTasks();
     if (state.savedWallet) {
       document.getElementById('tgUsername').value = state.savedUsername;
       document.getElementById('tonWallet').value = state.savedWallet;
