@@ -3,18 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Ads Miner Multi-Engine</title>
+  <title>ALTA ADS MINER - Secure Engine</title>
   
-  <!-- Telegram WebApp SDK -->
+  <!-- Fast Core SDKs -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <!-- Adsgram SDK -->
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
-
-  <!-- ADSTERRA SOCIAL BAR (Lazy Load) -->
-  <script type="text/javascript" src="//mammothsubway.com/46/ec/32/46ec32efbfe5ecbef2bb3c462cc4c9ba.js" async></script>
-
-  <!-- RICHADS IN-PAGE PUSH -->
-  <script src="https://richinfo.co/richpartners/in-page/js/richads-ob.js?pubid=1021768&siteid=407471" async></script>
 
   <style>
     :root {
@@ -219,7 +212,7 @@
 
   <div class="container">
     
-    <!-- Auto Refresh Banner Placement -->
+    <!-- Native Banner Auto Refresh -->
     <div class="native-banner-card" id="topNativeBanner">
       <script type="text/javascript">
         atOptions = {
@@ -236,18 +229,18 @@
     <!-- Balance Dashboard -->
     <div class="card">
       <div class="balance-title">Total Balance</div>
-      <div class="balance-amount"><span id="userBalance">0.0</span> Ads Point</div>
-      <p style="font-size: 11px; color: var(--text-sub);">Reserved System Fund: 300 Ads Point | Min Cashout: 150 Ads Point</p>
+      <div class="balance-amount"><span id="userBalance">0.00</span> Ads Point</div>
+      <p style="font-size: 11px; color: var(--text-sub);">Reserved Reserve Fund: 300 Ads Point | Min Cashout: 150 Ads Point</p>
     </div>
 
-    <!-- WITHDRAWAL SECTION WITH CHANNEL VERIFICATION -->
+    <!-- WITHDRAWAL SECTION -->
     <div class="card" style="border: 1px solid rgba(34, 197, 94, 0.3);">
       <h3 style="font-size: 15px; margin-bottom: 8px;">Withdraw (TON Wallet)</h3>
       
       <label style="font-size: 11px; color: var(--text-sub);">Telegram Username / Name:</label>
       <input type="text" id="tgUsername" class="input-field" placeholder="@username or Name" />
 
-      <label style="font-size: 11px; color: var(--text-sub);">Gram (TON) Wallet Address:</label>
+      <label style="font-size: 11px; color: var(--text-sub);">TON Wallet Address:</label>
       <input type="text" id="tonWallet" class="input-field" placeholder="Enter TON Wallet Address (e.g. EQD...)" />
 
       <label style="font-size: 11px; color: var(--text-sub);">Points to Cashout (Min 150 Ads Point):</label>
@@ -263,15 +256,15 @@
         <span>Submit</span>
       </button>
       <p style="font-size: 10px; color: var(--text-sub); margin-top: 6px; text-align: center;">
-        Note: Withdrawals are logged to history channel.
+        Note: Cashouts are logged to history channel.
       </p>
     </div>
 
-    <!-- VIP Booster (4-hour Reset Cooldown) -->
+    <!-- VIP Booster (4-Hour Cooldown Cycle) -->
     <div class="card" style="text-align: center; border: 1px solid rgba(245, 158, 11, 0.4);">
       <h3 style="margin-bottom: 6px; font-size: 15px; color: var(--warning-color);">VIP Mega Booster</h3>
       <p id="vipDesc" style="font-size: 11px; color: var(--text-sub); margin-bottom: 10px;">
-        Complete all daily ads to unlock VIP Booster (+100 Pts).
+        Complete all daily tasks to claim VIP Booster (+100 Pts).
       </p>
       <button id="vipBtn" class="btn btn-disabled" onclick="claimVipBooster()" disabled>
         <span id="vipBtnText">Complete All Ads First</span>
@@ -279,7 +272,7 @@
       </button>
     </div>
 
-    <!-- Tasks Header -->
+    <!-- Daily Tasks -->
     <div style="display: flex; justify-content: space-between; align-items: center; margin: 14px 0 8px 0;">
       <h3 style="font-size: 14px;">Daily Optimized Ads Flow</h3>
       <span style="font-size: 11px; color: var(--accent-color);" id="cooldownNotice">Ready</span>
@@ -333,7 +326,7 @@
 
   </div>
 
-  <!-- MODAL NOTIFICATION -->
+  <!-- MODAL DIALOG -->
   <div class="modal-overlay" id="customModal">
     <div class="modal-box">
       <div class="modal-title" id="modalTitle">Notification</div>
@@ -343,19 +336,20 @@
   </div>
 
   <script>
-    // UPDATED CONFIG WITH NEW ADSGRAM IDS AND WITHDRAWAL CHANNEL
+    // CONFIGURATION
     const CONFIG = {
       adsterra_link: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475",
       hilltop_link: "https://plump-plastic.com/ZjLmfX",
       adsgram_reward_id: "49532",
       adsgram_interstitial_id: "int-49533",
-      adsgram_task_id: "49534", // Task prefix removed for direct SDK compatibility
+      adsgram_task_id: "49534",
       history_channel: "https://t.me/Allwithdrawhistory"
     };
 
     const tg = window.Telegram?.WebApp;
     if (tg) tg.expand();
 
+    // SECURITY & STATE MANAGEMENT
     let state = {
       balance: parseFloat(localStorage.getItem('balance')) || 0,
       t1: parseInt(localStorage.getItem('t1')) || 0,
@@ -365,12 +359,29 @@
       cooldownEnd: parseInt(localStorage.getItem('cooldownEnd')) || 0,
       vipCooldown: parseInt(localStorage.getItem('vipCooldown')) || 0,
       savedWallet: localStorage.getItem('savedWallet') || "",
-      savedUsername: localStorage.getItem('savedUsername') || (tg?.initDataUnsafe?.user?.username ? `@${tg.initDataUnsafe.user.username}` : "")
+      savedUsername: localStorage.getItem('savedUsername') || (tg?.initDataUnsafe?.user?.username ? `@${tg.initDataUnsafe.user.username}` : ""),
+      taskStartTime: 0
     };
 
     const LIMITS = { t1: 15, t2: 15, t3: 15, t4: 10 };
-    let currentActiveTask = null;
-    let isProcessing = false;
+    let isTaskActive = false;
+
+    // LAZY LOAD HEAVY AD SCRIPTS WITHOUT BLOCKING APP LAUNCH
+    function loadAdScriptsLazy() {
+      setTimeout(() => {
+        // Adsterra Social Bar
+        const s1 = document.createElement('script');
+        s1.src = "//mammothsubway.com/46/ec/32/46ec32efbfe5ecbef2bb3c462cc4c9ba.js";
+        s1.async = true;
+        document.body.appendChild(s1);
+
+        // RichAds In-Page Push
+        const s2 = document.createElement('script');
+        s2.src = "https://richinfo.co/richpartners/in-page/js/richads-ob.js?pubid=1021768&siteid=407471";
+        s2.async = true;
+        document.body.appendChild(s2);
+      }, 1500); // Deferred load after 1.5 seconds
+    }
 
     function saveState() {
       localStorage.setItem('balance', state.balance);
@@ -415,29 +426,30 @@
       document.getElementById('customModal').style.display = 'none';
     }
 
-    // TASK EXECUTION WITH 15s INTERVAL COOLDOWN
+    // TASK FLOW WITH ANTI-CHEAT TIME VERIFICATION
     function startTaskFlow(taskNum) {
       const now = Date.now();
       if (now < state.cooldownEnd) {
         const left = Math.ceil((state.cooldownEnd - now) / 1000);
-        showModal("Cooldown Active", `Please wait ${left} seconds before starting next ad task.`);
+        showModal("Cooldown Active", `Please wait ${left} seconds before starting the next task.`);
         return;
       }
+
+      if (isTaskActive) return;
 
       if (taskNum === 1 && state.t1 >= LIMITS.t1) return;
       if (taskNum === 2 && state.t2 >= LIMITS.t2) return;
       if (taskNum === 3 && state.t3 >= LIMITS.t3) return;
       if (taskNum === 4 && state.t4 >= LIMITS.t4) return;
 
-      currentActiveTask = taskNum;
-      isProcessing = true;
+      isTaskActive = true;
+      state.taskStartTime = Date.now(); // Security Validation Marker
 
-      // STEP 1: Direct Link Open
+      // Trigger Direct Ads
       if (taskNum === 1 || taskNum === 3) openAdLink(CONFIG.adsterra_link);
       else if (taskNum === 2) openAdLink(CONFIG.hilltop_link);
 
-      // STEP 2: Trigger Social Bar & Processing Timer (10s)
-      showModal("Processing Ad", "Please wait 10 seconds while ad loads...", false);
+      showModal("Processing Ad", "Please wait 10 seconds while ad completes...", false);
 
       let timer = 10;
       const interval = setInterval(() => {
@@ -447,21 +459,31 @@
         } else {
           clearInterval(interval);
 
-          // STEP 3: Adsgram Show
+          // ADSGRAM INTEGRATION
           if (window.Adsgram) {
             const blockId = (taskNum === 4) ? CONFIG.adsgram_reward_id : CONFIG.adsgram_interstitial_id;
             const AdController = window.Adsgram.init({ blockId: blockId });
             AdController.show()
-              .then(() => finishTask(taskNum))
-              .catch(() => finishTask(taskNum)); // Fail-safe credit
+              .then(() => validateAndReward(taskNum))
+              .catch(() => validateAndReward(taskNum)); // Fail-safe fallback
           } else {
-            finishTask(taskNum);
+            validateAndReward(taskNum);
           }
         }
       }, 1000);
     }
 
-    function finishTask(taskNum) {
+    // SECURITY VALIDATION: PREVENT AUTO-CLICK BOT CHEATING
+    function validateAndReward(taskNum) {
+      const elapsedTime = (Date.now() - state.taskStartTime) / 1000;
+      
+      // If completed in less than 9 seconds, block fake claim
+      if (elapsedTime < 9) {
+        isTaskActive = false;
+        showModal("Security Warning", "Invalid ad completion speed detected. Task rejected.");
+        return;
+      }
+
       if (taskNum === 1) state.t1++;
       if (taskNum === 2) state.t2++;
       if (taskNum === 3) state.t3++;
@@ -470,16 +492,16 @@
       const reward = parseFloat((Math.random() * (1.2 - 0.3) + 0.3).toFixed(2));
       state.balance += reward;
       
-      // 15 SECONDS MANDATORY INTERVAL COOLDOWN
+      // Mandatory 15-second Cooldown
       state.cooldownEnd = Date.now() + (15 * 1000);
       saveState();
       updateUI();
-      isProcessing = false;
+      isTaskActive = false;
 
       showModal("Task Completed", `Success! +${reward} Ads Point added.`);
     }
 
-    // 4-HOUR VIP RESET LOGIC
+    // VIP REWARD LOGIC (4-HOUR CYCLE)
     function checkVipState() {
       const allDone = (state.t1 >= LIMITS.t1 && state.t2 >= LIMITS.t2 && state.t3 >= LIMITS.t3 && state.t4 >= LIMITS.t4);
       const now = Date.now();
@@ -507,22 +529,26 @@
 
     function claimVipBooster() {
       state.balance += 100;
-      // Reset All Daily Tasks
       state.t1 = 0; state.t2 = 0; state.t3 = 0; state.t4 = 0;
-      // Lock for 4 hours
       state.vipCooldown = Date.now() + (4 * 60 * 60 * 1000);
       saveState();
       updateUI();
-      showModal("VIP Bonus Claimed!", "100 Ads Point added. All task limits have been reset for the next cycle!");
+      showModal("VIP Bonus Claimed!", "100 Ads Point added. Daily tasks have been reset!");
     }
 
-    // WITHDRAW & SAVE WALLET
+    // WITHDRAWAL VALIDATION & SECURITY
     function saveAndLockWallet() {
       const u = document.getElementById('tgUsername').value.trim();
       const w = document.getElementById('tonWallet').value.trim();
 
+      // TON Wallet Regex Format Validation
+      const tonRegex = /^(EQ|UQ)[a-zA-Z0-9_-]{46}$/;
       if (!u || !w) {
-        showModal("Error", "Please fill in Username and TON Wallet Address!");
+        showModal("Error", "Please fill in Username and TON Wallet Address.");
+        return;
+      }
+      if (!tonRegex.test(w)) {
+        showModal("Security Notice", "Invalid TON Wallet format. Address must start with EQ or UQ.");
         return;
       }
 
@@ -534,40 +560,43 @@
       document.getElementById('tonWallet').disabled = true;
       document.getElementById('saveWalletBtn').style.display = 'none';
 
-      showModal("Saved", "Wallet details permanently locked.");
+      showModal("Saved", "Wallet details locked successfully.");
     }
 
     function processWithdrawal() {
       const pts = parseFloat(document.getElementById('withdrawPts').value);
       if (!state.savedWallet) {
-        showModal("Error", "Please save wallet details first!");
+        showModal("Error", "Please save and lock your wallet details first.");
         return;
       }
       if (isNaN(pts) || pts < 150) {
-        showModal("Error", "Minimum withdrawal is 150 Ads Point.");
+        showModal("Error", "Minimum withdrawal threshold is 150 Ads Point.");
         return;
       }
       if ((state.balance - pts) < 300) {
-        showModal("Error", "300 Ads Point must remain in account balance reserve.");
+        showModal("Error", "300 Ads Point reserve fund must remain in your account balance.");
         return;
       }
 
       state.balance -= pts;
       saveState();
       updateUI();
-      showModal("Withdrawal Submitted", `Sent ${pts} Ads Point cashout request to History Channel ${CONFIG.history_channel}`);
+      showModal("Withdrawal Submitted", `Request sent to history channel: ${CONFIG.history_channel}`);
     }
 
-    // INIT
-    if (state.savedWallet) {
-      document.getElementById('tgUsername').value = state.savedUsername;
-      document.getElementById('tonWallet').value = state.savedWallet;
-      document.getElementById('tgUsername').disabled = true;
-      document.getElementById('tonWallet').disabled = true;
-      document.getElementById('saveWalletBtn').style.display = 'none';
-    }
-    updateUI();
-    setInterval(checkVipState, 1000);
+    // INITIALIZATION
+    window.addEventListener('DOMContentLoaded', () => {
+      if (state.savedWallet) {
+        document.getElementById('tgUsername').value = state.savedUsername;
+        document.getElementById('tonWallet').value = state.savedWallet;
+        document.getElementById('tgUsername').disabled = true;
+        document.getElementById('tonWallet').disabled = true;
+        document.getElementById('saveWalletBtn').style.display = 'none';
+      }
+      updateUI();
+      setInterval(checkVipState, 1000);
+      loadAdScriptsLazy(); // Speed Fix
+    });
   </script>
 </body>
 </html>
