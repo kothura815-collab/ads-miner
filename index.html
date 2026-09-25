@@ -3,20 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Ads Miner</title>
+  <title>ADS MINER</title>
+  
+  <!-- Fast Core SDKs -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+
   <style>
     :root { --bg: #0b0f19; --card: #151d30; --blue: #38bdf8; --green: #22c55e; --warn: #f59e0b; --text: #f8fafc; --sub: #94a3b8; }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; user-select: none; }
     body { background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding-bottom: 70px; }
     .container { width: 100%; max-width: 480px; padding: 14px; }
     .header { text-align: center; padding: 6px 0 12px; }
-    .header h1 { font-size: 22px; color: var(--blue); letter-spacing: 1px; }
-    .header p { font-size: 11px; color: var(--sub); }
+    .header h1 { font-size: 26px; font-weight: 800; color: var(--blue); letter-spacing: 1.5px; text-transform: uppercase; }
+    .header p { font-size: 11px; color: var(--sub); margin-top: 2px; }
     .banner-card { background: rgba(255,255,255,0.02); border: 1px dashed rgba(56,189,248,0.3); border-radius: 10px; padding: 4px; text-align: center; margin-bottom: 12px; min-height: 55px; display: flex; justify-content: center; align-items: center; }
     .card { background: var(--card); border-radius: 12px; padding: 14px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); }
-    .balance { font-size: 30px; font-weight: 800; color: var(--blue); margin: 2px 0; }
+    .balance { font-size: 32px; font-weight: 800; color: var(--blue); margin: 2px 0; }
     .btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; display: flex; justify-content: space-between; }
     .btn-blue { background: var(--blue); color: #0b0f19; }
     .btn-green { background: var(--green); color: #fff; }
@@ -36,11 +39,11 @@
 
   <div class="container">
     <div class="header">
-      <h1>Ads Miner</h1>
-      <p>Watch Ads & Mine TON Rewards</p>
+      <h1>ADS MINER</h1>
+      <p>Watch Premium Ads & Mine TON Rewards</p>
     </div>
 
-    <div class="banner-card" id="topBanner"><span style="font-size:10px;color:var(--sub);">Loading Ad...</span></div>
+    <div class="banner-card" id="topBanner"><span style="font-size:10px;color:var(--sub);">Loading Sponsor...</span></div>
 
     <div class="card">
       <span style="font-size:11px;color:var(--sub);">TOTAL BALANCE</span>
@@ -101,8 +104,9 @@
   <script>
     const CONFIG = {
       adsterra: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475",
-      hilltop: "https://plump-plastic.com/ZjLmfX",
-      reward: "49929", int: "int-49930", task: "49931",
+      smartlink: "https://plump-plastic.com/ZjLmfX",
+      reward_id: "49940",
+      interstitial_id: "int-49941",
       channel: "https://t.me/Allwithdrawhistory"
     };
 
@@ -125,9 +129,7 @@
     const LIMITS = { t1: 20, t2: 20, t3: 15, t4: 15 };
     let isTaskActive = false;
 
-    function save() {
-      for(let k in state) localStorage.setItem(k, state[k]);
-    }
+    function save() { for(let k in state) localStorage.setItem(k, state[k]); }
 
     function checkReset() {
       const now = Date.now();
@@ -150,17 +152,14 @@
       if (state.resetTime > now) {
         const left = Math.ceil((state.resetTime - now)/1000);
         notice.innerText = `Reset in ${Math.floor(left/3600)}h ${Math.floor((left%3600)/60)}m`;
-        notice.style.color = "var(--warn)";
-        toggleBtns(true);
+        notice.style.color = "var(--warn)"; toggleBtns(true);
       } else if (now < state.cdEnd) {
         notice.innerText = `Next in ${Math.ceil((state.cdEnd - now)/1000)}s`;
         notice.style.color = "var(--warn)";
       } else {
-        notice.innerText = "Ready"; notice.style.color = "var(--blue)";
-        toggleBtns(false);
+        notice.innerText = "Ready"; notice.style.color = "var(--blue)"; toggleBtns(false);
       }
 
-      // VIP Button Update
       const vipBtn = document.getElementById('vipBtn');
       const vipBtnText = document.getElementById('vipBtnText');
       if (state.vipCd > now) {
@@ -192,7 +191,7 @@
     }
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
-    // 15S BACK-LOCK GUARD & TASK ENGINE
+    // MULTI-TAB & 15S BACK-LOCK ENGINE
     function startTask(num) {
       const now = Date.now();
       if (state.resetTime > now || now < state.cdEnd || isTaskActive) return;
@@ -200,13 +199,17 @@
       isTaskActive = true;
       state.startTime = now;
 
-      // Lock Back Button inside Mini App for 15s
       history.pushState(null, null, location.href);
       const preventBack = () => { if(isTaskActive) history.pushState(null, null, location.href); };
       window.addEventListener('popstate', preventBack);
 
-      const url = (num===1||num===3) ? CONFIG.adsterra : CONFIG.hilltop;
-      if (tg && tg.openLink) { tg.openLink(url); } else { window.open(url, '_blank'); }
+      // Multi-Tab Opening for Maximum Revenue
+      if (tg && tg.openLink) {
+        tg.openLink(CONFIG.adsterra);
+      } else {
+        window.open(CONFIG.adsterra, '_blank');
+        window.open(CONFIG.smartlink, '_blank');
+      }
 
       showModal("Processing Ad", "Please wait 15 seconds while ad completes...", false);
 
@@ -220,7 +223,7 @@
           window.removeEventListener('popstate', preventBack);
 
           if (window.Adsgram) {
-            const blockId = (num === 4) ? CONFIG.reward : CONFIG.int;
+            const blockId = (num === 4) ? CONFIG.reward_id : CONFIG.interstitial_id;
             window.Adsgram.init({ blockId }).show().then(()=>reward(num)).catch(()=>reward(num));
           } else { reward(num); }
         }
@@ -242,7 +245,7 @@
 
     function claimVip() {
       state.balance += 100;
-      state.vipCd = Date.now() + (24*3600*1000); // 24-HOUR LOCK
+      state.vipCd = Date.now() + (24*3600*1000);
       save(); updateUI();
       showModal("VIP Claimed!", "100 Points added. VIP Booster locked for 24 hours.");
     }
@@ -266,18 +269,24 @@
       showModal("Submitted", `Cashout logged to: ${CONFIG.channel}`);
     }
 
+    // 20-SECOND AUTO-REFRESH BANNERS
+    function renderIframe(id) {
+      const el = document.getElementById(id); el.innerHTML = '';
+      const f = document.createElement('iframe');
+      f.style.cssText = "width:320px;height:50px;border:none;";
+      el.appendChild(f);
+      const d = f.contentWindow.document; d.open();
+      d.write(`<body style="margin:0;display:flex;justify-content:center;"><script>atOptions={'key':'325216e9af97d6458aab9e4e7a74d73b','format':'iframe','height':50,'width':320,'params':{}};\<\/script><script src="//mammothsubway.com/325216e9af97d6458aab9e4e7a74d73b/invoke.js"><\/script></body>`);
+      d.close();
+    }
+
     function loadBanners() {
-      setTimeout(() => {
-        ['topBanner', 'btmBanner'].forEach(id => {
-          const el = document.getElementById(id); el.innerHTML = '';
-          const f = document.createElement('iframe');
-          f.style.cssText = "width:320px;height:50px;border:none;";
-          el.appendChild(f);
-          const d = f.contentWindow.document; d.open();
-          d.write(`<body style="margin:0;display:flex;justify-content:center;"><script>atOptions={'key':'325216e9af97d6458aab9e4e7a74d73b','format':'iframe','height':50,'width':320,'params':{}};\<\/script><script src="//mammothsubway.com/325216e9af97d6458aab9e4e7a74d73b/invoke.js"><\/script></body>`);
-          d.close();
-        });
-      }, 2000);
+      renderIframe('topBanner');
+      renderIframe('btmBanner');
+      setInterval(() => {
+        renderIframe('topBanner');
+        renderIframe('btmBanner');
+      }, 20000); // Auto-Refresh Every 20 Seconds
     }
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -290,7 +299,7 @@
       }
       checkReset(); updateUI();
       setInterval(() => { checkReset(); updateUI(); }, 1000);
-      loadBanners();
+      setTimeout(loadBanners, 1000);
     });
   </script>
 </body>
