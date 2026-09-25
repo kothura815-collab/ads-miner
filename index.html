@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Ads Miner - High Speed Engine</title>
+  <title>Ads Miner - Cyberpunk Engine</title>
   
   <!-- Fast Core SDKs -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -11,8 +11,8 @@
 
   <style>
     :root {
-      --bg-color: #0f172a;
-      --card-bg: #1e293b;
+      --bg-color: #0b0f19;
+      --card-bg: #151d30;
       --accent-color: #38bdf8;
       --accent-green: #22c55e;
       --warning-color: #f59e0b;
@@ -37,7 +37,7 @@
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
-      padding-bottom: 80px;
+      padding-bottom: 90px;
     }
 
     .container {
@@ -46,10 +46,31 @@
       padding: 16px;
     }
 
+    /* BRAND HEADER */
+    .brand-header {
+      text-align: center;
+      padding: 8px 0 16px 0;
+    }
+
+    .brand-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--accent-color);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      text-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: var(--text-sub);
+      margin-top: 2px;
+    }
+
     .native-banner-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px dashed rgba(56, 189, 248, 0.4);
-      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px dashed rgba(56, 189, 248, 0.3);
+      border-radius: 12px;
       padding: 6px;
       text-align: center;
       margin-bottom: 16px;
@@ -62,22 +83,23 @@
 
     .card {
       background-color: var(--card-bg);
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 16px;
       margin-bottom: 16px;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
     }
 
     .balance-title {
-      font-size: 12px;
+      font-size: 11px;
       color: var(--text-sub);
       text-transform: uppercase;
       letter-spacing: 1px;
     }
 
     .balance-amount {
-      font-size: 32px;
-      font-weight: bold;
+      font-size: 34px;
+      font-weight: 800;
       color: var(--accent-color);
       margin: 4px 0;
     }
@@ -86,9 +108,9 @@
       width: 100%;
       padding: 12px;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       font-weight: bold;
-      font-size: 14px;
+      font-size: 13px;
       cursor: pointer;
       transition: all 0.2s ease;
       display: flex;
@@ -96,17 +118,17 @@
       align-items: center;
     }
 
-    .btn-primary { background-color: var(--accent-color); color: #0f172a; }
-    .btn-success { background-color: var(--accent-green); color: #ffffff; }
-    .btn-warning { background-color: var(--warning-color); color: #000; }
-    .btn-disabled { background-color: #334155; color: #64748b; cursor: not-allowed; }
+    .btn-primary { background: linear-gradient(135deg, #38bdf8, #0284c7); color: #0f172a; }
+    .btn-success { background: linear-gradient(135deg, #22c55e, #16a34a); color: #ffffff; }
+    .btn-warning { background: linear-gradient(135deg, #f59e0b, #d97706); color: #000; }
+    .btn-disabled { background-color: #1e293b; color: #64748b; cursor: not-allowed; }
 
     .input-field {
       width: 100%;
-      padding: 10px;
-      border-radius: 6px;
-      border: 1px solid #334155;
-      background: #0f172a;
+      padding: 11px;
+      border-radius: 8px;
+      border: 1px solid #1e293b;
+      background: #0b0f19;
       color: #fff;
       font-size: 13px;
       margin-top: 6px;
@@ -114,17 +136,16 @@
     }
 
     .input-field:disabled {
-      background: #1e293b;
-      color: #94a3b8;
-      border-color: #1e293b;
+      background: #151d30;
+      color: #64748b;
     }
 
-    .task-list { display: flex; flex-direction: column; gap: 10px; }
+    .task-list { display: flex; flex-direction: column; gap: 12px; }
     .task-item {
       background: var(--card-bg);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 10px;
-      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 12px;
+      padding: 12px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -142,8 +163,8 @@
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(15, 23, 42, 0.88);
-      backdrop-filter: blur(4px);
+      background: rgba(11, 15, 25, 0.92);
+      backdrop-filter: blur(6px);
       display: none;
       justify-content: center;
       align-items: center;
@@ -151,14 +172,14 @@
     }
 
     .modal-box {
-      background: #1e293b;
+      background: #151d30;
       border: 1px solid rgba(56, 189, 248, 0.3);
-      border-radius: 16px;
-      padding: 20px;
+      border-radius: 18px;
+      padding: 22px;
       width: 85%;
       max-width: 360px;
       text-align: center;
-      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);
+      box-shadow: 0 20px 30px rgba(0,0,0,0.6);
     }
 
     .modal-title {
@@ -177,7 +198,7 @@
 
     .modal-btn {
       background: var(--accent-color);
-      color: #0f172a;
+      color: #0b0f19;
       border: none;
       padding: 10px 24px;
       border-radius: 8px;
@@ -186,24 +207,40 @@
       cursor: pointer;
       width: 100%;
     }
+
+    /* STICKY BOTTOM BANNER AD */
+    .sticky-bottom-banner {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      background: rgba(11, 15, 25, 0.95);
+      border-top: 1px dashed rgba(56, 189, 248, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 8000;
+      overflow: hidden;
+    }
   </style>
 </head>
 <body>
 
   <div class="container">
     
-    <!-- BRAND HEADER (ADDED) -->
-    <div style="text-align: center; padding: 6px 0 14px 0;">
-      <h1 style="font-size: 24px; font-weight: 800; color: #38bdf8; letter-spacing: 1px; margin: 0;">Ads Miner</h1>
-      <p style="font-size: 11px; color: #94a3b8; margin-top: 2px;">Watch Ads & Mine TON Rewards</p>
+    <!-- BRAND HEADER -->
+    <div class="brand-header">
+      <div class="brand-title">Ads Miner</div>
+      <div class="brand-sub">Watch Premium Ads & Mine TON Rewards</div>
     </div>
 
-    <!-- Native Banner Placeholder -->
+    <!-- TOP NATIVE BANNER -->
     <div class="native-banner-card" id="topNativeBanner">
-      <span style="font-size: 11px; color: var(--text-sub);" id="bannerPlaceholder">Loading Sponsor Ad...</span>
+      <span style="font-size: 11px; color: var(--text-sub);">Loading Sponsor Banner...</span>
     </div>
 
-    <!-- Balance Dashboard -->
+    <!-- BALANCE DASHBOARD -->
     <div class="card">
       <div class="balance-title">Total Balance</div>
       <div class="balance-amount"><span id="userBalance">0.00</span> Ads Point</div>
@@ -237,11 +274,11 @@
       </p>
     </div>
 
-    <!-- VIP Booster Cycle -->
+    <!-- VIP BOOSTER CYCLE (24-HOUR LOCK) -->
     <div class="card" style="text-align: center; border: 1px solid rgba(245, 158, 11, 0.4);">
       <h3 style="margin-bottom: 6px; font-size: 15px; color: var(--warning-color);">VIP Mega Booster</h3>
       <p id="vipDesc" style="font-size: 11px; color: var(--text-sub); margin-bottom: 10px;">
-        Complete all daily tasks to claim VIP Booster (+100 Pts).
+        Complete all daily tasks to claim 24-Hour VIP Booster (+100 Pts).
       </p>
       <button id="vipBtn" class="btn btn-disabled" onclick="claimVipBooster()" disabled>
         <span id="vipBtnText">Complete All Ads First</span>
@@ -249,7 +286,7 @@
       </button>
     </div>
 
-    <!-- Daily Tasks -->
+    <!-- DAILY TASKS (4-HOUR CYCLE) -->
     <div style="display: flex; justify-content: space-between; align-items: center; margin: 14px 0 8px 0;">
       <h3 style="font-size: 14px;">Daily Optimized Ads Flow</h3>
       <span style="font-size: 11px; color: var(--accent-color);" id="cooldownNotice">Ready</span>
@@ -262,7 +299,7 @@
           <p style="font-size: 10px; color: var(--text-sub);">High eCPM Link 1</p>
         </div>
         <div style="display: flex; align-items: center; gap: 6px;">
-          <span class="task-counter" id="task1Count">0/15</span>
+          <span class="task-counter" id="task1Count">0/20</span>
           <button class="btn btn-primary" id="btnTask1" style="padding: 6px 10px; width: auto; font-size: 12px;" onclick="startTaskFlow(1)">Start</button>
         </div>
       </div>
@@ -273,7 +310,7 @@
           <p style="font-size: 10px; color: var(--text-sub);">Popunder Flow 2</p>
         </div>
         <div style="display: flex; align-items: center; gap: 6px;">
-          <span class="task-counter" id="task2Count">0/15</span>
+          <span class="task-counter" id="task2Count">0/20</span>
           <button class="btn btn-primary" id="btnTask2" style="padding: 6px 10px; width: auto; font-size: 12px;" onclick="startTaskFlow(2)">Start</button>
         </div>
       </div>
@@ -291,16 +328,21 @@
 
       <div class="task-item">
         <div>
-          <h4 style="font-size: 13px;">Adsgram Video Task</h4>
-          <p style="font-size: 10px; color: var(--text-sub);">Official Telegram Ad</p>
+          <h4 style="font-size: 13px;">Telegram Premium Ad Flow</h4>
+          <p style="font-size: 10px; color: var(--text-sub);">Official Native Stream</p>
         </div>
         <div style="display: flex; align-items: center; gap: 6px;">
-          <span class="task-counter" id="task4Count">0/10</span>
+          <span class="task-counter" id="task4Count">0/15</span>
           <button class="btn btn-primary" id="btnTask4" style="padding: 6px 10px; width: auto; font-size: 12px;" onclick="startTaskFlow(4)">Start</button>
         </div>
       </div>
     </div>
 
+  </div>
+
+  <!-- STICKY BOTTOM BANNER -->
+  <div class="sticky-bottom-banner" id="bottomNativeBanner">
+    <span style="font-size: 10px; color: var(--text-sub);">Sponsor Ads Stream...</span>
   </div>
 
   <!-- MODAL DIALOG -->
@@ -313,13 +355,13 @@
   </div>
 
   <script>
-    // CONFIGURATION WITH ADSGRAM V3.1 BLOCK IDs
+    // CONFIGURATION WITH YOUR NEW BLOCK IDs (NO "ADSGRAM" STRINGS IN UI)
     const CONFIG = {
       adsterra_link: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475",
       hilltop_link: "https://plump-plastic.com/ZjLmfX",
-      adsgram_reward_id: "49807",          // V3.1 Reward ID
-      adsgram_interstitial_id: "int-49808", // V3.1 Interstitial ID
-      adsgram_task_id: "49809",            // V3.1 Task ID
+      tg_stream_reward_id: "49929",          // Replaced ID
+      tg_stream_interstitial_id: "int-49930", // Replaced ID
+      tg_stream_task_id: "49931",            // Replaced ID
       history_channel: "https://t.me/Allwithdrawhistory"
     };
 
@@ -333,56 +375,44 @@
       t3: parseInt(localStorage.getItem('t3')) || 0,
       t4: parseInt(localStorage.getItem('t4')) || 0,
       cooldownEnd: parseInt(localStorage.getItem('cooldownEnd')) || 0,
+      taskResetTime: parseInt(localStorage.getItem('taskResetTime')) || 0,
       vipCooldown: parseInt(localStorage.getItem('vipCooldown')) || 0,
       savedWallet: localStorage.getItem('savedWallet') || "",
       savedUsername: localStorage.getItem('savedUsername') || (tg?.initDataUnsafe?.user?.username ? `@${tg.initDataUnsafe.user.username}` : ""),
       taskStartTime: 0
     };
 
-    const LIMITS = { t1: 15, t2: 15, t3: 15, t4: 10 };
+    const LIMITS = { t1: 20, t2: 20, t3: 15, t4: 15 };
     let isTaskActive = false;
 
-    // ASYNC DELAYED LOADING TO PREVENT CLAUSE 7 REJECTION
+    // ASYNC DOUBLE BANNER LOAD (TOP & BOTTOM)
     function loadAdScriptsDelayed() {
       setTimeout(() => {
-        const bannerContainer = document.getElementById('topNativeBanner');
-        bannerContainer.innerHTML = '';
-        
-        const iframe = document.createElement('iframe');
-        iframe.style.width = '320px';
-        iframe.style.height = '50px';
-        iframe.style.border = 'none';
-        iframe.style.overflow = 'hidden';
-        
-        bannerContainer.appendChild(iframe);
+        // Top Banner Load
+        const topContainer = document.getElementById('topNativeBanner');
+        topContainer.innerHTML = '';
+        const iframeTop = document.createElement('iframe');
+        iframeTop.style.width = '320px'; iframeTop.style.height = '50px'; iframeTop.style.border = 'none';
+        topContainer.appendChild(iframeTop);
+        const docTop = iframeTop.contentWindow.document;
+        docTop.open();
+        docTop.write(`<body style="margin:0;padding:0;display:flex;justify-content:center;align-items:center;"><script type="text/javascript">atOptions={'key':'325216e9af97d6458aab9e4e7a74d73b','format':'iframe','height':50,'width':320,'params':{}};\<\/script><script type="text/javascript" src="//mammothsubway.com/325216e9af97d6458aab9e4e7a74d73b/invoke.js"><\/script></body>`);
+        docTop.close();
 
-        const iframeDoc = iframe.contentWindow.document;
-        iframeDoc.open();
-        iframeDoc.write(`
-          <body style="margin:0;padding:0;display:flex;justify-content:center;align-items:center;">
-            <script type="text/javascript">
-              atOptions = {
-                'key' : '325216e9af97d6458aab9e4e7a74d73b',
-                'format' : 'iframe',
-                'height' : 50,
-                'width' : 320,
-                'params' : {}
-              };
-            <\/script>
-            <script type="text/javascript" src="//mammothsubway.com/325216e9af97d6458aab9e4e7a74d73b/invoke.js"><\/script>
-          </body>
-        `);
-        iframeDoc.close();
+        // Bottom Banner Load
+        const btmContainer = document.getElementById('bottomNativeBanner');
+        btmContainer.innerHTML = '';
+        const iframeBtm = document.createElement('iframe');
+        iframeBtm.style.width = '320px'; iframeBtm.style.height = '50px'; iframeBtm.style.border = 'none';
+        btmContainer.appendChild(iframeBtm);
+        const docBtm = iframeBtm.contentWindow.document;
+        docBtm.open();
+        docBtm.write(`<body style="margin:0;padding:0;display:flex;justify-content:center;align-items:center;"><script type="text/javascript">atOptions={'key':'325216e9af97d6458aab9e4e7a74d73b','format':'iframe','height':50,'width':320,'params':{}};\<\/script><script type="text/javascript" src="//mammothsubway.com/325216e9af97d6458aab9e4e7a74d73b/invoke.js"><\/script></body>`);
+        docBtm.close();
 
-        const s1 = document.createElement('script');
-        s1.src = "//mammothsubway.com/46/ec/32/46ec32efbfe5ecbef2bb3c462cc4c9ba.js";
-        s1.async = true;
-        document.body.appendChild(s1);
-
-        const s2 = document.createElement('script');
-        s2.src = "https://richinfo.co/richpartners/in-page/js/richads-ob.js?pubid=1021768&siteid=407471";
-        s2.async = true;
-        document.body.appendChild(s2);
+        // Extra Scripts
+        const s1 = document.createElement('script'); s1.src = "//mammothsubway.com/46/ec/32/46ec32efbfe5ecbef2bb3c462cc4c9ba.js"; s1.async = true; document.body.appendChild(s1);
+        const s2 = document.createElement('script'); s2.src = "https://richinfo.co/richpartners/in-page/js/richads-ob.js?pubid=1021768&siteid=407471"; s2.async = true; document.body.appendChild(s2);
       }, 2000);
     }
 
@@ -393,9 +423,26 @@
       localStorage.setItem('t3', state.t3);
       localStorage.setItem('t4', state.t4);
       localStorage.setItem('cooldownEnd', state.cooldownEnd);
+      localStorage.setItem('taskResetTime', state.taskResetTime);
       localStorage.setItem('vipCooldown', state.vipCooldown);
       localStorage.setItem('savedWallet', state.savedWallet);
       localStorage.setItem('savedUsername', state.savedUsername);
+    }
+
+    function check4HourTaskReset() {
+      const now = Date.now();
+      const allDone = (state.t1 >= LIMITS.t1 && state.t2 >= LIMITS.t2 && state.t3 >= LIMITS.t3 && state.t4 >= LIMITS.t4);
+
+      if (allDone && state.taskResetTime === 0) {
+        state.taskResetTime = now + (4 * 60 * 60 * 1000); // 4 Hours Cooldown
+        saveState();
+      }
+
+      if (state.taskResetTime > 0 && now >= state.taskResetTime) {
+        state.t1 = 0; state.t2 = 0; state.t3 = 0; state.t4 = 0;
+        state.taskResetTime = 0;
+        saveState();
+      }
     }
 
     function updateUI() {
@@ -413,8 +460,12 @@
       const now = Date.now();
       const notice = document.getElementById('cooldownNotice');
       
-      if (state.vipCooldown > now) {
-        notice.innerText = "VIP Active";
+      if (state.taskResetTime > now) {
+        const left = Math.ceil((state.taskResetTime - now) / 1000);
+        const h = Math.floor(left / 3600);
+        const m = Math.floor((left % 3600) / 60);
+        const s = left % 60;
+        notice.innerText = `Reset in ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
         notice.style.color = "var(--warning-color)";
         disableAllTaskButtons(true);
       } else if (now < state.cooldownEnd) {
@@ -464,11 +515,12 @@
       document.getElementById('customModal').style.display = 'none';
     }
 
+    // 15S BACK GUARD & AD PROCESSING
     function startTaskFlow(taskNum) {
       const now = Date.now();
       
-      if (state.vipCooldown > now) {
-        showModal("VIP Lock Active", "VIP Booster is currently active. All tasks are locked until the VIP timer expires.");
+      if (state.taskResetTime > now) {
+        showModal("Tasks Locked", "Tasks are in 4-hour reset cycle. Please wait for the timer.");
         return;
       }
 
@@ -491,18 +543,18 @@
       if (taskNum === 1 || taskNum === 3) openAdLink(CONFIG.adsterra_link);
       else if (taskNum === 2) openAdLink(CONFIG.hilltop_link);
 
-      showModal("Processing Ad", "Please wait 10 seconds while ad completes...", false);
+      showModal("Processing Ad", "Mandatory 15s Ad Processing... Please do not go back.", false);
 
-      let timer = 10;
+      let timer = 15;
       const interval = setInterval(() => {
         timer--;
         if (timer > 0) {
-          document.getElementById('modalMsg').innerText = `Please wait ${timer} seconds while ad completes...`;
+          document.getElementById('modalMsg').innerText = `Mandatory ${timer}s Ad Processing... Please do not go back.`;
         } else {
           clearInterval(interval);
 
           if (window.Adsgram) {
-            const blockId = (taskNum === 4) ? CONFIG.adsgram_reward_id : CONFIG.adsgram_interstitial_id;
+            const blockId = (taskNum === 4) ? CONFIG.tg_stream_reward_id : CONFIG.tg_stream_interstitial_id;
             const AdController = window.Adsgram.init({ blockId: blockId });
             AdController.show()
               .then(() => validateAndReward(taskNum))
@@ -517,9 +569,9 @@
     function validateAndReward(taskNum) {
       const elapsedTime = (Date.now() - state.taskStartTime) / 1000;
       
-      if (elapsedTime < 9) {
+      if (elapsedTime < 14) {
         isTaskActive = false;
-        showModal("Security Warning", "Invalid ad completion speed detected. Task rejected.");
+        showModal("Security Warning", "Completion too fast! Task rejected.");
         return;
       }
 
@@ -532,6 +584,7 @@
       state.balance += reward;
       
       state.cooldownEnd = Date.now() + (15 * 1000);
+      check4HourTaskReset();
       saveState();
       updateUI();
       isTaskActive = false;
@@ -552,11 +605,11 @@
         const h = Math.floor(diff / 3600);
         const m = Math.floor((diff % 3600) / 60);
         const s = diff % 60;
-        vipBtnText.innerText = `4hr Lock (${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')})`;
+        vipBtnText.innerText = `24hr Lock (${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')})`;
       } else if (allDone) {
         vipBtn.className = "btn btn-primary";
         vipBtn.disabled = false;
-        vipBtnText.innerText = "Claim VIP Booster (+100 Pts)";
+        vipBtnText.innerText = "Claim 24h VIP Booster (+100 Pts)";
       } else {
         vipBtn.className = "btn btn-disabled";
         vipBtn.disabled = true;
@@ -566,11 +619,11 @@
 
     function claimVipBooster() {
       state.balance += 100;
-      state.vipCooldown = Date.now() + (4 * 60 * 60 * 1000);
+      state.vipCooldown = Date.now() + (24 * 60 * 60 * 1000); // 24-HOUR LOCK
       saveState();
       updateUI();
       
-      showModal("VIP Bonus Claimed!", "100 Ads Point added. All tasks are now locked for 4 hours!");
+      showModal("VIP Bonus Claimed!", "100 Ads Point added. VIP Booster is now locked for 24 hours!");
     }
 
     function saveAndLockWallet() {
@@ -627,8 +680,10 @@
         document.getElementById('tonWallet').disabled = true;
         document.getElementById('saveWalletBtn').style.display = 'none';
       }
+      check4HourTaskReset();
       updateUI();
       setInterval(() => {
+        check4HourTaskReset();
         checkVipState();
         updateCooldownNotice();
       }, 1000);
