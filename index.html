@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ALTA ADS MINER - Ultra Fast Engine</title>
+  <title>ALTA ADS MINER - High Speed Engine</title>
   
-  <!-- Core Lightweight SDKs -->
+  <!-- Fast Core SDKs -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
@@ -186,42 +186,22 @@
       cursor: pointer;
       width: 100%;
     }
-
-    #offlineOverlay {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(15, 23, 42, 0.98);
-      display: none;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 100000;
-      padding: 20px;
-      text-align: center;
-    }
   </style>
 </head>
 <body>
 
-  <div id="offlineOverlay">
-    <div style="border: 2px solid var(--danger-color); background: rgba(239, 68, 68, 0.1); padding: 24px; border-radius: 16px; max-width: 340px;">
-      <h2 style="color: var(--danger-color); font-size: 18px; margin-bottom: 8px;">No Internet Connection</h2>
-      <p style="font-size: 13px; color: #cbd5e1; line-height: 1.5;">Connection lost. Please check your network connection.</p>
-    </div>
-  </div>
-
   <div class="container">
     
-    <!-- Native Banner Placeholder (Lazy Loaded) -->
+    <!-- Native Banner Placeholder -->
     <div class="native-banner-card" id="topNativeBanner">
-      <div id="bannerTarget">Loading Ad Container...</div>
+      <span style="font-size: 11px; color: var(--text-sub);" id="bannerPlaceholder">Loading Sponsor Ad...</span>
     </div>
 
     <!-- Balance Dashboard -->
     <div class="card">
       <div class="balance-title">Total Balance</div>
       <div class="balance-amount"><span id="userBalance">0.00</span> Ads Point</div>
-      <p style="font-size: 11px; color: var(--text-sub);">Reserved Reserve Fund: 300 Ads Point | Min Cashout: 150 Ads Point</p>
+      <p style="font-size: 11px; color: var(--text-sub);">Reserved Fund: 300 Ads Point | Min Cashout: 150 Ads Point</p>
     </div>
 
     <!-- WITHDRAWAL SECTION -->
@@ -251,7 +231,7 @@
       </p>
     </div>
 
-    <!-- VIP Booster (4-Hour Cooldown Cycle) -->
+    <!-- VIP Booster Cycle -->
     <div class="card" style="text-align: center; border: 1px solid rgba(245, 158, 11, 0.4);">
       <h3 style="margin-bottom: 6px; font-size: 15px; color: var(--warning-color);">VIP Mega Booster</h3>
       <p id="vipDesc" style="font-size: 11px; color: var(--text-sub); margin-bottom: 10px;">
@@ -327,20 +307,19 @@
   </div>
 
   <script>
-    // UPDATED CONFIGURATION WITH V3 BLOCK IDs
+    // UPDATED WITH ADSGRAM V3.1 BLOCK IDs
     const CONFIG = {
       adsterra_link: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475",
       hilltop_link: "https://plump-plastic.com/ZjLmfX",
-      adsgram_reward_id: "49803",          // Updated V3 Reward ID
-      adsgram_interstitial_id: "int-49804", // Updated V3 Interstitial ID
-      adsgram_task_id: "49805",             // Updated V3 Task ID
+      adsgram_reward_id: "49807",          // Updated V3.1 Reward ID
+      adsgram_interstitial_id: "int-49808", // Updated V3.1 Interstitial ID
+      adsgram_task_id: "49809",            // Updated V3.1 Task ID
       history_channel: "https://t.me/Allwithdrawhistory"
     };
 
     const tg = window.Telegram?.WebApp;
     if (tg) tg.expand();
 
-    // STATE MANAGEMENT
     let state = {
       balance: parseFloat(localStorage.getItem('balance')) || 0,
       t1: parseInt(localStorage.getItem('t1')) || 0,
@@ -357,34 +336,50 @@
     const LIMITS = { t1: 15, t2: 15, t3: 15, t4: 10 };
     let isTaskActive = false;
 
-    // HIGH SPEED LAZY LOADING FOR AD SCRIPTS (Prevents Blank Screen on Launch)
-    function loadAdScriptsLazy() {
+    // FAST ASYNC LAZY LOAD TO PREVENT MAIN-THREAD BLOCKING (CLAUSE 7 FIX)
+    function loadAdScriptsDelayed() {
       setTimeout(() => {
-        // Native Banner Dynamic Injection
-        window.atOptions = {
-          'key' : '325216e9af97d6458aab9e4e7a74d73b',
-          'format' : 'iframe',
-          'height' : 50,
-          'width' : 320,
-          'params' : {}
-        };
-        const bannerScript = document.createElement('script');
-        bannerScript.src = "//mammothsubway.com/325216e9af97d6458aab9e4e7a74d73b/invoke.js";
-        bannerScript.async = true;
-        document.getElementById('bannerTarget').appendChild(bannerScript);
+        // Load Banner Ad iframe safely
+        const bannerContainer = document.getElementById('topNativeBanner');
+        bannerContainer.innerHTML = '';
+        
+        const iframe = document.createElement('iframe');
+        iframe.style.width = '320px';
+        iframe.style.height = '50px';
+        iframe.style.border = 'none';
+        iframe.style.overflow = 'hidden';
+        
+        bannerContainer.appendChild(iframe);
 
-        // Adsterra Social Bar Script
+        const iframeDoc = iframe.contentWindow.document;
+        iframeDoc.open();
+        iframeDoc.write(`
+          <body style="margin:0;padding:0;display:flex;justify-content:center;align-items:center;">
+            <script type="text/javascript">
+              atOptions = {
+                'key' : '325216e9af97d6458aab9e4e7a74d73b',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+              };
+            <\/script>
+            <script type="text/javascript" src="//mammothsubway.com/325216e9af97d6458aab9e4e7a74d73b/invoke.js"><\/script>
+          </body>
+        `);
+        iframeDoc.close();
+
+        // Load Background Network Scripts
         const s1 = document.createElement('script');
         s1.src = "//mammothsubway.com/46/ec/32/46ec32efbfe5ecbef2bb3c462cc4c9ba.js";
         s1.async = true;
         document.body.appendChild(s1);
 
-        // RichAds In-Page Push
         const s2 = document.createElement('script');
         s2.src = "https://richinfo.co/richpartners/in-page/js/richads-ob.js?pubid=1021768&siteid=407471";
         s2.async = true;
         document.body.appendChild(s2);
-      }, 2000); // Deferred 2 seconds for instant app opening
+      }, 2000); // 2 Seconds Delayed Async Load
     }
 
     function saveState() {
@@ -567,8 +562,6 @@
 
     function claimVipBooster() {
       state.balance += 100;
-      
-      // LOCK EVERYTHING FOR 4 HOURS ON VIP CLAIM
       state.vipCooldown = Date.now() + (4 * 60 * 60 * 1000);
       saveState();
       updateUI();
@@ -635,7 +628,7 @@
         checkVipState();
         updateCooldownNotice();
       }, 1000);
-      loadAdScriptsLazy();
+      loadAdScriptsDelayed();
     });
   </script>
 </body>
