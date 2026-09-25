@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ALTA ADS MINER - Secure Engine</title>
+  <title>ALTA ADS MINER - Ultra Fast Engine</title>
   
-  <!-- Fast Core SDKs -->
+  <!-- Core Lightweight SDKs -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
@@ -212,18 +212,9 @@
 
   <div class="container">
     
-    <!-- Native Banner Auto Refresh -->
+    <!-- Native Banner Placeholder (Lazy Loaded) -->
     <div class="native-banner-card" id="topNativeBanner">
-      <script type="text/javascript">
-        atOptions = {
-          'key' : '325216e9af97d6458aab9e4e7a74d73b',
-          'format' : 'iframe',
-          'height' : 50,
-          'width' : 320,
-          'params' : {}
-        };
-      </script>
-      <script type="text/javascript" src="//mammothsubway.com/325216e9af97d6458aab9e4e7a74d73b/invoke.js"></script>
+      <div id="bannerTarget">Loading Ad Container...</div>
     </div>
 
     <!-- Balance Dashboard -->
@@ -336,20 +327,20 @@
   </div>
 
   <script>
-    // UPDATED CONFIGURATION WITH YOUR NEW ADSGRAM BLOCK IDs
+    // UPDATED CONFIGURATION WITH V3 BLOCK IDs
     const CONFIG = {
       adsterra_link: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475",
       hilltop_link: "https://plump-plastic.com/ZjLmfX",
-      adsgram_reward_id: "49765",       // Replaced with actual Reward ID
-      adsgram_interstitial_id: "int-49768", // Replaced with actual Interstitial ID
-      adsgram_task_id: "49769",        // Raw task ID without prefix
+      adsgram_reward_id: "49803",          // Updated V3 Reward ID
+      adsgram_interstitial_id: "int-49804", // Updated V3 Interstitial ID
+      adsgram_task_id: "49805",             // Updated V3 Task ID
       history_channel: "https://t.me/Allwithdrawhistory"
     };
 
     const tg = window.Telegram?.WebApp;
     if (tg) tg.expand();
 
-    // SECURITY & STATE MANAGEMENT
+    // STATE MANAGEMENT
     let state = {
       balance: parseFloat(localStorage.getItem('balance')) || 0,
       t1: parseInt(localStorage.getItem('t1')) || 0,
@@ -366,19 +357,34 @@
     const LIMITS = { t1: 15, t2: 15, t3: 15, t4: 10 };
     let isTaskActive = false;
 
-    // LAZY LOAD HEAVY AD SCRIPTS WITHOUT BLOCKING APP LAUNCH
+    // HIGH SPEED LAZY LOADING FOR AD SCRIPTS (Prevents Blank Screen on Launch)
     function loadAdScriptsLazy() {
       setTimeout(() => {
+        // Native Banner Dynamic Injection
+        window.atOptions = {
+          'key' : '325216e9af97d6458aab9e4e7a74d73b',
+          'format' : 'iframe',
+          'height' : 50,
+          'width' : 320,
+          'params' : {}
+        };
+        const bannerScript = document.createElement('script');
+        bannerScript.src = "//mammothsubway.com/325216e9af97d6458aab9e4e7a74d73b/invoke.js";
+        bannerScript.async = true;
+        document.getElementById('bannerTarget').appendChild(bannerScript);
+
+        // Adsterra Social Bar Script
         const s1 = document.createElement('script');
         s1.src = "//mammothsubway.com/46/ec/32/46ec32efbfe5ecbef2bb3c462cc4c9ba.js";
         s1.async = true;
         document.body.appendChild(s1);
 
+        // RichAds In-Page Push
         const s2 = document.createElement('script');
         s2.src = "https://richinfo.co/richpartners/in-page/js/richads-ob.js?pubid=1021768&siteid=407471";
         s2.async = true;
         document.body.appendChild(s2);
-      }, 1500);
+      }, 2000); // Deferred 2 seconds for instant app opening
     }
 
     function saveState() {
@@ -408,7 +414,6 @@
       const now = Date.now();
       const notice = document.getElementById('cooldownNotice');
       
-      // If VIP Cooldown is Active, lock all buttons and show VIP Status
       if (state.vipCooldown > now) {
         notice.innerText = "VIP Active";
         notice.style.color = "var(--warning-color)";
@@ -431,7 +436,6 @@
           btn.classList.add('btn-disabled');
           btn.style.pointerEvents = 'none';
         } else {
-          // Only re-enable if task limits aren't hit
           if (state[`t${i}`] < LIMITS[`t${i}`]) {
             btn.classList.remove('btn-disabled');
             btn.style.pointerEvents = 'auto';
