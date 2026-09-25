@@ -336,13 +336,13 @@
   </div>
 
   <script>
-    // CONFIGURATION
+    // UPDATED CONFIGURATION WITH YOUR NEW ADSGRAM BLOCK IDs
     const CONFIG = {
       adsterra_link: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475",
       hilltop_link: "https://plump-plastic.com/ZjLmfX",
-      adsgram_reward_id: "49532",
-      adsgram_interstitial_id: "int-49533",
-      adsgram_task_id: "49534",
+      adsgram_reward_id: "49765",       // Replaced with actual Reward ID
+      adsgram_interstitial_id: "int-49768", // Replaced with actual Interstitial ID
+      adsgram_task_id: "49769",        // Raw task ID without prefix
       history_channel: "https://t.me/Allwithdrawhistory"
     };
 
@@ -369,18 +369,16 @@
     // LAZY LOAD HEAVY AD SCRIPTS WITHOUT BLOCKING APP LAUNCH
     function loadAdScriptsLazy() {
       setTimeout(() => {
-        // Adsterra Social Bar
         const s1 = document.createElement('script');
         s1.src = "//mammothsubway.com/46/ec/32/46ec32efbfe5ecbef2bb3c462cc4c9ba.js";
         s1.async = true;
         document.body.appendChild(s1);
 
-        // RichAds In-Page Push
         const s2 = document.createElement('script');
         s2.src = "https://richinfo.co/richpartners/in-page/js/richads-ob.js?pubid=1021768&siteid=407471";
         s2.async = true;
         document.body.appendChild(s2);
-      }, 1500); // Deferred load after 1.5 seconds
+      }, 1500);
     }
 
     function saveState() {
@@ -403,6 +401,43 @@
       document.getElementById('task4Count').innerText = `${state.t4}/${LIMITS.t4}`;
 
       checkVipState();
+      updateCooldownNotice();
+    }
+
+    function updateCooldownNotice() {
+      const now = Date.now();
+      const notice = document.getElementById('cooldownNotice');
+      
+      // If VIP Cooldown is Active, lock all buttons and show VIP Status
+      if (state.vipCooldown > now) {
+        notice.innerText = "VIP Active";
+        notice.style.color = "var(--warning-color)";
+        disableAllTaskButtons(true);
+      } else if (now < state.cooldownEnd) {
+        const leftSec = Math.ceil((state.cooldownEnd - now) / 1000);
+        notice.innerText = `Next in ${leftSec}s`;
+        notice.style.color = "var(--warning-color)";
+      } else {
+        notice.innerText = "Ready";
+        notice.style.color = "var(--accent-color)";
+        disableAllTaskButtons(false);
+      }
+    }
+
+    function disableAllTaskButtons(disabled) {
+      for (let i = 1; i <= 4; i++) {
+        const btn = document.getElementById(`btnTask${i}`);
+        if (disabled) {
+          btn.classList.add('btn-disabled');
+          btn.style.pointerEvents = 'none';
+        } else {
+          // Only re-enable if task limits aren't hit
+          if (state[`t${i}`] < LIMITS[`t${i}`]) {
+            btn.classList.remove('btn-disabled');
+            btn.style.pointerEvents = 'auto';
+          }
+        }
+      }
     }
 
     function openAdLink(url) {
@@ -426,9 +461,14 @@
       document.getElementById('customModal').style.display = 'none';
     }
 
-    // TASK FLOW WITH ANTI-CHEAT TIME VERIFICATION
     function startTaskFlow(taskNum) {
       const now = Date.now();
+      
+      if (state.vipCooldown > now) {
+        showModal("VIP Lock Active", "VIP Booster is currently active. All tasks are locked until the VIP timer expires.");
+        return;
+      }
+
       if (now < state.cooldownEnd) {
         const left = Math.ceil((state.cooldownEnd - now) / 1000);
         showModal("Cooldown Active", `Please wait ${left} seconds before starting the next task.`);
@@ -443,9 +483,8 @@
       if (taskNum === 4 && state.t4 >= LIMITS.t4) return;
 
       isTaskActive = true;
-      state.taskStartTime = Date.now(); // Security Validation Marker
+      state.taskStartTime = Date.now();
 
-      // Trigger Direct Ads
       if (taskNum === 1 || taskNum === 3) openAdLink(CONFIG.adsterra_link);
       else if (taskNum === 2) openAdLink(CONFIG.hilltop_link);
 
@@ -459,13 +498,12 @@
         } else {
           clearInterval(interval);
 
-          // ADSGRAM INTEGRATION
           if (window.Adsgram) {
             const blockId = (taskNum === 4) ? CONFIG.adsgram_reward_id : CONFIG.adsgram_interstitial_id;
             const AdController = window.Adsgram.init({ blockId: blockId });
             AdController.show()
               .then(() => validateAndReward(taskNum))
-              .catch(() => validateAndReward(taskNum)); // Fail-safe fallback
+              .catch(() => validateAndReward(taskNum));
           } else {
             validateAndReward(taskNum);
           }
@@ -473,11 +511,9 @@
       }, 1000);
     }
 
-    // SECURITY VALIDATION: PREVENT AUTO-CLICK BOT CHEATING
     function validateAndReward(taskNum) {
       const elapsedTime = (Date.now() - state.taskStartTime) / 1000;
       
-      // If completed in less than 9 seconds, block fake claim
       if (elapsedTime < 9) {
         isTaskActive = false;
         showModal("Security Warning", "Invalid ad completion speed detected. Task rejected.");
@@ -492,7 +528,6 @@
       const reward = parseFloat((Math.random() * (1.2 - 0.3) + 0.3).toFixed(2));
       state.balance += reward;
       
-      // Mandatory 15-second Cooldown
       state.cooldownEnd = Date.now() + (15 * 1000);
       saveState();
       updateUI();
@@ -501,7 +536,6 @@
       showModal("Task Completed", `Success! +${reward} Ads Point added.`);
     }
 
-    // VIP REWARD LOGIC (4-HOUR CYCLE)
     function checkVipState() {
       const allDone = (state.t1 >= LIMITS.t1 && state.t2 >= LIMITS.t2 && state.t3 >= LIMITS.t3 && state.t4 >= LIMITS.t4);
       const now = Date.now();
@@ -529,19 +563,19 @@
 
     function claimVipBooster() {
       state.balance += 100;
-      state.t1 = 0; state.t2 = 0; state.t3 = 0; state.t4 = 0;
+      
+      // LOCK EVERYTHING FOR 4 HOURS ON VIP CLAIM
       state.vipCooldown = Date.now() + (4 * 60 * 60 * 1000);
       saveState();
       updateUI();
-      showModal("VIP Bonus Claimed!", "100 Ads Point added. Daily tasks have been reset!");
+      
+      showModal("VIP Bonus Claimed!", "100 Ads Point added. All tasks are now locked for 4 hours!");
     }
 
-    // WITHDRAWAL VALIDATION & SECURITY
     function saveAndLockWallet() {
       const u = document.getElementById('tgUsername').value.trim();
       const w = document.getElementById('tonWallet').value.trim();
 
-      // TON Wallet Regex Format Validation
       const tonRegex = /^(EQ|UQ)[a-zA-Z0-9_-]{46}$/;
       if (!u || !w) {
         showModal("Error", "Please fill in Username and TON Wallet Address.");
@@ -584,7 +618,6 @@
       showModal("Withdrawal Submitted", `Request sent to history channel: ${CONFIG.history_channel}`);
     }
 
-    // INITIALIZATION
     window.addEventListener('DOMContentLoaded', () => {
       if (state.savedWallet) {
         document.getElementById('tgUsername').value = state.savedUsername;
@@ -594,8 +627,11 @@
         document.getElementById('saveWalletBtn').style.display = 'none';
       }
       updateUI();
-      setInterval(checkVipState, 1000);
-      loadAdScriptsLazy(); // Speed Fix
+      setInterval(() => {
+        checkVipState();
+        updateCooldownNotice();
+      }, 1000);
+      loadAdScriptsLazy();
     });
   </script>
 </body>
