@@ -3,84 +3,96 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Utility & Note Center</title>
+  <title>QR & Security Toolkit</title>
   
   <!-- Telegram WebApp & Adsgram SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
   <style>
-    :root { --bg: #0f172a; --card: #1e293b; --blue: #38bdf8; --text: #f8fafc; --sub: #94a3b8; }
+    :root { --bg: #090d16; --card: #131c2e; --blue: #38bdf8; --text: #f8fafc; --sub: #94a3b8; }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
     body { background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 16px; }
     .container { width: 100%; max-width: 480px; }
     .card { background: var(--card); border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); }
     h1 { font-size: 20px; color: var(--blue); margin-bottom: 4px; text-align: center; }
     p { font-size: 12px; color: var(--sub); text-align: center; margin-bottom: 14px; }
-    .input-field { width: 100%; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; color: var(--text); font-size: 13px; margin-bottom: 8px; outline: none; }
-    .btn { width: 100%; padding: 10px; background: var(--blue); color: #0f172a; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; }
-    .result { margin-top: 10px; font-size: 14px; color: var(--blue); text-align: center; font-weight: bold; }
+    .input-field { width: 100%; background: #090d16; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; color: var(--text); font-size: 13px; margin-bottom: 8px; outline: none; }
+    .btn { width: 100%; padding: 10px; background: var(--blue); color: #090d16; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; }
+    .result-box { margin-top: 10px; font-size: 13px; color: var(--blue); text-align: center; background: rgba(56,189,248,0.05); padding: 10px; border-radius: 8px; }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <h1>Utility & Note Center</h1>
-    <p>Manage your daily notes and quick currency estimates.</p>
+    <h1>Security & QR Toolkit</h1>
+    <p>Generate secure passwords and text-based QR codes easily.</p>
 
-    <!-- Quick Note Pad -->
+    <!-- Password Checker Tool -->
     <div class="card">
-      <h3 style="font-size:14px; margin-bottom:8px;">Quick Note Pad</h3>
-      <input type="text" class="input-field" id="noteInput" placeholder="Enter your note here...">
-      <button class="btn" onclick="addNote()">Save Note</button>
-      <div id="noteList" style="margin-top:10px; font-size:12px; color:var(--sub);"></div>
+      <h3 style="font-size:14px; margin-bottom:8px;">Password Strength Checker</h3>
+      <input type="text" class="input-field" id="pwdInput" placeholder="Enter password to test..." oninput="checkPassword()">
+      <div class="result-box" id="pwdResult">Status: Enter a password</div>
     </div>
 
-    <!-- Currency Converter -->
+    <!-- QR / Text Encoder Tool -->
     <div class="card">
-      <h3 style="font-size:14px; margin-bottom:8px;">Simple Currency Converter</h3>
-      <input type="number" class="input-field" id="usdInput" placeholder="Enter USD amount" oninput="convertCurrency()">
-      <div class="result" id="convertedResult">Equivalent: 0.00 EUR</div>
+      <h3 style="font-size:14px; margin-bottom:8px;">Quick Text Encoder</h3>
+      <input type="text" class="input-field" id="textInput" placeholder="Enter text or URL...">
+      <button class="btn" onclick="encodeText()">Generate Code Data</button>
+      <div class="result-box" id="encodeResult" style="word-break: break-all;">Result will appear here</div>
     </div>
-    
-    <!-- Interactive Demo Ad Trigger -->
+
+    <!-- Rewarded / Interstitial Test Trigger -->
     <div class="card" style="text-align:center;">
-      <button class="btn" onclick="triggerAd()">Show Interactive Demo Ad</button>
+      <h3 style="font-size:14px; margin-bottom:8px;">Ad-Supported Feature</h3>
+      <button class="btn" onclick="triggerAd()">Load Extra Tool Data</button>
     </div>
   </div>
 
   <script>
     // Configuration with new Adsgram Block IDs
     const CONFIG = {
-      reward_id: "50135",          // Adsgram Reward Block ID
-      interstitial_id: "int-50136", // Adsgram Interstitial Block ID
-      task_id: "50134"             // Adsgram Task ID reference
+      reward_id: "50160",          // Adsgram Reward Block ID
+      interstitial_id: "int-50161", // Adsgram Interstitial Block ID
+      task_id: "50162"             // Adsgram Task ID
     };
 
     const tg = window.Telegram?.WebApp;
     if(tg) { tg.expand(); }
 
-    function addNote() {
-      const val = document.getElementById('noteInput').value.trim();
-      if(val) {
-        document.getElementById('noteList').innerHTML += `• ${val}<br>`;
-        document.getElementById('noteInput').value = '';
+    function checkPassword() {
+      const val = document.getElementById('pwdInput').value;
+      const res = document.getElementById('pwdResult');
+      if(val.length < 6) {
+        res.innerText = "Status: Weak (Too short)";
+        res.style.color = "#f87171";
+      } else if(/[A-Z]/.test(val) && /[0-9]/.test(val)) {
+        res.innerText = "Status: Strong & Secure";
+        res.style.color = "#4ade80";
+      } else {
+        res.innerText = "Status: Medium (Add numbers/caps)";
+        res.style.color = "#facc15";
       }
     }
 
-    function convertCurrency() {
-      const val = document.getElementById('usdInput').value;
-      const res = val ? (val * 0.92).toFixed(2) : "0.00";
-      document.getElementById('convertedResult').innerText = `Equivalent: ${res} EUR`;
+    function encodeText() {
+      const val = document.getElementById('textInput').value.trim();
+      const res = document.getElementById('encodeResult');
+      if(val) {
+        res.innerText = "Encoded: " + btoa(val);
+      } else {
+        res.innerText = "Please enter valid text first.";
+      }
     }
 
     function triggerAd() {
       if (window.Adsgram) {
         window.Adsgram.init({ blockId: CONFIG.interstitial_id, mode: CONFIG.task_id }).show()
-          .then(() => alert("Ad viewed successfully!"))
-          .catch((e) => alert("Ad closed or loading."));
+          .then(() => alert("Feature unlocked successfully!"))
+          .catch((e) => alert("Ad loading or skipped."));
       } else {
-        alert("Adsgram SDK loading...");
+        alert("Toolkit SDK initializing...");
       }
     }
   </script>
