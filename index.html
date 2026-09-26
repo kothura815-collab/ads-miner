@@ -3,341 +3,86 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Task Hub Center</title>
+  <title>Utility & Note Center</title>
   
   <!-- Telegram WebApp & Adsgram SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
   <style>
-    :root { --bg: #0b0f19; --card: #151d30; --blue: #38bdf8; --green: #22c55e; --orange: #f59e0b; --text: #f8fafc; --sub: #94a3b8; }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; user-select: none; }
-    body { background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding-bottom: 70px; }
-    .container { width: 100%; max-width: 480px; padding: 14px; }
-    .header { text-align: center; padding: 6px 0 12px; }
-    .header h1 { font-size: 22px; font-weight: 800; color: var(--blue); letter-spacing: 1px; text-transform: uppercase; }
-    .header p { font-size: 11px; color: var(--sub); margin-top: 2px; }
-    .banner-card { background: rgba(255,255,255,0.02); border: 1px dashed rgba(56,189,248,0.3); border-radius: 10px; padding: 4px; text-align: center; margin-bottom: 12px; min-height: 55px; display: flex; justify-content: center; align-items: center; }
-    .card { background: var(--card); border-radius: 12px; padding: 14px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); }
-    .balance { font-size: 28px; font-weight: 800; color: var(--blue); margin: 2px 0; }
-    .input-field { width: 100%; background: #0b0f19; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 12px; color: var(--text); font-size: 13px; margin-bottom: 8px; outline: none; }
-    .input-field:focus { border-color: var(--blue); }
-    .btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-    .btn-orange { background: var(--orange); color: #0b0f19; margin-bottom: 8px; }
-    .btn-green { background: var(--green); color: #fff; }
-    .btn-blue { background: var(--blue); color: #0b0f19; }
-    .btn-off { background: #1e293b; color: #64748b; cursor: not-allowed; pointer-events: none; }
-    .task-list { display: flex; flex-direction: column; gap: 8px; }
-    .task-item { background: var(--card); border-radius: 10px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(255,255,255,0.05); }
-    .counter { font-size: 11px; font-weight: bold; color: var(--blue); background: rgba(56,189,248,0.1); padding: 3px 6px; border-radius: 4px; }
-    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11,15,25,0.92); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 9999; }
-    .modal-box { background: #151d30; border: 1px solid rgba(56,189,248,0.3); border-radius: 14px; padding: 18px; width: 85%; max-width: 320px; text-align: center; }
-    .bottom-banner { position: fixed; bottom: 0; left: 0; width: 100%; height: 55px; background: rgba(11,15,25,0.95); border-top: 1px dashed rgba(56,189,248,0.3); display: flex; justify-content: center; align-items: center; z-index: 8000; }
+    :root { --bg: #0f172a; --card: #1e293b; --blue: #38bdf8; --text: #f8fafc; --sub: #94a3b8; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
+    body { background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 16px; }
+    .container { width: 100%; max-width: 480px; }
+    .card { background: var(--card); border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); }
+    h1 { font-size: 20px; color: var(--blue); margin-bottom: 4px; text-align: center; }
+    p { font-size: 12px; color: var(--sub); text-align: center; margin-bottom: 14px; }
+    .input-field { width: 100%; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; color: var(--text); font-size: 13px; margin-bottom: 8px; outline: none; }
+    .btn { width: 100%; padding: 10px; background: var(--blue); color: #0f172a; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; }
+    .result { margin-top: 10px; font-size: 14px; color: var(--blue); text-align: center; font-weight: bold; }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <div class="header">
-      <h1 id="appTitle">Task Hub Center</h1>
-      <p id="appSubtitle">Interactive Productivity & Task Management Center</p>
-    </div>
+    <h1>Utility & Note Center</h1>
+    <p>Manage your daily notes and quick currency estimates.</p>
 
-    <!-- Top Ad Banner Placeholder -->
-    <div class="banner-card" id="topBanner"><span style="font-size:10px;color:var(--sub);">Loading Content...</span></div>
-
-    <!-- Balance / Score Section -->
+    <!-- Quick Note Pad -->
     <div class="card">
-      <span style="font-size:11px;color:var(--sub);letter-spacing:0.5px;" id="balanceTitle">COMPLETED GOALS SCORE</span>
-      <div class="balance"><span id="userBalance">329.67</span> <span id="unitLabel">Pts</span></div>
-      <p style="font-size:10px;color:var(--sub);margin-top:2px;" id="subBalanceText">Daily Progress System Active</p>
+      <h3 style="font-size:14px; margin-bottom:8px;">Quick Note Pad</h3>
+      <input type="text" class="input-field" id="noteInput" placeholder="Enter your note here...">
+      <button class="btn" onclick="addNote()">Save Note</button>
+      <div id="noteList" style="margin-top:10px; font-size:12px; color:var(--sub);"></div>
     </div>
 
-    <!-- Interactive Utility Section (Added for Clause 11 Compliance) -->
-    <div class="card" id="utilityCard">
-      <h3 style="font-size:13px;margin-bottom:6px;color:var(--blue);">Quick Daily Notes & Tasks</h3>
-      <input type="text" class="input-field" id="noteInput" placeholder="Add a quick task or note...">
-      <button class="btn btn-blue" onclick="addNote()" style="justify-content:center;margin-bottom:6px;">Add to List</button>
-      <div id="notesList" style="font-size:11px;color:var(--sub);max-height:80px;overflow-y:auto;text-align:left;padding:4px;"></div>
-    </div>
-
-    <!-- Withdraw / Wallet Section (Dynamically toggled once approved) -->
-    <div class="card" id="withdrawCard" style="display:none;">
-      <h3 style="font-size:13px;margin-bottom:8px;color:var(--text);">Withdraw (TON Wallet)</h3>
-      <input type="text" class="input-field" id="tgUsername" placeholder="@username or Name">
-      <input type="text" class="input-field" id="tonAddress" placeholder="TON Wallet Address (EQD...)">
-      <input type="number" class="input-field" id="withdrawAmount" value="150" readonly>
-      <button class="btn btn-orange" onclick="saveDetails()"><span>Save Details</span><span>Save</span></button>
-      <button class="btn btn-green" onclick="requestWithdraw()"><span>Withdraw</span><span>Submit</span></button>
-    </div>
-
-    <!-- VIP Booster Section -->
+    <!-- Currency Converter -->
     <div class="card">
-      <h3 style="font-size:13px;margin-bottom:4px;color:var(--orange);">System Booster</h3>
-      <p style="font-size:10px;color:var(--sub);margin-bottom:8px;">Complete modules to claim 24h Booster (+100 Pts)</p>
-      <button class="btn btn-off" id="vipBtn" style="justify-content:center;font-size:11px;">Complete All Modules First</button>
+      <h3 style="font-size:14px; margin-bottom:8px;">Simple Currency Converter</h3>
+      <input type="number" class="input-field" id="usdInput" placeholder="Enter USD amount" oninput="convertCurrency()">
+      <div class="result" id="convertedResult">Equivalent: 0.00 EUR</div>
     </div>
-
-    <!-- Modules Header -->
-    <div style="display:flex;justify-content:space-between;align-items:center;margin:10px 0 6px;">
-      <h3 style="font-size:13px;" id="flowHeader">Daily Modules List</h3>
-      <span style="font-size:11px;color:var(--blue);" id="cooldownNotice">Ready</span>
-    </div>
-
-    <!-- Modules List -->
-    <div class="task-list">
-      <div class="task-item">
-        <div><h4 style="font-size:12px;">Module Alpha</h4><p style="font-size:9px;color:var(--sub);">Interactive Link 1</p></div>
-        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t1Count">18/20</span><button class="btn btn-blue" id="btnTask1" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(1)">Start</button></div>
-      </div>
-      <div class="task-item">
-        <div><h4 style="font-size:12px;">Module Beta</h4><p style="font-size:9px;color:var(--sub);">Interactive Link 2</p></div>
-        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t2Count">10/20</span><button class="btn btn-blue" id="btnTask2" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(2)">Start</button></div>
-      </div>
-      <div class="task-item">
-        <div><h4 style="font-size:12px;">Module Gamma</h4><p style="font-size:9px;color:var(--sub);">Interactive Link 3</p></div>
-        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t3Count">7/15</span><button class="btn btn-blue" id="btnTask3" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(3)">Start</button></div>
-      </div>
-      <div class="task-item">
-        <div><h4 style="font-size:12px;">Community Media Stream</h4><p style="font-size:9px;color:var(--sub);">Native Video Stream</p></div>
-        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t4Count">5/15</span><button class="btn btn-blue" id="btnTask4" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(4)">Start</button></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Bottom Ad Banner Placeholder -->
-  <div class="bottom-banner" id="btmBanner"><span style="font-size:9px;color:var(--sub);">Loading Content...</span></div>
-
-  <!-- Modal Notification Popup -->
-  <div class="modal" id="modal">
-    <div class="modal-box">
-      <div style="font-size:15px;font-weight:bold;color:var(--blue);margin-bottom:6px;" id="mTitle">Notification</div>
-      <div style="font-size:12px;color:var(--text);margin-bottom:14px;" id="mMsg">Please wait...</div>
-      <button class="btn btn-blue" id="mBtn" style="justify-content:center;" onclick="closeModal()">OK</button>
+    
+    <!-- Interactive Demo Ad Trigger -->
+    <div class="card" style="text-align:center;">
+      <button class="btn" onclick="triggerAd()">Show Interactive Demo Ad</button>
     </div>
   </div>
 
   <script>
-    // Configuration with new Adsgram Block IDs provided
+    // Configuration with new Adsgram Block IDs
     const CONFIG = {
-      adsterra: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475",
-      smartlink: "https://plump-plastic.com/ZjLmfX",
-      reward_id: "50132",          // Adsgram Reward Block ID
-      interstitial_id: "int-50133", // Adsgram Interstitial Block ID
-      task_id: "50134"             // Adsgram Task ID
+      reward_id: "50135",          // Adsgram Reward Block ID
+      interstitial_id: "int-50136", // Adsgram Interstitial Block ID
+      task_id: "50134"             // Adsgram Task ID reference
     };
 
-    const tg = window.Telegram?.WebApp; 
-    if(tg) {
-      tg.expand();
-      if(tg.initDataUnsafe?.user?.username) {
-        document.getElementById('tgUsername').value = "@" + tg.initDataUnsafe.user.username;
-      }
-    }
-
-    let state = {
-      balance: parseFloat(localStorage.getItem('balance')) || 329.67,
-      t1: parseInt(localStorage.getItem('t1')) || 18,
-      t2: parseInt(localStorage.getItem('t2')) || 10,
-      t3: parseInt(localStorage.getItem('t3')) || 7,
-      t4: parseInt(localStorage.getItem('t4')) || 5,
-      cdEnd: parseInt(localStorage.getItem('cdEnd')) || 0,
-      resetTime: parseInt(localStorage.getItem('resetTime')) || 0,
-      startTime: 0,
-      walletSaved: localStorage.getItem('walletSaved') === 'true',
-      unlocked: localStorage.getItem('unlocked') === 'true',
-      notes: JSON.parse(localStorage.getItem('notes') || '["Welcome to Task Hub Center!"]')
-    };
-
-    const LIMITS = { t1: 20, t2: 20, t3: 15, t4: 15 };
-    let isTaskActive = false;
-
-    function save() { 
-      localStorage.setItem('balance', state.balance);
-      localStorage.setItem('t1', state.t1);
-      localStorage.setItem('t2', state.t2);
-      localStorage.setItem('t3', state.t3);
-      localStorage.setItem('t4', state.t4);
-      localStorage.setItem('cdEnd', state.cdEnd);
-      localStorage.setItem('resetTime', state.resetTime);
-      localStorage.setItem('walletSaved', state.walletSaved);
-      localStorage.setItem('unlocked', state.unlocked);
-      localStorage.setItem('notes', JSON.stringify(state.notes));
-    }
-
-    function updateUI() {
-      document.getElementById('userBalance').innerText = state.balance.toFixed(2);
-      document.getElementById('t1Count').innerText = `${state.t1}/${LIMITS.t1}`;
-      document.getElementById('t2Count').innerText = `${state.t2}/${LIMITS.t2}`;
-      document.getElementById('t3Count').innerText = `${state.t3}/${LIMITS.t3}`;
-      document.getElementById('t4Count').innerText = `${state.t4}/${LIMITS.t4}`;
-
-      const notesEl = document.getElementById('notesList');
-      notesEl.innerHTML = state.notes.map(n => `• ${n}`).join('<br>');
-
-      if(state.unlocked) {
-        document.getElementById('appTitle').innerText = "ADS MINER";
-        document.getElementById('appSubtitle').innerText = "Watch Premium Ads & Mine TON Rewards";
-        document.getElementById('balanceTitle').innerText = "TOTAL BALANCE";
-        document.getElementById('unitLabel').innerText = "Ads Point";
-        document.getElementById('subBalanceText').innerText = "Reserve: 300 Pts | Min Cashout: 150 Pts";
-        document.getElementById('utilityCard').style.display = 'none';
-        document.getElementById('withdrawCard').style.display = 'block';
-        document.getElementById('flowHeader').innerText = "Daily Ads Flow";
-      }
-
-      const allDone = (state.t1>=LIMITS.t1 && state.t2>=LIMITS.t2 && state.t3>=LIMITS.t3 && state.t4>=LIMITS.t4);
-      const vipBtn = document.getElementById('vipBtn');
-      if(allDone) {
-        vipBtn.className = "btn btn-orange";
-        vipBtn.innerText = "Claim Booster (+100 Pts)";
-        vipBtn.setAttribute("onclick", "claimVip()");
-      }
-
-      const now = Date.now();
-      const notice = document.getElementById('cooldownNotice');
-      if (now < state.cdEnd) {
-        notice.innerText = `Next in ${Math.ceil((state.cdEnd - now)/1000)}s`;
-        notice.style.color = "var(--orange)";
-      } else {
-        notice.innerText = "Ready"; 
-        notice.style.color = "var(--blue)"; 
-      }
-    }
+    const tg = window.Telegram?.WebApp;
+    if(tg) { tg.expand(); }
 
     function addNote() {
       const val = document.getElementById('noteInput').value.trim();
       if(val) {
-        state.notes.unshift(val);
-        if(state.notes.length > 5) state.notes.pop();
+        document.getElementById('noteList').innerHTML += `• ${val}<br>`;
         document.getElementById('noteInput').value = '';
-        save();
-        updateUI();
       }
     }
 
-    function showModal(title, msg) {
-      document.getElementById('mTitle').innerText = title;
-      document.getElementById('mMsg').innerText = msg;
-      document.getElementById('modal').style.display = 'flex';
-    }
-    function closeModal() { document.getElementById('modal').style.display = 'none'; }
-
-    function saveDetails() {
-      const uname = document.getElementById('tgUsername').value.trim();
-      const address = document.getElementById('tonAddress').value.trim();
-      if(!uname || !address) {
-        showModal("Error", "Please fill in your Username and TON Wallet Address.");
-        return;
-      }
-      state.walletSaved = true;
-      save();
-      showModal("Success", "Wallet details saved successfully!");
+    function convertCurrency() {
+      const val = document.getElementById('usdInput').value;
+      const res = val ? (val * 0.92).toFixed(2) : "0.00";
+      document.getElementById('convertedResult').innerText = `Equivalent: ${res} EUR`;
     }
 
-    function requestWithdraw() {
-      if(!state.walletSaved) {
-        showModal("Notice", "Please save your wallet details first.");
-        return;
-      }
-      if(state.balance < 150) {
-        showModal("Notice", "Minimum cashout is 150 Pts.");
-        return;
-      }
-      showModal("Withdrawal Pending", "Your withdrawal request has been submitted successfully and is being processed.");
-    }
-
-    function claimVip() {
-      state.balance += 100;
-      state.unlocked = true; 
-      save();
-      updateUI();
-      showModal("Booster Claimed", "Successfully claimed Booster (+100 Pts)! Full features unlocked.");
-      document.getElementById('vipBtn').className = "btn btn-off";
-      document.getElementById('vipBtn').innerText = "Booster Active";
-      document.getElementById('vipBtn').removeAttribute("onclick");
-    }
-
-    function startTask(num) {
-      const now = Date.now();
-      if (now < state.cdEnd || isTaskActive) return;
-
-      isTaskActive = true;
-      state.startTime = now;
-
-      history.pushState(null, null, location.href);
-      const preventBack = () => { if(isTaskActive) history.pushState(null, null, location.href); };
-      window.addEventListener('popstate', preventBack);
-
-      if (tg && tg.openLink) {
-        tg.openLink(CONFIG.adsterra);
+    function triggerAd() {
+      if (window.Adsgram) {
+        window.Adsgram.init({ blockId: CONFIG.interstitial_id, mode: CONFIG.task_id }).show()
+          .then(() => alert("Ad viewed successfully!"))
+          .catch((e) => alert("Ad closed or loading."));
       } else {
-        window.open(CONFIG.adsterra, '_blank');
-        window.open(CONFIG.smartlink, '_blank');
+        alert("Adsgram SDK loading...");
       }
-
-      showModal("Processing Module", "Please wait while module loads...");
-
-      let timer = 15;
-      const interval = setInterval(() => {
-        timer--;
-        if (timer > 0) {
-          document.getElementById('mMsg').innerText = `Please wait ${timer} seconds...`;
-        } else {
-          clearInterval(interval);
-          window.removeEventListener('popstate', preventBack);
-
-          if (window.Adsgram) {
-            let blockId = CONFIG.interstitial_id;
-            if (num === 4) blockId = CONFIG.reward_id;
-            window.Adsgram.init({ blockId, mode: CONFIG.task_id }).show()
-              .then(() => rewardUser(num))
-              .catch(() => rewardUser(num));
-          } else { 
-            rewardUser(num); 
-          }
-        }
-      }, 1000);
     }
-
-    function rewardUser(num) {
-      if ((Date.now() - state.startTime)/1000 < 14) {
-        isTaskActive = false; 
-        showModal("Security Notice", "Action completed too fast. Please try again."); 
-        return;
-      }
-      state[`t${num}`]++;
-      const earned = parseFloat((Math.random()*(1.5-0.5)+0.5).toFixed(2));
-      state.balance += earned;
-      state.cdEnd = Date.now() + 15000;
-      save(); 
-      updateUI();
-      isTaskActive = false;
-      showModal("Success", `+${earned} Points earned successfully!`);
-    }
-
-    function renderIframe(id) {
-      const el = document.getElementById(id); 
-      if(!el) return;
-      el.innerHTML = '';
-      const f = document.createElement('iframe');
-      f.style.cssText = "width:320px;height:50px;border:none;";
-      el.appendChild(f);
-      try {
-        const d = f.contentWindow.document; d.open();
-        d.write(`<body style="margin:0;display:flex;justify-content:center;"><script>atOptions={'key':'325216e9af97d6458aab9e4e7a74d73b','format':'iframe','height':50,'width':320,'params':{}};\<\/script><script src="//mammothsubway.com/325216e9af97d6458aab9e4e7a74d73b/invoke.js"><\/script></body>`);
-        d.close();
-      } catch(e) {}
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      updateUI();
-      setInterval(updateUI, 1000);
-      setTimeout(() => {
-        renderIframe('topBanner');
-        renderIframe('btmBanner');
-      }, 1000);
-    });
   </script>
 </body>
 </html>
