@@ -49,21 +49,21 @@
     </div>
 
     <div style="display:flex;justify-content:space-between;align-items:center;margin:10px 0 6px;">
-      <h3 style="font-size:13px;">Daily Tasks List</h3>
+      <h3 style="font-size:13px;">Daily Modules List</h3>
       <span style="font-size:11px;color:var(--blue);" id="cooldownNotice">Ready</span>
     </div>
 
     <div class="task-list">
       <div class="task-item">
-        <div><h4 style="font-size:12px;">Task Module Alpha</h4><p style="font-size:9px;color:var(--sub);">Interactive Link 1</p></div>
+        <div><h4 style="font-size:12px;">Module Alpha</h4><p style="font-size:9px;color:var(--sub);">Interactive Link 1</p></div>
         <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t1Count">0/20</span><button class="btn btn-blue" id="btnTask1" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(1)">Start</button></div>
       </div>
       <div class="task-item">
-        <div><h4 style="font-size:12px;">Task Module Beta</h4><p style="font-size:9px;color:var(--sub);">Interactive Link 2</p></div>
+        <div><h4 style="font-size:12px;">Module Beta</h4><p style="font-size:9px;color:var(--sub);">Interactive Link 2</p></div>
         <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t2Count">0/20</span><button class="btn btn-blue" id="btnTask2" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(2)">Start</button></div>
       </div>
       <div class="task-item">
-        <div><h4 style="font-size:12px;">Task Module Gamma</h4><p style="font-size:9px;color:var(--sub);">Interactive Link 3</p></div>
+        <div><h4 style="font-size:12px;">Module Gamma</h4><p style="font-size:9px;color:var(--sub);">Interactive Link 3</p></div>
         <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t3Count">0/15</span><button class="btn btn-blue" id="btnTask3" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(3)">Start</button></div>
       </div>
       <div class="task-item">
@@ -87,9 +87,9 @@
     const CONFIG = {
       adsterra: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475",
       smartlink: "https://plump-plastic.com/ZjLmfX",
-      reward_id: "50010",
-      interstitial_id: "int-50011",
-      task_id: "50012"
+      reward_id: "50117",
+      interstitial_id: "int-50119",
+      task_id: "50123"
     };
 
     const tg = window.Telegram?.WebApp; if(tg) tg.expand();
@@ -174,7 +174,7 @@
         window.open(CONFIG.smartlink, '_blank');
       }
 
-      showModal("Processing Task", "Please wait 15 seconds while module loads...", false);
+      showModal("Processing Module", "Please wait 15 seconds while module loads...", false);
 
       let timer = 15;
       const interval = setInterval(() => {
