@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Task Hub Center</title>
+  <title>ADS MINER</title>
   
-  <!-- Fast Core SDKs -->
+  <!-- Telegram WebApp & Adsgram SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
   <style>
-    :root { --bg: #0b0f19; --card: #151d30; --blue: #38bdf8; --green: #22c55e; --warn: #f59e0b; --text: #f8fafc; --sub: #94a3b8; }
+    :root { --bg: #0b0f19; --card: #151d30; --blue: #38bdf8; --green: #22c55e; --orange: #f59e0b; --text: #f8fafc; --sub: #94a3b8; }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; user-select: none; }
     body { background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding-bottom: 70px; }
     .container { width: 100%; max-width: 480px; padding: 14px; }
@@ -19,13 +19,16 @@
     .header p { font-size: 11px; color: var(--sub); margin-top: 2px; }
     .banner-card { background: rgba(255,255,255,0.02); border: 1px dashed rgba(56,189,248,0.3); border-radius: 10px; padding: 4px; text-align: center; margin-bottom: 12px; min-height: 55px; display: flex; justify-content: center; align-items: center; }
     .card { background: var(--card); border-radius: 12px; padding: 14px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); }
-    .balance { font-size: 32px; font-weight: 800; color: var(--blue); margin: 2px 0; }
-    .btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; display: flex; justify-content: space-between; }
-    .btn-blue { background: var(--blue); color: #0b0f19; }
+    .balance { font-size: 30px; font-weight: 800; color: var(--blue); margin: 2px 0; }
+    .input-field { width: 100%; background: #0b0f19; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 12px; color: var(--text); font-size: 13px; margin-bottom: 8px; outline: none; }
+    .input-field:focus { border-color: var(--blue); }
+    .btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .btn-orange { background: var(--orange); color: #0b0f19; margin-bottom: 8px; }
     .btn-green { background: var(--green); color: #fff; }
+    .btn-blue { background: var(--blue); color: #0b0f19; }
     .btn-off { background: #1e293b; color: #64748b; cursor: not-allowed; pointer-events: none; }
     .task-list { display: flex; flex-direction: column; gap: 8px; }
-    .task-item { background: var(--card); border-radius: 10px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; }
+    .task-item { background: var(--card); border-radius: 10px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(255,255,255,0.05); }
     .counter { font-size: 11px; font-weight: bold; color: var(--blue); background: rgba(56,189,248,0.1); padding: 3px 6px; border-radius: 4px; }
     .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11,15,25,0.92); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 9999; }
     .modal-box { background: #151d30; border: 1px solid rgba(56,189,248,0.3); border-radius: 14px; padding: 18px; width: 85%; max-width: 320px; text-align: center; }
@@ -36,87 +39,111 @@
 
   <div class="container">
     <div class="header">
-      <h1>Task Hub Center</h1>
-      <p>Interactive Daily Tasks & Features</p>
+      <h1>ADS MINER</h1>
+      <p>Watch Premium Ads & Mine TON Rewards</p>
     </div>
 
-    <div class="banner-card" id="topBanner"><span style="font-size:10px;color:var(--sub);">Loading Content...</span></div>
+    <!-- Top Ad Banner Placeholder -->
+    <div class="banner-card" id="topBanner"><span style="font-size:10px;color:var(--sub);">Loading Ad...</span></div>
 
+    <!-- Balance Section -->
     <div class="card">
-      <span style="font-size:11px;color:var(--sub);">COMPLETED GOALS SCORE</span>
-      <div class="balance"><span id="userBalance">0.00</span> Pts</div>
-      <p style="font-size:10px;color:var(--sub);">Daily Progress System Active</p>
+      <span style="font-size:11px;color:var(--sub);letter-spacing:0.5px;">TOTAL BALANCE</span>
+      <div class="balance"><span id="userBalance">329.67</span> Ads Point</div>
+      <p style="font-size:10px;color:var(--sub);margin-top:2px;">Reserve: 300 Pts | Min Cashout: 150 Pts</p>
     </div>
 
+    <!-- Withdraw (TON Wallet) Section -->
+    <div class="card">
+      <h3 style="font-size:13px;margin-bottom:8px;color:var(--text);">Withdraw (TON Wallet)</h3>
+      <input type="text" class="input-field" id="tgUsername" placeholder="@username or Name" value="">
+      <input type="text" class="input-field" id="tonAddress" placeholder="TON Wallet Address (EQD...)">
+      <input type="number" class="input-field" id="withdrawAmount" value="150" readonly>
+      <button class="btn btn-orange" onclick="saveDetails()"><span>Save Details</span><span>Save</span></button>
+      <button class="btn btn-green" onclick="requestWithdraw()"><span>Withdraw</span><span>Submit</span></button>
+    </div>
+
+    <!-- VIP Booster Section -->
+    <div class="card">
+      <h3 style="font-size:13px;margin-bottom:4px;color:var(--orange);">VIP Booster</h3>
+      <p style="font-size:10px;color:var(--sub);margin-bottom:8px;">Complete tasks to claim 24h VIP Booster (+100 Pts)</p>
+      <button class="btn btn-off" id="vipBtn" style="justify-content:center;font-size:11px;">Complete All Ads First</button>
+    </div>
+
+    <!-- Daily Ads Flow Header -->
     <div style="display:flex;justify-content:space-between;align-items:center;margin:10px 0 6px;">
-      <h3 style="font-size:13px;">Daily Modules List</h3>
+      <h3 style="font-size:13px;">Daily Ads Flow</h3>
       <span style="font-size:11px;color:var(--blue);" id="cooldownNotice">Ready</span>
     </div>
 
+    <!-- Daily Ads Flow List -->
     <div class="task-list">
       <div class="task-item">
-        <div><h4 style="font-size:12px;">Module Alpha</h4><p style="font-size:9px;color:var(--sub);">Interactive Link 1</p></div>
-        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t1Count">0/20</span><button class="btn btn-blue" id="btnTask1" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(1)">Start</button></div>
+        <div><h4 style="font-size:12px;">Adsterra Direct</h4><p style="font-size:9px;color:var(--sub);">High eCPM 1</p></div>
+        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t1Count">18/20</span><button class="btn btn-blue" id="btnTask1" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(1)">Start</button></div>
       </div>
       <div class="task-item">
-        <div><h4 style="font-size:12px;">Module Beta</h4><p style="font-size:9px;color:var(--sub);">Interactive Link 2</p></div>
-        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t2Count">0/20</span><button class="btn btn-blue" id="btnTask2" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(2)">Start</button></div>
+        <div><h4 style="font-size:12px;">HilltopAds Engine</h4><p style="font-size:9px;color:var(--sub);">Popunder 2</p></div>
+        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t2Count">10/20</span><button class="btn btn-blue" id="btnTask2" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(2)">Start</button></div>
       </div>
       <div class="task-item">
-        <div><h4 style="font-size:12px;">Module Gamma</h4><p style="font-size:9px;color:var(--sub);">Interactive Link 3</p></div>
-        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t3Count">0/15</span><button class="btn btn-blue" id="btnTask3" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(3)">Start</button></div>
+        <div><h4 style="font-size:12px;">RichAds Engine</h4><p style="font-size:9px;color:var(--sub);">Push Flow 3</p></div>
+        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t3Count">7/15</span><button class="btn btn-blue" id="btnTask3" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(3)">Start</button></div>
       </div>
       <div class="task-item">
-        <div><h4 style="font-size:12px;">Community Media Stream</h4><p style="font-size:9px;color:var(--sub);">Native Video Stream</p></div>
-        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t4Count">0/15</span><button class="btn btn-blue" id="btnTask4" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(4)">Start</button></div>
+        <div><h4 style="font-size:12px;">Telegram Premium Stream</h4><p style="font-size:9px;color:var(--sub);">Native Video</p></div>
+        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t4Count">5/15</span><button class="btn btn-blue" id="btnTask4" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(4)">Start</button></div>
       </div>
     </div>
   </div>
 
-  <div class="bottom-banner" id="btmBanner"><span style="font-size:9px;color:var(--sub);">Loading Content...</span></div>
+  <!-- Bottom Ad Banner Placeholder -->
+  <div class="bottom-banner" id="btmBanner"><span style="font-size:9px;color:var(--sub);">Loading Ad...</span></div>
 
+  <!-- Modal Notification Popup -->
   <div class="modal" id="modal">
     <div class="modal-box">
-      <div style="font-size:15px;font-weight:bold;color:var(--blue);margin-bottom:6px;" id="mTitle">Processing</div>
+      <div style="font-size:15px;font-weight:bold;color:var(--blue);margin-bottom:6px;" id="mTitle">Notification</div>
       <div style="font-size:12px;color:var(--text);margin-bottom:14px;" id="mMsg">Please wait...</div>
-      <button class="btn btn-blue" id="mBtn" style="display:none;" onclick="closeModal()">OK</button>
+      <button class="btn btn-blue" id="mBtn" style="justify-content:center;" onclick="closeModal()">OK</button>
     </div>
   </div>
 
   <script>
+    // Configuration with new IDs provided
     const CONFIG = {
       adsterra: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475",
       smartlink: "https://plump-plastic.com/ZjLmfX",
-      reward_id: "50117",
-      interstitial_id: "int-50119",
-      task_id: "50123"
+      reward_id: "50117",          // Adsgram Reward Block ID
+      interstitial_id: "int-50119", // Adsgram Interstitial Block ID
+      task_id: "50123"             // Adsgram Task ID reference
     };
 
-    const tg = window.Telegram?.WebApp; if(tg) tg.expand();
+    const tg = window.Telegram?.WebApp; 
+    if(tg) {
+      tg.expand();
+      if(tg.initDataUnsafe?.user?.username) {
+        document.getElementById('tgUsername').value = "@" + tg.initDataUnsafe.user.username;
+      }
+    }
 
     let state = {
-      balance: parseFloat(localStorage.getItem('balance')) || 0,
-      t1: parseInt(localStorage.getItem('t1')) || 0,
-      t2: parseInt(localStorage.getItem('t2')) || 0,
-      t3: parseInt(localStorage.getItem('t3')) || 0,
-      t4: parseInt(localStorage.getItem('t4')) || 0,
+      balance: parseFloat(localStorage.getItem('balance')) || 329.67,
+      t1: parseInt(localStorage.getItem('t1')) || 18,
+      t2: parseInt(localStorage.getItem('t2')) || 10,
+      t3: parseInt(localStorage.getItem('t3')) || 7,
+      t4: parseInt(localStorage.getItem('t4')) || 5,
       cdEnd: parseInt(localStorage.getItem('cdEnd')) || 0,
       resetTime: parseInt(localStorage.getItem('resetTime')) || 0,
-      startTime: 0
+      startTime: 0,
+      walletSaved: localStorage.getItem('walletSaved') === 'true'
     };
 
     const LIMITS = { t1: 20, t2: 20, t3: 15, t4: 15 };
     let isTaskActive = false;
 
-    function save() { for(let k in state) localStorage.setItem(k, state[k]); }
-
-    function checkReset() {
-      const now = Date.now();
-      const allDone = (state.t1>=LIMITS.t1 && state.t2>=LIMITS.t2 && state.t3>=LIMITS.t3 && state.t4>=LIMITS.t4);
-      if (allDone && state.resetTime === 0) { state.resetTime = now + (4*3600*1000); save(); }
-      if (state.resetTime > 0 && now >= state.resetTime) {
-        state.t1=0; state.t2=0; state.t3=0; state.t4=0; state.resetTime=0; save();
-      }
+    function save() { 
+      for(let k in state) localStorage.setItem(k, state[k]); 
     }
 
     function updateUI() {
@@ -126,43 +153,74 @@
       document.getElementById('t3Count').innerText = `${state.t3}/${LIMITS.t3}`;
       document.getElementById('t4Count').innerText = `${state.t4}/${LIMITS.t4}`;
 
+      const allDone = (state.t1>=LIMITS.t1 && state.t2>=LIMITS.t2 && state.t3>=LIMITS.t3 && state.t4>=LIMITS.t4);
+      const vipBtn = document.getElementById('vipBtn');
+      if(allDone) {
+        vipBtn.className = "btn btn-orange";
+        vipBtn.innerText = "Claim VIP Booster (+100 Pts)";
+        vipBtn.setAttribute("onclick", "claimVip()");
+      }
+
       const now = Date.now();
       const notice = document.getElementById('cooldownNotice');
-      if (state.resetTime > now) {
-        const left = Math.ceil((state.resetTime - now)/1000);
-        notice.innerText = `Reset in ${Math.floor(left/3600)}h ${Math.floor((left%3600)/60)}m`;
-        notice.style.color = "var(--warn)"; toggleBtns(true);
-      } else if (now < state.cdEnd) {
+      if (now < state.cdEnd) {
         notice.innerText = `Next in ${Math.ceil((state.cdEnd - now)/1000)}s`;
-        notice.style.color = "var(--warn)";
+        notice.style.color = "var(--orange)";
       } else {
-        notice.innerText = "Ready"; notice.style.color = "var(--blue)"; toggleBtns(false);
+        notice.innerText = "Ready"; 
+        notice.style.color = "var(--blue)"; 
       }
     }
 
-    function toggleBtns(disabled) {
-      for(let i=1;i<=4;i++) {
-        const btn = document.getElementById(`btnTask${i}`);
-        if(disabled || state[`t${i}`]>=LIMITS[`t${i}`]) { btn.classList.add('btn-off'); }
-        else { btn.classList.remove('btn-off'); }
-      }
-    }
-
-    function showModal(title, msg, showBtn=true) {
+    function showModal(title, msg) {
       document.getElementById('mTitle').innerText = title;
       document.getElementById('mMsg').innerText = msg;
-      document.getElementById('mBtn').style.display = showBtn ? 'block' : 'none';
       document.getElementById('modal').style.display = 'flex';
     }
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
+    function saveDetails() {
+      const uname = document.getElementById('tgUsername').value.trim();
+      const address = document.getElementById('tonAddress').value.trim();
+      if(!uname || !address) {
+        showModal("Error", "Please fill in your Username and TON Wallet Address.");
+        return;
+      }
+      state.walletSaved = true;
+      save();
+      showModal("Success", "Wallet details saved successfully!");
+    }
+
+    function requestWithdraw() {
+      if(!state.walletSaved) {
+        showModal("Notice", "Please save your wallet details first.");
+        return;
+      }
+      if(state.balance < 150) {
+        showModal("Notice", "Minimum cashout is 150 Pts.");
+        return;
+      }
+      showModal("Withdrawal Pending", "Your withdrawal request has been submitted successfully and is being processed.");
+    }
+
+    function claimVip() {
+      state.balance += 100;
+      save();
+      updateUI();
+      showModal("VIP Claimed", "Successfully claimed 24h VIP Booster (+100 Pts)!");
+      document.getElementById('vipBtn').className = "btn btn-off";
+      document.getElementById('vipBtn').innerText = "VIP Active";
+      document.getElementById('vipBtn').removeAttribute("onclick");
+    }
+
     function startTask(num) {
       const now = Date.now();
-      if (state.resetTime > now || now < state.cdEnd || isTaskActive) return;
+      if (now < state.cdEnd || isTaskActive) return;
 
       isTaskActive = true;
       state.startTime = now;
 
+      // Prevent quick back navigation cheating
       history.pushState(null, null, location.href);
       const preventBack = () => { if(isTaskActive) history.pushState(null, null, location.href); };
       window.addEventListener('popstate', preventBack);
@@ -174,62 +232,69 @@
         window.open(CONFIG.smartlink, '_blank');
       }
 
-      showModal("Processing Module", "Please wait 15 seconds while module loads...", false);
+      showModal("Processing Ad", "Please watch the ad for 15 seconds...");
 
       let timer = 15;
       const interval = setInterval(() => {
         timer--;
         if (timer > 0) {
-          document.getElementById('mMsg').innerText = `Please wait ${timer} seconds while module loads...`;
+          document.getElementById('mMsg').innerText = `Please watch the ad for ${timer} seconds...`;
         } else {
           clearInterval(interval);
           window.removeEventListener('popstate', preventBack);
 
+          // Call Adsgram SDK using the new IDs
           if (window.Adsgram) {
             let blockId = CONFIG.interstitial_id;
             if (num === 4) blockId = CONFIG.reward_id;
-            window.Adsgram.init({ blockId }).show().then(()=>reward(num)).catch(()=>reward(num));
-          } else { reward(num); }
+            window.Adsgram.init({ blockId, mode: CONFIG.task_id }).show()
+              .then(() => rewardUser(num))
+              .catch(() => rewardUser(num));
+          } else { 
+            rewardUser(num); 
+          }
         }
       }, 1000);
     }
 
-    function reward(num) {
+    function rewardUser(num) {
       if ((Date.now() - state.startTime)/1000 < 14) {
-        isTaskActive = false; showModal("Security Notice", "Speed check failed. Action rejected."); return;
+        isTaskActive = false; 
+        showModal("Security Notice", "Action completed too fast. Please watch fully."); 
+        return;
       }
       state[`t${num}`]++;
-      const pts = parseFloat((Math.random()*(1.2-0.3)+0.3).toFixed(2));
-      state.balance += pts;
+      const earned = parseFloat((Math.random()*(1.5-0.5)+0.5).toFixed(2));
+      state.balance += earned;
       state.cdEnd = Date.now() + 15000;
-      checkReset(); save(); updateUI();
+      save(); 
+      updateUI();
       isTaskActive = false;
-      showModal("Success", `+${pts} Points completed successfully!`);
+      showModal("Success", `+${earned} Ads Point earned successfully!`);
     }
 
+    // Adsterra Banner Iframes render
     function renderIframe(id) {
-      const el = document.getElementById(id); el.innerHTML = '';
+      const el = document.getElementById(id); 
+      if(!el) return;
+      el.innerHTML = '';
       const f = document.createElement('iframe');
       f.style.cssText = "width:320px;height:50px;border:none;";
       el.appendChild(f);
-      const d = f.contentWindow.document; d.open();
-      d.write(`<body style="margin:0;display:flex;justify-content:center;"><script>atOptions={'key':'325216e9af97d6458aab9e4e7a74d73b','format':'iframe','height':50,'width':320,'params':{}};\<\/script><script src="//mammothsubway.com/325216e9af97d6458aab9e4e7a74d73b/invoke.js"><\/script></body>`);
-      d.close();
-    }
-
-    function loadBanners() {
-      renderIframe('topBanner');
-      renderIframe('btmBanner');
-      setInterval(() => {
-        renderIframe('topBanner');
-        renderIframe('btmBanner');
-      }, 20000);
+      try {
+        const d = f.contentWindow.document; d.open();
+        d.write(`<body style="margin:0;display:flex;justify-content:center;"><script>atOptions={'key':'325216e9af97d6458aab9e4e7a74d73b','format':'iframe','height':50,'width':320,'params':{}};\<\/script><script src="//mammothsubway.com/325216e9af97d6458aab9e4e7a74d73b/invoke.js"><\/script></body>`);
+        d.close();
+      } catch(e) {}
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-      checkReset(); updateUI();
-      setInterval(() => { checkReset(); updateUI(); }, 1000);
-      setTimeout(loadBanners, 1000);
+      updateUI();
+      setInterval(updateUI, 1000);
+      setTimeout(() => {
+        renderIframe('topBanner');
+        renderIframe('btmBanner');
+      }, 1000);
     });
   </script>
 </body>
