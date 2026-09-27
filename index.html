@@ -3,97 +3,128 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>QR & Security Toolkit</title>
+  <title>ALTA ADS ANALYTICS</title>
   
-  <!-- Telegram WebApp & Adsgram SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
   <style>
-    :root { --bg: #090d16; --card: #131c2e; --blue: #38bdf8; --text: #f8fafc; --sub: #94a3b8; }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
-    body { background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 16px; }
-    .container { width: 100%; max-width: 480px; }
-    .card { background: var(--card); border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); }
-    h1 { font-size: 20px; color: var(--blue); margin-bottom: 4px; text-align: center; }
-    p { font-size: 12px; color: var(--sub); text-align: center; margin-bottom: 14px; }
-    .input-field { width: 100%; background: #090d16; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; color: var(--text); font-size: 13px; margin-bottom: 8px; outline: none; }
-    .btn { width: 100%; padding: 10px; background: var(--blue); color: #090d16; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; }
-    .result-box { margin-top: 10px; font-size: 13px; color: var(--blue); text-align: center; background: rgba(56,189,248,0.05); padding: 10px; border-radius: 8px; }
+    :root { --bg: #0b0f19; --card: #151d30; --blue: #38bdf8; --green: #22c55e; --orange: #f59e0b; --text: #f8fafc; --sub: #94a3b8; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; user-select: none; }
+    body { background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding-bottom: 70px; }
+    .container { width: 100%; max-width: 480px; padding: 14px; }
+    .header { text-align: center; padding: 6px 0 12px; }
+    .header h1 { font-size: 24px; font-weight: 800; color: var(--blue); letter-spacing: 1px; text-transform: uppercase; }
+    .header p { font-size: 11px; color: var(--sub); margin-top: 2px; }
+    .card { background: var(--card); border-radius: 12px; padding: 14px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); }
+    .balance { font-size: 30px; font-weight: 800; color: var(--blue); margin: 2px 0; }
+    .input-field { width: 100%; background: #0b0f19; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 12px; color: var(--text); font-size: 13px; margin-bottom: 8px; outline: none; }
+    .btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .btn-orange { background: var(--orange); color: #0b0f19; margin-bottom: 8px; }
+    .btn-green { background: var(--green); color: #fff; }
+    .btn-blue { background: var(--blue); color: #0b0f19; }
+    .task-list { display: flex; flex-direction: column; gap: 8px; }
+    .task-item { background: var(--card); border-radius: 10px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(255,255,255,0.05); }
+    .counter { font-size: 11px; font-weight: bold; color: var(--blue); background: rgba(56,189,248,0.1); padding: 3px 6px; border-radius: 4px; }
+    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11,15,25,0.92); display: none; justify-content: center; align-items: center; z-index: 9999; }
+    .modal-box { background: #151d30; border: 1px solid rgba(56,189,248,0.3); border-radius: 14px; padding: 18px; width: 85%; max-width: 320px; text-align: center; }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <h1>Security & QR Toolkit</h1>
-    <p>Generate secure passwords and text-based QR codes easily.</p>
-
-    <!-- Password Checker Tool -->
-    <div class="card">
-      <h3 style="font-size:14px; margin-bottom:8px;">Password Strength Checker</h3>
-      <input type="text" class="input-field" id="pwdInput" placeholder="Enter password to test..." oninput="checkPassword()">
-      <div class="result-box" id="pwdResult">Status: Enter a password</div>
+    <div class="header">
+      <h1>ALTA ADS ANALYTICS</h1>
+      <p>Performance Metrics & Campaign Optimizer</p>
     </div>
 
-    <!-- QR / Text Encoder Tool -->
+    <!-- Stats Summary Section -->
     <div class="card">
-      <h3 style="font-size:14px; margin-bottom:8px;">Quick Text Encoder</h3>
-      <input type="text" class="input-field" id="textInput" placeholder="Enter text or URL...">
-      <button class="btn" onclick="encodeText()">Generate Code Data</button>
-      <div class="result-box" id="encodeResult" style="word-break: break-all;">Result will appear here</div>
+      <span style="font-size:11px;color:var(--sub);letter-spacing:0.5px;">TOTAL IMPRESSION SCORE</span>
+      <div class="balance"><span id="userBalance">329.67</span> pts</div>
     </div>
 
-    <!-- Rewarded / Interstitial Test Trigger -->
-    <div class="card" style="text-align:center;">
-      <h3 style="font-size:14px; margin-bottom:8px;">Ad-Supported Feature</h3>
-      <button class="btn" onclick="triggerAd()">Load Extra Tool Data</button>
+    <!-- Account Configuration Section -->
+    <div class="card">
+      <h3 style="font-size:13px;margin-bottom:8px;color:var(--text);">Campaign Config</h3>
+      <input type="text" class="input-field" id="tgUsername" placeholder="@channel_username">
+      <input type="text" class="input-field" id="tonAddress" placeholder="Network Target ID (EQD...)">
+      <button class="btn btn-orange" onclick="saveDetails()"><span>Save Parameters</span><span>Save</span></button>
+      <button class="btn btn-green" onclick="requestWithdraw()"><span>Run Diagnostics</span><span>Verify</span></button>
+    </div>
+
+    <!-- Analytics Flow List -->
+    <div class="task-list">
+      <div class="task-item">
+        <div><h4 style="font-size:12px;">High eCPM Stream</h4><p style="font-size:9px;color:var(--sub);">Active Optimizer</p></div>
+        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t1Count">18/20</span><button class="btn btn-blue" id="btnTask1" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(1)">Run</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="modal">
+    <div class="modal-box">
+      <div style="font-size:15px;font-weight:bold;color:var(--blue);margin-bottom:6px;" id="mTitle">Notification</div>
+      <div style="font-size:12px;color:var(--text);margin-bottom:14px;" id="mMsg">Please wait...</div>
+      <button class="btn btn-blue" id="mBtn" style="justify-content:center;" onclick="closeModal()">OK</button>
     </div>
   </div>
 
   <script>
-    // Configuration with new Adsgram Block IDs
     const CONFIG = {
-      reward_id: "50160",          // Adsgram Reward Block ID
-      interstitial_id: "int-50161", // Adsgram Interstitial Block ID
-      task_id: "50162"             // Adsgram Task ID
+      adsterra: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475",
+      reward_id: "50357",          // Adsgram Reward Block ID
+      interstitial_id: "int-50358", // Adsgram Interstitial Block ID
+      task_id: "50359"             // Adsgram Task ID
     };
 
-    const tg = window.Telegram?.WebApp;
+    const tg = window.Telegram?.WebApp; 
     if(tg) { tg.expand(); }
 
-    function checkPassword() {
-      const val = document.getElementById('pwdInput').value;
-      const res = document.getElementById('pwdResult');
-      if(val.length < 6) {
-        res.innerText = "Status: Weak (Too short)";
-        res.style.color = "#f87171";
-      } else if(/[A-Z]/.test(val) && /[0-9]/.test(val)) {
-        res.innerText = "Status: Strong & Secure";
-        res.style.color = "#4ade80";
-      } else {
-        res.innerText = "Status: Medium (Add numbers/caps)";
-        res.style.color = "#facc15";
-      }
+    let state = {
+      balance: parseFloat(localStorage.getItem('balance')) || 329.67,
+      t1: parseInt(localStorage.getItem('t1')) || 18,
+      walletSaved: localStorage.getItem('walletSaved') === 'true'
+    };
+
+    function save() { for(let k in state) localStorage.setItem(k, state[k]); }
+    function showModal(title, msg) {
+      document.getElementById('mTitle').innerText = title;
+      document.getElementById('mMsg').innerText = msg;
+      document.getElementById('modal').style.display = 'flex';
+    }
+    function closeModal() { document.getElementById('modal').style.display = 'none'; }
+
+    function saveDetails() {
+      state.walletSaved = true;
+      save();
+      showModal("Success", "Analytics parameters saved successfully!");
     }
 
-    function encodeText() {
-      const val = document.getElementById('textInput').value.trim();
-      const res = document.getElementById('encodeResult');
-      if(val) {
-        res.innerText = "Encoded: " + btoa(val);
-      } else {
-        res.innerText = "Please enter valid text first.";
-      }
+    function requestWithdraw() {
+      if(!state.walletSaved) { showModal("Notice", "Please save configuration parameters first."); return; }
+      showModal("Verified", "System diagnostics completed successfully.");
     }
 
-    function triggerAd() {
+    function startTask(num) {
+      if (tg && tg.openLink) { tg.openLink(CONFIG.adsterra); } 
+      else { window.open(CONFIG.adsterra, '_blank'); }
+
       if (window.Adsgram) {
-        window.Adsgram.init({ blockId: CONFIG.interstitial_id, mode: CONFIG.task_id }).show()
-          .then(() => alert("Feature unlocked successfully!"))
-          .catch((e) => alert("Ad loading or skipped."));
+        window.Adsgram.init({ blockId: CONFIG.reward_id, mode: CONFIG.task_id }).show()
+          .then(() => rewardUser(num)).catch(() => rewardUser(num));
       } else {
-        alert("Toolkit SDK initializing...");
+        setTimeout(() => rewardUser(num), 3000);
       }
+    }
+
+    function rewardUser(num) {
+      state.t1++;
+      state.balance += 1.5;
+      save();
+      document.getElementById('userBalance').innerText = state.balance.toFixed(2);
+      document.getElementById('t1Count').innerText = `${state.t1}/20`;
+      showModal("Success", "+1.5 Analytics Score updated!");
     }
   </script>
 </body>
