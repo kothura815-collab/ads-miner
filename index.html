@@ -107,14 +107,24 @@
     }
 
     function startTask(num) {
-      if (tg && tg.openLink) { tg.openLink(CONFIG.adsterra); } 
-      else { window.open(CONFIG.adsterra, '_blank'); }
+      if (tg && tg.openLink) { 
+        tg.openLink(CONFIG.adsterra); 
+      } else { 
+        window.open(CONFIG.adsterra, '_blank'); 
+      }
 
+      // Adsgram SDK ကို မှန်ကန်စွာ ပွင့်စေရန်
       if (window.Adsgram) {
-        window.Adsgram.init({ blockId: CONFIG.reward_id, mode: CONFIG.task_id }).show()
-          .then(() => rewardUser(num)).catch(() => rewardUser(num));
+        window.Adsgram.init({ blockId: CONFIG.reward_id }).show()
+          .then((result) => {
+            rewardUser(num);
+          })
+          .catch((err) => {
+            console.log("Ad error:", err);
+            showModal("Notice", "Ad could not be loaded or was skipped.");
+          });
       } else {
-        setTimeout(() => rewardUser(num), 3000);
+        setTimeout(() => rewardUser(num), 1000);
       }
     }
 
