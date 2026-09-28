@@ -3,25 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Fruit Frenzy Mini App</title>
+  <title>Fruit Frenzy</title>
   
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
   <style>
-    :root { --bg: #fdf2f4; --card: #ffffff; --primary: #e11d48; --text: #1e293b; --sub: #64748b; }
+    :root { --bg: #fce7f3; --card: #ffffff; --primary: #db2777; --text: #1f2937; --sub: #6b7280; --orange: #f59e0b; }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; user-select: none; }
     body { background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding-bottom: 70px; }
-    .container { width: 100%; max-width: 480px; padding: 14px; }
-    .header { display: flex; justify-content: space-between; align-items: center; background: var(--card); padding: 12px 16px; border-radius: 12px; margin-bottom: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-    .coin-box { font-weight: 800; color: #b45309; font-size: 15px; }
-    .spin-box { font-weight: 800; color: #0284c7; font-size: 15px; }
-    .section-title { font-size: 16px; font-weight: 800; margin: 12px 0 8px; color: var(--text); }
-    .task-card { background: var(--card); border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 6px rgba(0,0,0,0.03); }
-    .task-info h4 { font-size: 13px; font-weight: 700; }
-    .task-info p { font-size: 11px; color: var(--sub); margin-top: 2px; }
-    .btn { padding: 6px 14px; border: none; border-radius: 8px; font-weight: bold; font-size: 12px; cursor: pointer; }
-    .btn-green { background: #16a34a; color: #fff; }
+    .container { width: 100%; max-width: 480px; padding: 12px; }
+    
+    /* Top Header */
+    .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .badge { background: #fff; padding: 6px 12px; border-radius: 20px; font-weight: 800; font-size: 13px; display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    .badge-coins { color: #b45309; }
+    .badge-spins { color: #0284c7; }
+    .app-title { font-size: 14px; font-weight: 900; font-style: italic; color: #831843; letter-spacing: 0.5px; }
+
+    /* Game Board */
+    .game-board { background: #ea580c; border-radius: 16px; padding: 10px; display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(234,88,12,0.3); }
+    .cell { background: #fff; border-radius: 8px; aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: #374151; box-shadow: inset 0 -2px 4px rgba(0,0,0,0.05); }
+    .cell img, .cell span { font-size: 18px; }
+    .cell.bonus { background: #fde047; color: #854d0e; font-size: 11px; }
+
+    /* Center Screen inside board */
+    .center-screen { grid-column: 2 / span 4; grid-row: 2 / span 3; background: #581c87; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; border: 2px solid #fbcfe8; }
+    .center-screen .slots { display: flex; gap: 8px; font-size: 24px; margin-bottom: 4px; }
+    .center-screen .score-display { background: #1e1b4b; padding: 4px 16px; border-radius: 6px; font-size: 16px; font-weight: bold; color: #fde047; }
+
+    /* Action Controls */
+    .go-btn { width: 100%; background: linear-gradient(135deg, #4b5563, #1f2937); color: #fff; border: none; border-radius: 12px; padding: 14px; font-size: 18px; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); letter-spacing: 1px; }
+    .banner-card { background: #fff; border-radius: 12px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-weight: bold; color: #9a3412; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+
+    /* Bottom Nav */
+    .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; padding: 8px 0; border-top: 1px solid #f3e8ff; z-index: 1000; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: var(--sub); text-decoration: none; font-weight: bold; }
+    .nav-item.active { color: var(--primary); }
+    .nav-item span { font-size: 16px; }
+
+    /* Modal */
     .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 9999; }
     .modal-box { background: #fff; border-radius: 14px; padding: 20px; width: 85%; max-width: 300px; text-align: center; }
   </style>
@@ -30,46 +51,84 @@
 
   <div class="container">
     <!-- Top Header -->
-    <div class="header">
-      <div class="coin-box">🟡 <span id="coinBalance">115</span> Coins</div>
-      <div class="spin-box">⚡ <span id="spinBalance">7</span> Spins</div>
+    <div class="top-header">
+      <div class="badge badge-coins">🟡 <span id="coinCount">115</span> COINS</div>
+      <div class="app-title">FRUIT FRENZY</div>
+      <div class="badge badge-spins">⚡ <span id="spinCount">7</span> SPINS</div>
     </div>
 
-    <div class="section-title">⭐ Tasks & Watch Ads</div>
+    <!-- Game Board Layout -->
+    <div class="game-board" id="board">
+      <!-- Row 1 -->
+      <div class="cell"><span>🍒</span>Cherry</div>
+      <div class="cell"><span>🍋</span>Lemon</div>
+      <div class="cell bonus">X3<br>BONUS</div>
+      <div class="cell"><span>🍎</span>Apple</div>
+      <div class="cell"><span>🍊</span>Orange</div>
+      <div class="cell"><span>🍉</span>Melon</div>
 
-    <!-- Task List (Real Working Ads) -->
-    <div class="task-list">
-      <div class="task-card">
-        <div class="task-info">
-          <h4>Watch Video 1x</h4>
-          <p>+1 Free Spin & Reward</p>
-        </div>
-        <button class="btn btn-green" onclick="watchAdTask(1)">GO</button>
+      <!-- Row 2 -->
+      <div class="cell"><span>🍎</span>Apple</div>
+      <!-- Center Box spanning 4 cells -->
+      <div class="center-screen">
+        <div class="slots"><span>🍒</span><span>🍉</span><span>🍇</span></div>
+        <div class="score-display" id="winScore">0</div>
       </div>
+      <div class="cell bonus">X3<br>BONUS</div>
 
-      <div class="task-card">
-        <div class="task-info">
-          <h4>Watch Video 2x</h4>
-          <p>+1 Free Spin & Reward</p>
-        </div>
-        <button class="btn btn-green" onclick="watchAdTask(2)">GO</button>
-      </div>
+      <!-- Row 3 -->
+      <div class="cell"><span>🍋</span>Lemon</div>
+      <div class="cell"><span>🍊</span>Orange</div>
+
+      <!-- Row 4 -->
+      <div class="cell"><span>🍎</span>Apple</div>
+      <div class="cell"><span>🍒</span>Cherry</div>
+
+      <!-- Row 5 -->
+      <div class="cell bonus">X3<br>BONUS</div>
+      <div class="cell"><span>🍉</span>Melon</div>
+
+      <!-- Row 6 -->
+      <div class="cell"><span>🍉</span>Melon</div>
+      <div class="cell"><span>🍒</span>Cherry</div>
+      <div class="cell"><span>🍋</span>Lemon</div>
+      <div class="cell"><span>🍒</span>Cherry</div>
+      <div class="cell"><span>🍋</span>Lemon</div>
+      <div class="cell"><span>🍉</span>Melon</div>
     </div>
+
+    <!-- GO Button -->
+    <button class="go-btn" onclick="spinWheel()">GO</button>
+
+    <!-- Invite Banner -->
+    <div class="banner-card">
+      <span>🎁 Invite 1 friend = +10 free spins</span>
+      <span style="font-size:16px;">›</span>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="nav-bar">
+    <a href="#" class="nav-item active"><span>▶️</span>PLAY</a>
+    <a href="#" class="nav-item" onclick="showTaskModal()"><span>📋</span>TASKS</a>
+    <a href="#" class="nav-item"><span>👥</span>INVITE</a>
+    <a href="#" class="nav-item"><span>🏆</span>TOP</a>
+    <a href="#" class="nav-item"><span>💰</span>WALLET</a>
+    <a href="#" class="nav-item"><span>⋯</span>MORE</a>
   </div>
 
   <!-- Modal -->
   <div class="modal" id="modal">
     <div class="modal-box">
-      <div style="font-size:16px;font-weight:bold;margin-bottom:8px;" id="mTitle">Alert</div>
+      <div style="font-size:16px;font-weight:bold;margin-bottom:8px;color:#db2777;" id="mTitle">Notification</div>
       <div style="font-size:13px;color:var(--sub);margin-bottom:16px;" id="mMsg">Message</div>
-      <button class="btn btn-green" style="width:100%;" onclick="closeModal()">OK</button>
+      <button style="width:100%;padding:10px;background:#db2777;color:#fff;border:none;border-radius:8px;font-weight:bold;" onclick="closeModal()">OK</button>
     </div>
   </div>
 
   <script>
     const CONFIG = {
-      adNetworkUrl: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475",
-      reward_id: "50357" // Adsgram Block ID အသစ်
+      reward_id: "50357" // Adsgram Reward Block ID
     };
 
     const tg = window.Telegram?.WebApp;
@@ -81,8 +140,8 @@
     };
 
     function updateUI() {
-      document.getElementById('coinBalance').innerText = state.coins;
-      document.getElementById('spinBalance').innerText = state.spins;
+      document.getElementById('coinCount').innerText = state.coins;
+      document.getElementById('spinCount').innerText = state.spins;
       localStorage.setItem('coins', state.coins);
       localStorage.setItem('spins', state.spins);
     }
@@ -94,34 +153,46 @@
     }
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
-    function watchAdTask(taskId) {
-      // 1. Ad Network Link ကို ဖွင့်ပေးမည် (Monetag / Adsterra)
-      if (tg && tg.openLink) { 
-        tg.openLink(CONFIG.adNetworkUrl); 
-      } else { 
-        window.open(CONFIG.adNetworkUrl, '_blank'); 
+    function showTaskModal() {
+      showModal("Tasks & Ads", "Free spins ကုန်သွားပါက Adsgram ဗီဒီယိုကြော်ငြာကြည့်၍ Spins များနှင့် Coins များ ထပ်မံရယူနိုင်ပါသည်။");
+    }
+
+    function spinWheel() {
+      if (state.spins <= 0) {
+        // Spins ကုန်သွားလျှင် Adsgram ကြော်ငြာပြပြီး Spin ဖြည့်ပေးမည်
+        showModal("Notice", "Spins ကုန်သွားပါပြီ။ ကြော်ငြာကြည့်ပြီး Spin ထပ်ဖြည့်ပါမည်။");
+        triggerAdsgram();
+        return;
       }
 
-      // 2. Adsgram Native Rewarded Ad ကို ခေါ်ယူမည်
+      state.spins--;
+      let earned = Math.floor(Math.random() * 30) + 10;
+      state.coins += earned;
+      document.getElementById('winScore').innerText = earned;
+      updateUI();
+    }
+
+    function triggerAdsgram() {
       if (window.Adsgram) {
         window.Adsgram.init({ blockId: CONFIG.reward_id }).show()
           .then(() => {
-            giveReward();
+            state.spins += 5;
+            state.coins += 20;
+            updateUI();
+            showModal("Success!", "🎉 ကြော်ငြာကြည့်ရှုပြီးချင်း +5 Spins နှင့် +20 Coins ရရှိသွားပါပြီ။");
           })
           .catch((err) => {
-            // ကြော်ငြာမတက်လာရင်တောင် User အဆင်ပြေစေရန် Reward ပေးမည်
-            giveReward();
+            state.spins += 3;
+            updateUI();
+            showModal("Reward", "🎁 +3 Spins ရရှိသွားပါပြီ။");
           });
       } else {
-        setTimeout(() => { giveReward(); }, 2000);
+        setTimeout(() => {
+          state.spins += 3;
+          updateUI();
+          showModal("Reward", "🎁 +3 Spins ရရှိသွားပါပြီ။");
+        }, 1500);
       }
-    }
-
-    function giveReward() {
-      state.coins += 10;
-      state.spins += 1;
-      updateUI();
-      showModal("Success!", "🎉 +10 Coins နဲ့ +1 Spin ရရှိသွားပါပြီ။");
     }
 
     updateUI();
