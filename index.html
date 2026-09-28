@@ -3,91 +3,90 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ALTA ADS ANALYTICS</title>
+  <title>Fruit Frenzy Mini App</title>
   
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
   <style>
-    :root { --bg: #0b0f19; --card: #151d30; --blue: #38bdf8; --green: #22c55e; --orange: #f59e0b; --text: #f8fafc; --sub: #94a3b8; }
+    :root { --bg: #fdf2f4; --card: #ffffff; --primary: #e11d48; --text: #1e293b; --sub: #64748b; }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; user-select: none; }
     body { background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding-bottom: 70px; }
     .container { width: 100%; max-width: 480px; padding: 14px; }
-    .header { text-align: center; padding: 6px 0 12px; }
-    .header h1 { font-size: 24px; font-weight: 800; color: var(--blue); letter-spacing: 1px; text-transform: uppercase; }
-    .header p { font-size: 11px; color: var(--sub); margin-top: 2px; }
-    .card { background: var(--card); border-radius: 12px; padding: 14px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); }
-    .balance { font-size: 30px; font-weight: 800; color: var(--blue); margin: 2px 0; }
-    .input-field { width: 100%; background: #0b0f19; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 12px; color: var(--text); font-size: 13px; margin-bottom: 8px; outline: none; }
-    .btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-    .btn-orange { background: var(--orange); color: #0b0f19; margin-bottom: 8px; }
-    .btn-green { background: var(--green); color: #fff; }
-    .btn-blue { background: var(--blue); color: #0b0f19; }
-    .task-list { display: flex; flex-direction: column; gap: 8px; }
-    .task-item { background: var(--card); border-radius: 10px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(255,255,255,0.05); }
-    .counter { font-size: 11px; font-weight: bold; color: var(--blue); background: rgba(56,189,248,0.1); padding: 3px 6px; border-radius: 4px; }
-    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11,15,25,0.92); display: none; justify-content: center; align-items: center; z-index: 9999; }
-    .modal-box { background: #151d30; border: 1px solid rgba(56,189,248,0.3); border-radius: 14px; padding: 18px; width: 85%; max-width: 320px; text-align: center; }
+    .header { display: flex; justify-content: space-between; align-items: center; background: var(--card); padding: 12px 16px; border-radius: 12px; margin-bottom: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    .coin-box { font-weight: 800; color: #b45309; font-size: 15px; }
+    .spin-box { font-weight: 800; color: #0284c7; font-size: 15px; }
+    .section-title { font-size: 16px; font-weight: 800; margin: 12px 0 8px; color: var(--text); }
+    .task-card { background: var(--card); border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 6px rgba(0,0,0,0.03); }
+    .task-info h4 { font-size: 13px; font-weight: 700; }
+    .task-info p { font-size: 11px; color: var(--sub); margin-top: 2px; }
+    .btn { padding: 6px 14px; border: none; border-radius: 8px; font-weight: bold; font-size: 12px; cursor: pointer; }
+    .btn-green { background: #16a34a; color: #fff; }
+    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 9999; }
+    .modal-box { background: #fff; border-radius: 14px; padding: 20px; width: 85%; max-width: 300px; text-align: center; }
   </style>
 </head>
 <body>
 
   <div class="container">
+    <!-- Top Header -->
     <div class="header">
-      <h1>ALTA ADS ANALYTICS</h1>
-      <p>Performance Metrics & Campaign Optimizer</p>
+      <div class="coin-box">🟡 <span id="coinBalance">115</span> Coins</div>
+      <div class="spin-box">⚡ <span id="spinBalance">7</span> Spins</div>
     </div>
 
-    <!-- Stats Summary Section -->
-    <div class="card">
-      <span style="font-size:11px;color:var(--sub);letter-spacing:0.5px;">TOTAL IMPRESSION SCORE</span>
-      <div class="balance"><span id="userBalance">329.67</span> pts</div>
-    </div>
+    <div class="section-title">⭐ Tasks & Watch Ads</div>
 
-    <!-- Account Configuration Section -->
-    <div class="card">
-      <h3 style="font-size:13px;margin-bottom:8px;color:var(--text);">Campaign Config</h3>
-      <input type="text" class="input-field" id="tgUsername" placeholder="@channel_username">
-      <input type="text" class="input-field" id="tonAddress" placeholder="Network Target ID (EQD...)">
-      <button class="btn btn-orange" onclick="saveDetails()"><span>Save Parameters</span><span>Save</span></button>
-      <button class="btn btn-green" onclick="requestWithdraw()"><span>Run Diagnostics</span><span>Verify</span></button>
-    </div>
-
-    <!-- Analytics Flow List -->
+    <!-- Task List (Real Working Ads) -->
     <div class="task-list">
-      <div class="task-item">
-        <div><h4 style="font-size:12px;">High eCPM Stream</h4><p style="font-size:9px;color:var(--sub);">Active Optimizer</p></div>
-        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t1Count">18/20</span><button class="btn btn-blue" id="btnTask1" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(1)">Run</button></div>
+      <div class="task-card">
+        <div class="task-info">
+          <h4>Watch Video 1x</h4>
+          <p>+1 Free Spin & Reward</p>
+        </div>
+        <button class="btn btn-green" onclick="watchAdTask(1)">GO</button>
+      </div>
+
+      <div class="task-card">
+        <div class="task-info">
+          <h4>Watch Video 2x</h4>
+          <p>+1 Free Spin & Reward</p>
+        </div>
+        <button class="btn btn-green" onclick="watchAdTask(2)">GO</button>
       </div>
     </div>
   </div>
 
+  <!-- Modal -->
   <div class="modal" id="modal">
     <div class="modal-box">
-      <div style="font-size:15px;font-weight:bold;color:var(--blue);margin-bottom:6px;" id="mTitle">Notification</div>
-      <div style="font-size:12px;color:var(--text);margin-bottom:14px;" id="mMsg">Please wait...</div>
-      <button class="btn btn-blue" id="mBtn" style="justify-content:center;" onclick="closeModal()">OK</button>
+      <div style="font-size:16px;font-weight:bold;margin-bottom:8px;" id="mTitle">Alert</div>
+      <div style="font-size:13px;color:var(--sub);margin-bottom:16px;" id="mMsg">Message</div>
+      <button class="btn btn-green" style="width:100%;" onclick="closeModal()">OK</button>
     </div>
   </div>
 
   <script>
     const CONFIG = {
-      adsterra: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475",
-      reward_id: "50357",          // Adsgram Reward Block ID
-      interstitial_id: "int-50358", // Adsgram Interstitial Block ID
-      task_id: "50359"             // Adsgram Task ID
+      adNetworkUrl: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475",
+      reward_id: "50357" // Adsgram Block ID အသစ်
     };
 
-    const tg = window.Telegram?.WebApp; 
+    const tg = window.Telegram?.WebApp;
     if(tg) { tg.expand(); }
 
     let state = {
-      balance: parseFloat(localStorage.getItem('balance')) || 329.67,
-      t1: parseInt(localStorage.getItem('t1')) || 18,
-      walletSaved: localStorage.getItem('walletSaved') === 'true'
+      coins: parseInt(localStorage.getItem('coins')) || 115,
+      spins: parseInt(localStorage.getItem('spins')) || 7
     };
 
-    function save() { for(let k in state) localStorage.setItem(k, state[k]); }
+    function updateUI() {
+      document.getElementById('coinBalance').innerText = state.coins;
+      document.getElementById('spinBalance').innerText = state.spins;
+      localStorage.setItem('coins', state.coins);
+      localStorage.setItem('spins', state.spins);
+    }
+
     function showModal(title, msg) {
       document.getElementById('mTitle').innerText = title;
       document.getElementById('mMsg').innerText = msg;
@@ -95,47 +94,37 @@
     }
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
-    function saveDetails() {
-      state.walletSaved = true;
-      save();
-      showModal("Success", "Analytics parameters saved successfully!");
-    }
-
-    function requestWithdraw() {
-      if(!state.walletSaved) { showModal("Notice", "Please save configuration parameters first."); return; }
-      showModal("Verified", "System diagnostics completed successfully.");
-    }
-
-    function startTask(num) {
+    function watchAdTask(taskId) {
+      // 1. Ad Network Link ကို ဖွင့်ပေးမည် (Monetag / Adsterra)
       if (tg && tg.openLink) { 
-        tg.openLink(CONFIG.adsterra); 
+        tg.openLink(CONFIG.adNetworkUrl); 
       } else { 
-        window.open(CONFIG.adsterra, '_blank'); 
+        window.open(CONFIG.adNetworkUrl, '_blank'); 
       }
 
-      // Adsgram SDK ကို မှန်ကန်စွာ ပွင့်စေရန်
+      // 2. Adsgram Native Rewarded Ad ကို ခေါ်ယူမည်
       if (window.Adsgram) {
         window.Adsgram.init({ blockId: CONFIG.reward_id }).show()
-          .then((result) => {
-            rewardUser(num);
+          .then(() => {
+            giveReward();
           })
           .catch((err) => {
-            console.log("Ad error:", err);
-            showModal("Notice", "Ad could not be loaded or was skipped.");
+            // ကြော်ငြာမတက်လာရင်တောင် User အဆင်ပြေစေရန် Reward ပေးမည်
+            giveReward();
           });
       } else {
-        setTimeout(() => rewardUser(num), 1000);
+        setTimeout(() => { giveReward(); }, 2000);
       }
     }
 
-    function rewardUser(num) {
-      state.t1++;
-      state.balance += 1.5;
-      save();
-      document.getElementById('userBalance').innerText = state.balance.toFixed(2);
-      document.getElementById('t1Count').innerText = `${state.t1}/20`;
-      showModal("Success", "+1.5 Analytics Score updated!");
+    function giveReward() {
+      state.coins += 10;
+      state.spins += 1;
+      updateUI();
+      showModal("Success!", "🎉 +10 Coins နဲ့ +1 Spin ရရှိသွားပါပြီ။");
     }
+
+    updateUI();
   </script>
 </body>
 </html>
