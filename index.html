@@ -3,49 +3,133 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Fruit Frenzy - Real Spin Game</title>
-  
+  <title>Fruit Frenzy - Real Rotation & Ads</title>
+
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
   <style>
-    :root { --bg: #fce7f3; --card: #ffffff; --primary: #db2777; --text: #1f2937; --sub: #6b7280; }
+    :root { 
+      --bg: #fce7f3; 
+      --card: #ffffff; 
+      --primary: #db2777; 
+      --text: #1f2937; 
+      --sub: #6b7280; 
+      --active-border: #ef4444;
+    }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; user-select: none; }
-    body { background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding-bottom: 70px; }
+    body { background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding-bottom: 80px; }
     .container { width: 100%; max-width: 480px; padding: 12px; }
-    
+
     /* Top Header */
-    .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-    .badge { background: #fff; padding: 6px 12px; border-radius: 20px; font-weight: 800; font-size: 13px; display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .badge { background: #fff; padding: 6px 14px; border-radius: 20px; font-weight: 800; font-size: 13px; display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
     .badge-coins { color: #b45309; }
     .badge-spins { color: #0284c7; }
-    .app-title { font-size: 14px; font-weight: 900; font-style: italic; color: #831843; letter-spacing: 0.5px; }
+    .app-title { font-size: 15px; font-weight: 900; font-style: italic; color: #831843; letter-spacing: 0.5px; }
 
-    /* Game Board Layout */
-    .game-board { background: #ea580c; border-radius: 16px; padding: 10px; display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(234,88,12,0.3); }
-    .cell { background: #fff; border-radius: 8px; aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: #374151; }
+    /* Outer Rotation Grid Board */
+    .game-board { 
+      background: #ea580c; 
+      border-radius: 16px; 
+      padding: 10px; 
+      display: grid; 
+      grid-template-columns: repeat(6, 1fr); 
+      gap: 6px; 
+      margin-bottom: 14px; 
+      box-shadow: 0 4px 12px rgba(234,88,12,0.3); 
+    }
+    .cell { 
+      background: #fff; 
+      border-radius: 8px; 
+      aspect-ratio: 1; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center; 
+      font-size: 9px; 
+      font-weight: bold; 
+      color: #374151; 
+      border: 3px solid transparent;
+      transition: border 0.1s ease, background 0.1s ease;
+    }
     .cell span { font-size: 18px; }
-    .cell.bonus { background: #fde047; color: #854d0e; font-size: 11px; }
+    .cell.bonus { background: #fde047; color: #854d0e; font-size: 10px; text-align: center; line-height: 1.1; }
+    
+    /* Rotation Active Border State */
+    .cell.active {
+      border-color: var(--active-border);
+      background: #fef08a;
+      box-shadow: 0 0 10px #ef4444;
+    }
 
-    /* Center Reel Display */
-    .center-screen { grid-column: 2 / span 4; grid-row: 2 / span 3; background: #581c87; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; border: 2px solid #fbcfe8; }
-    .slots { display: flex; gap: 10px; font-size: 32px; margin-bottom: 6px; background: rgba(0,0,0,0.3); padding: 8px 16px; border-radius: 10px; }
-    .slot-item { min-width: 38px; text-align: center; }
-    .score-display { background: #1e1b4b; padding: 4px 16px; border-radius: 6px; font-size: 15px; font-weight: bold; color: #fde047; }
+    /* Center Display Screen */
+    .center-screen { 
+      grid-column: 2 / span 4; 
+      grid-row: 2 / span 3; 
+      background: #4c1d95; 
+      border-radius: 12px; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center; 
+      color: #fff; 
+      border: 2px solid #fbcfe8; 
+      padding: 10px;
+    }
+    .slots { display: flex; gap: 10px; font-size: 32px; margin-bottom: 8px; background: rgba(0,0,0,0.3); padding: 8px 16px; border-radius: 10px; }
+    .slot-item { min-width: 36px; text-align: center; }
+    .score-display { background: #1e1b4b; padding: 6px 16px; border-radius: 6px; font-size: 14px; font-weight: bold; color: #fde047; }
 
-    /* Controls */
-    .go-btn { width: 100%; background: linear-gradient(135deg, #16a34a, #15803d); color: #fff; border: none; border-radius: 12px; padding: 14px; font-size: 18px; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(22,163,74,0.3); letter-spacing: 1px; }
-    .go-btn:disabled { background: #9ca3af; box-shadow: none; }
+    /* Action Button */
+    .go-btn { 
+      width: 100%; 
+      background: linear-gradient(135deg, #16a34a, #15803d); 
+      color: #fff; 
+      border: none; 
+      border-radius: 12px; 
+      padding: 14px; 
+      font-size: 18px; 
+      font-weight: 900; 
+      text-transform: uppercase; 
+      cursor: pointer; 
+      margin-bottom: 12px; 
+      box-shadow: 0 4px 10px rgba(22,163,74,0.3); 
+      letter-spacing: 1px; 
+    }
+    .go-btn:disabled { background: #9ca3af; box-shadow: none; cursor: not-allowed; }
 
-    .banner-card { background: #fff; border-radius: 12px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-weight: bold; color: #9a3412; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    /* Previous Ads Section Box */
+    .ads-container-box {
+      background: #fff;
+      border: 2px dashed #db2777;
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    .ads-title { font-size: 11px; font-weight: bold; color: #9d174d; margin-bottom: 6px; text-transform: uppercase; }
+    .ad-link-btn {
+      display: block;
+      width: 100%;
+      background: #fdf2f8;
+      border: 1px solid #f472b6;
+      border-radius: 8px;
+      padding: 8px;
+      color: #be185d;
+      font-weight: bold;
+      font-size: 12px;
+      text-decoration: none;
+      cursor: pointer;
+    }
 
-    /* Bottom Nav */
+    /* Bottom Nav Bar */
     .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; padding: 8px 0; border-top: 1px solid #f3e8ff; z-index: 1000; }
-    .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: var(--sub); text-decoration: none; font-weight: bold; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: var(--sub); text-decoration: none; font-weight: bold; cursor: pointer; }
     .nav-item.active { color: var(--primary); }
     .nav-item span { font-size: 16px; }
 
-    /* Modal Popup */
+    /* Modal */
     .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 9999; }
     .modal-box { background: #fff; border-radius: 14px; padding: 20px; width: 85%; max-width: 300px; text-align: center; }
   </style>
@@ -60,56 +144,60 @@
       <div class="badge badge-spins">⚡ <span id="spinCount">5</span> SPINS</div>
     </div>
 
-    <!-- Game Board -->
+    <!-- Outer Border Rotation Game Board -->
     <div class="game-board">
-      <div class="cell"><span>🍒</span>Cherry</div>
-      <div class="cell"><span>🍋</span>Lemon</div>
-      <div class="cell bonus">X3<br>BONUS</div>
-      <div class="cell"><span>🍎</span>Apple</div>
-      <div class="cell"><span>🍊</span>Orange</div>
-      <div class="cell"><span>🍉</span>Melon</div>
+      <!-- Top Row (0 - 5) -->
+      <div class="cell" id="c0"><span>🍒</span>Cherry</div>
+      <div class="cell" id="c1"><span>🍋</span>Lemon</div>
+      <div class="cell bonus" id="c2">X3<br>BONUS</div>
+      <div class="cell" id="c3"><span>🍎</span>Apple</div>
+      <div class="cell" id="c4"><span>🍊</span>Orange</div>
+      <div class="cell" id="c5"><span>🍉</span>Melon</div>
 
-      <div class="cell"><span>🍎</span>Apple</div>
+      <!-- Right Column & Left Column Cells -->
+      <div class="cell" id="c15"><span>🍎</span>Apple</div>
       
-      <!-- Slot Spinning Area -->
+      <!-- Center Slot Machine Display -->
       <div class="center-screen">
         <div class="slots">
-          <span class="slot-item" id="slot1">🍒</span>
-          <span class="slot-item" id="slot2">🍉</span>
+          <span class="slot-item" id="slot1">🍎</span>
+          <span class="slot-item" id="slot2">🍒</span>
           <span class="slot-item" id="slot3">🍇</span>
         </div>
         <div class="score-display" id="winScore">READY</div>
       </div>
 
-      <div class="cell bonus">X3<br>BONUS</div>
-      <div class="cell"><span>🍋</span>Lemon</div>
-      <div class="cell"><span>🍊</span>Orange</div>
-      <div class="cell"><span>🍎</span>Apple</div>
-      <div class="cell"><span>🍒</span>Cherry</div>
-      <div class="cell bonus">X3<br>BONUS</div>
-      <div class="cell"><span>🍉</span>Melon</div>
-      <div class="cell"><span>🍉</span>Melon</div>
-      <div class="cell"><span>🍒</span>Cherry</div>
-      <div class="cell"><span>🍋</span>Lemon</div>
-      <div class="cell"><span>🍒</span>Cherry</div>
-      <div class="cell"><span>🍋</span>Lemon</div>
-      <div class="cell"><span>🍉</span>Melon</div>
+      <div class="cell bonus" id="c6">X3<br>BONUS</div>
+
+      <div class="cell" id="c14"><span>🍋</span>Lemon</div>
+      <div class="cell" id="c7"><span>🍊</span>Orange</div>
+
+      <div class="cell" id="c13"><span>🍎</span>Apple</div>
+      <div class="cell" id="c8"><span>🍒</span>Cherry</div>
+
+      <!-- Bottom Row (9 - 12) -->
+      <div class="cell bonus" id="c12">X3<br>BONUS</div>
+      <div class="cell" id="c11"><span>🍉</span>Melon</div>
+      <div class="cell" id="c10"><span>🍒</span>Cherry</div>
+      <div class="cell" id="c9"><span>🍋</span>Lemon</div>
     </div>
 
-    <!-- Spin Button -->
+    <!-- GO Button -->
     <button class="go-btn" id="goBtn" onclick="handleSpin()">GO</button>
 
-    <div class="banner-card">
-      <span>🎁 Spin ကုန်ပါက Ads ကြည့်၍ Spin +5 ယူပါ။</span>
+    <!-- Previous Ad Networks Section Box -->
+    <div class="ads-container-box">
+      <div class="ads-title">🎁 Bonus Sponsor Link</div>
+      <a class="ad-link-btn" onclick="openExternalAd()">Visit Sponsor Ad (+50 Coins)</a>
     </div>
   </div>
 
-  <!-- Navigation -->
+  <!-- Bottom Navigation -->
   <div class="nav-bar">
-    <a href="#" class="nav-item active"><span>▶️</span>PLAY</a>
-    <a href="#" class="nav-item" onclick="showAdsForSpins()"><span>🎬</span>FREE SPINS</a>
-    <a href="#" class="nav-item"><span>👥</span>INVITE</a>
-    <a href="#" class="nav-item"><span>💰</span>WALLET</a>
+    <a class="nav-item active"><span>▶️</span>PLAY</a>
+    <a class="nav-item" onclick="triggerTaskAd()"><span>📋</span>TASKS</a>
+    <a class="nav-item" onclick="triggerRewardedAd()"><span>🎬</span>FREE SPINS</a>
+    <a class="nav-item" onclick="showAdsgramInterstitial()"><span>⚡</span>SPECIAL</a>
   </div>
 
   <!-- Modal -->
@@ -122,16 +210,27 @@
   </div>
 
   <script>
-    const CONFIG = {
-      reward_id: "50357" // Adsgram Block ID
+    // Adsgram Blocks Configuration
+    const ADSCONFIG = {
+      rewarded_id: "50715",
+      interstitial_id: "50716",
+      task_id: "50717",
+      external_ad_url: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475"
     };
 
-    const fruits = ["🍒", "🍋", "🍎", "🍊", "🍉", "🍇"];
-    let isSpinning = false;
+    // Border Cells mapping in clockwise sequence
+    const borderSequence = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+    const fruits = ["🍒", "🍋", "🍎", "🍉"];
+    const cellFruits = {
+      0: "🍒", 1: "🍋", 2: "X3", 3: "🍎", 4: "🍊", 5: "🍉",
+      6: "X3", 7: "🍊", 8: "🍒", 9: "🍋", 10: "🍒", 11: "🍉",
+      12: "X3", 13: "🍎", 14: "🍋", 15: "🍎"
+    };
 
     const tg = window.Telegram?.WebApp;
     if(tg) { tg.expand(); }
 
+    let isSpinning = false;
     let state = {
       coins: parseInt(localStorage.getItem('coins')) || 115,
       spins: parseInt(localStorage.getItem('spins')) || 5
@@ -151,14 +250,74 @@
     }
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
-    // Spin Engine & Logic
+    // External Ad Network Link Trigger
+    function openExternalAd() {
+      if (tg && tg.openLink) {
+        tg.openLink(ADSCONFIG.external_ad_url);
+      } else {
+        window.open(ADSCONFIG.external_ad_url, '_blank');
+      }
+      state.coins += 50;
+      updateUI();
+      showModal("Sponsor Reward", "🎉 +50 Coins earned for visiting sponsor!");
+    }
+
+    // Adsgram Calls
+    function triggerRewardedAd() {
+      if (window.Adsgram) {
+        window.Adsgram.init({ blockId: ADSCONFIG.rewarded_id }).show()
+          .then(() => {
+            state.spins += 5;
+            updateUI();
+            showModal("Success!", "🎉 Video watched! +5 Free Spins added.");
+          })
+          .catch(() => {
+            state.spins += 5;
+            updateUI();
+            showModal("Reward", "🎉 +5 Free Spins added.");
+          });
+      } else {
+        state.spins += 5;
+        updateUI();
+        showModal("Reward", "🎉 +5 Free Spins added.");
+      }
+    }
+
+    function showAdsgramInterstitial() {
+      if (window.Adsgram) {
+        window.Adsgram.init({ blockId: ADSCONFIG.interstitial_id }).show()
+          .then(() => { state.coins += 20; updateUI(); })
+          .catch(() => {});
+      }
+    }
+
+    function triggerTaskAd() {
+      if (window.Adsgram) {
+        window.Adsgram.init({ blockId: ADSCONFIG.task_id }).show()
+          .then(() => {
+            state.coins += 30;
+            updateUI();
+            showModal("Task Completed", "🎉 +30 Coins added!");
+          })
+          .catch(() => {
+            showModal("Task Notice", "Task completed! +20 Coins added.");
+            state.coins += 20;
+            updateUI();
+          });
+      } else {
+        showModal("Task Notice", "Task completed! +20 Coins added.");
+        state.coins += 20;
+        updateUI();
+      }
+    }
+
+    // Game Spin Engine (Outer Border & Center Sync)
     function handleSpin() {
       if (isSpinning) return;
 
-      // Spins ကုန်သွားရင် ကြော်ငြာတောင်းမည်
       if (state.spins <= 0) {
-        showModal("Spins ကုန်သွားပါပြီ!", "ဂိမ်းဆက်ဆော့ရန် Ads Video အဆုံးထိကြည့်ရှုပြီး +5 Spins ရယူပါခင်ဗျာ။");
-        showAdsForSpins();
+        showModal("Out of Spins!", "Watch a video ad to get +5 Free Spins.");
+        triggerRewardedAd();
         return;
       }
 
@@ -168,74 +327,71 @@
       document.getElementById('goBtn').disabled = true;
       document.getElementById('winScore').innerText = "SPINNING...";
 
-      let counter = 0;
+      let currentBorderIndex = 0;
+      let totalBorderSteps = 16 * 2 + Math.floor(Math.random() * 16); // 2 full rotations + random stop
+      let stepCount = 0;
+      let speed = 60;
+
       let slot1 = document.getElementById('slot1');
       let slot2 = document.getElementById('slot2');
       let slot3 = document.getElementById('slot3');
 
-      // Animation Loop (အလယ်က သစ်သီးများ မြန်မြန်လည်မည်)
-      let interval = setInterval(() => {
-        slot1.innerText = fruits[Math.floor(Math.random() * fruits.length)];
-        slot2.innerText = fruits[Math.floor(Math.random() * fruits.length)];
-        slot3.innerText = fruits[Math.floor(Math.random() * fruits.length)];
-        counter++;
+      // Border Animation Function
+      function rotateBorder() {
+        // Clear previous active border
+        document.querySelectorAll('.cell').forEach(c => c.classList.remove('active'));
 
-        if (counter > 20) { // 2 စက္ကန့်ခန့် လည်ပြီးပါက ရပ်မည်
-          clearInterval(interval);
-          finishSpin(slot1.innerText, slot2.innerText, slot3.innerText);
+        let activeCellId = "c" + borderSequence[currentBorderIndex % 16];
+        document.getElementById(activeCellId).classList.add('active');
+
+        // Animate Center Slots simultaneously
+        if (stepCount < totalBorderSteps - 5) {
+          slot1.innerText = fruits[Math.floor(Math.random() * fruits.length)];
+          slot2.innerText = fruits[Math.floor(Math.random() * fruits.length)];
+          slot3.innerText = fruits[Math.floor(Math.random() * fruits.length)];
         }
-      }, 100);
+
+        stepCount++;
+        currentBorderIndex++;
+
+        if (stepCount < totalBorderSteps) {
+          setTimeout(rotateBorder, speed);
+        } else {
+          let finalCellId = borderSequence[(currentBorderIndex - 1) % 16];
+          finishSpin(finalCellId, slot1.innerText, slot2.innerText, slot3.innerText);
+        }
+      }
+
+      rotateBorder();
     }
 
-    // ရလဒ်နှင့် အမှတ်တွက်ချက်ခြင်း
-    function finishSpin(f1, f2, f3) {
+    // Calculate Game Results
+    function finishSpin(borderCellIndex, s1, s2, s3) {
       isSpinning = false;
       document.getElementById('goBtn').disabled = false;
 
-      let score = 0;
-      let msg = "";
+      let stoppedFruit = cellFruits[borderCellIndex];
+      let centerFruits = [s1, s2, s3];
 
-      // စည်းမျဉ်းအတိုင်း စစ်ဆေးခြင်း
-      if (f1 === f2 && f2 === f3) {
-        // ၃ ခုလုံးတူရင်
-        score = 200;
-        msg = "🎉 JACKPOT! 3 ခုလုံးတူလို့ +200 Coins!";
-      } else if (f1 === f2 || f1 === f3 || f2 === f3) {
-        // ၂ ခုတူရင်
-        score = 50;
-        msg = "👏 2 ခုတူလို့ +50 Coins!";
-      } else {
-        // ၁ ခုတူ (သို့မဟုတ်) အနည်းဆုံး သစ်သီး ၁ မျိုးပါရင်
-        score = 10;
-        msg = "✨ +10 Coins ရရှိပါသည်!";
+      let matches = centerFruits.filter(f => f === stoppedFruit).length;
+      let baseCoins = 10;
+
+      if (matches === 1) baseCoins = 20;
+      else if (matches === 2) baseCoins = 50;
+      else if (matches === 3) baseCoins = 100;
+
+      // X3 Bonus Calculation
+      if (stoppedFruit === "X3") {
+        baseCoins = 150; // Special Bonus flat rate
       }
 
-      state.coins += score;
-      document.getElementById('winScore').innerText = `+${score} COINS`;
+      state.coins += baseCoins;
+      document.getElementById('winScore').innerText = `+${baseCoins} COINS`;
       updateUI();
-    }
 
-    // Adsgram ကြော်ငြာခေါ်ယူပြီး Spin ဖြည့်ပေးခြင်း
-    function showAdsForSpins() {
-      if (window.Adsgram) {
-        window.Adsgram.init({ blockId: CONFIG.reward_id }).show()
-          .then(() => {
-            state.spins += 5;
-            updateUI();
-            showModal("Success!", "🎉 ကြော်ငြာကြည့်ရှုပြီးပါပြီ။ +5 Free Spins ရရှိသွားပါပြီ။");
-          })
-          .catch((err) => {
-            // Error ဖြစ်လျှင်လည်း အသုံးပြုသူမနစ်နာစေရန် +5 ပေးမည်
-            state.spins += 5;
-            updateUI();
-            showModal("Reward", "🎉 +5 Free Spins ရရှိသွားပါပြီ။");
-          });
-      } else {
-        setTimeout(() => {
-          state.spins += 5;
-          updateUI();
-          showModal("Reward", "🎉 +5 Free Spins ရရှိသွားပါပြီ။");
-        }, 1500);
+      // Trigger Interstitial occasionally
+      if (Math.random() < 0.3) {
+        showAdsgramInterstitial();
       }
     }
 
