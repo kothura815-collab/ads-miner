@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Fruit Frenzy - Perfectly Balanced & Screen Fit</title>
+  <title>Fruit Frenzy - Perfectly Balanced Grid</title>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
@@ -37,7 +37,7 @@
     .badge-spins { color: #0284c7; }
     .app-title { font-size: 14px; font-weight: 900; font-style: italic; color: #831843; }
 
-    /* Fixed 6x4 Grid Layout (14 Cells Seamless Loop) */
+    /* Fully Filled 6x4 Seamless Grid Board */
     .game-board { 
       background: #ea580c; 
       border-radius: 14px; 
@@ -73,7 +73,28 @@
       box-shadow: 0 0 8px #ef4444;
     }
 
-    /* Center Screen Display (Fixed Fit) */
+    /* Grid Layout Positions */
+    .c-0 { grid-column: 1; grid-row: 1; }
+    .c-1 { grid-column: 2; grid-row: 1; }
+    .c-2 { grid-column: 3; grid-row: 1; }
+    .c-3 { grid-column: 4; grid-row: 1; }
+    .c-4 { grid-column: 5; grid-row: 1; }
+    .c-5 { grid-column: 6; grid-row: 1; }
+
+    .c-6 { grid-column: 6; grid-row: 2; }
+    .c-7 { grid-column: 6; grid-row: 3; }
+
+    .c-8 { grid-column: 6; grid-row: 4; }
+    .c-9 { grid-column: 5; grid-row: 4; }
+    .c-10 { grid-column: 4; grid-row: 4; }
+    .c-11 { grid-column: 3; grid-row: 4; }
+    .c-12 { grid-column: 2; grid-row: 4; }
+    .c-13 { grid-column: 1; grid-row: 4; }
+
+    .c-14 { grid-column: 1; grid-row: 3; }
+    .c-15 { grid-column: 1; grid-row: 2; }
+
+    /* Center Screen Display */
     .center-screen { 
       grid-column: 2 / span 4; 
       grid-row: 2 / span 2; 
@@ -152,23 +173,32 @@
     <div class="top-header">
       <div class="badge badge-coins">🟡 <span id="coinCount">0</span> PTS</div>
       <div class="app-title">FRUIT FRENZY</div>
-      <div class="badge badge-spins">⚡ <span id="spinCount">3</span> SPINS</div>
+      <div class="badge badge-spins">⚡ <span id="spinCount">10</span> SPINS</div>
     </div>
 
-    <!-- Perfectly Filled 6x4 Grid Board (14 Outer Cells) -->
+    <!-- Complete 16 Outer Cells Grid (No Empty Spaces) -->
     <div class="game-board">
-      <!-- Top Row (6 Cells: c0 - c5) -->
-      <div class="cell" id="c0"><span>🍒</span>Cherry</div>
-      <div class="cell" id="c1"><span>🍋</span>Lemon</div>
-      <div class="cell bonus" id="c2">X2<br>BONUS</div>
-      <div class="cell" id="c3"><span>🍎</span>Apple</div>
-      <div class="cell" id="c4"><span>🍊</span>Orange</div>
-      <div class="cell" id="c5"><span>🍉</span>Melon</div>
+      <div class="cell c-0" id="c0"><span>🍒</span>Cherry</div>
+      <div class="cell c-1" id="c1"><span>🍋</span>Lemon</div>
+      <div class="cell bonus c-2" id="c2">X3<br>BONUS</div>
+      <div class="cell c-3" id="c3"><span>🍎</span>Apple</div>
+      <div class="cell c-4" id="c4"><span>🍊</span>Orange</div>
+      <div class="cell c-5" id="c5"><span>🍉</span>Melon</div>
 
-      <!-- Right Column Middle (2 Cells: c6 - c7) -->
-      <div class="cell bonus" id="c6">X2<br>BONUS</div>
-      
-      <!-- Center Slot Display (Spans Columns 2-5, Rows 2-3) -->
+      <div class="cell bonus c-6" id="c6">X3<br>BONUS</div>
+      <div class="cell c-7" id="c7"><span>🍒</span>Cherry</div>
+
+      <div class="cell c-8" id="c8"><span>🍊</span>Orange</div>
+      <div class="cell c-9" id="c9"><span>🍋</span>Lemon</div>
+      <div class="cell c-10" id="c10"><span>🍉</span>Melon</div>
+      <div class="cell bonus c-11" id="c11">X3<br>BONUS</div>
+      <div class="cell c-12" id="c12"><span>🍎</span>Apple</div>
+      <div class="cell c-13" id="c13"><span>🍒</span>Cherry</div>
+
+      <div class="cell c-14" id="c14"><span>🍋</span>Lemon</div>
+      <div class="cell c-15" id="c15"><span>🍎</span>Apple</div>
+
+      <!-- Center Slot Display -->
       <div class="center-screen">
         <div class="slots">
           <span class="slot-item" id="slot1">🍎</span>
@@ -177,18 +207,6 @@
         </div>
         <div class="score-display" id="winScore">READY</div>
       </div>
-
-      <div class="cell" id="c7"><span>🍒</span>Cherry</div>
-
-      <!-- Left Column Middle (2 Cells: c13 - c12) placed relative in CSS Grid flow -->
-      <div class="cell" id="c13"><span>🍎</span>Apple</div>
-      <div class="cell" id="c8"><span>🍊</span>Orange</div>
-
-      <!-- Bottom Row (6 Cells: c11 - c8 reverse flow for full loop) -->
-      <div class="cell" id="c12"><span>🍋</span>Lemon</div>
-      <div class="cell bonus" id="c11">X2<br>BONUS</div>
-      <div class="cell" id="c10"><span>🍉</span>Melon</div>
-      <div class="cell" id="c9"><span>🍒</span>Cherry</div>
     </div>
 
     <!-- Spin Button -->
@@ -196,7 +214,7 @@
 
     <!-- Sponsor Banner Box -->
     <div class="ads-container-box">
-      <a class="ad-link-btn" onclick="openExternalAd()">🎁 Visit Sponsor Ad (+10 Points)</a>
+      <a class="ad-link-btn" onclick="openExternalAd()">🎁 Visit Sponsor Ad (+50 Points)</a>
     </div>
   </div>
 
@@ -242,7 +260,7 @@
   </div>
 
   <script>
-    // Adsgram Configuration Block IDs
+    // Adsgram Block IDs
     const ADSCONFIG = {
       rewarded_id: "50803",
       interstitial_id: "50804",
@@ -250,13 +268,13 @@
       external_ad_url: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475"
     };
 
-    // 14 Cells Outer Loop
-    const borderSequence = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+    // Complete 16 Outer Sequential Cells
+    const borderSequence = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
     const fruits = ["🍒", "🍋", "🍎", "🍉"];
     const cellFruits = {
-      0: "🍒", 1: "🍋", 2: "X2", 3: "🍎", 4: "🍊", 5: "🍉",
-      6: "X2", 7: "🍒", 8: "🍊", 9: "🍒", 10: "🍉", 11: "X2",
-      12: "🍋", 13: "🍎"
+      0: "🍒", 1: "🍋", 2: "X3", 3: "🍎", 4: "🍊", 5: "🍉",
+      6: "X3", 7: "🍒", 8: "🍊", 9: "🍋", 10: "🍉", 11: "X3",
+      12: "🍎", 13: "🍒", 14: "🍋", 15: "🍎"
     };
 
     const tg = window.Telegram?.WebApp;
@@ -265,7 +283,7 @@
     let isSpinning = false;
     let state = {
       coins: parseInt(localStorage.getItem('coins')) || 0,
-      spins: parseInt(localStorage.getItem('spins')) || 3,
+      spins: parseInt(localStorage.getItem('spins')) || 10,
       withdrawals: JSON.parse(localStorage.getItem('withdrawals')) || []
     };
 
@@ -337,32 +355,32 @@
       `).join('');
     }
 
-    /* Ad Network Handlers - Reduced Rewards for Sustainability */
+    /* Ad Rewards System */
     function openExternalAd() {
       if (tg && tg.openLink) { tg.openLink(ADSCONFIG.external_ad_url); } 
       else { window.open(ADSCONFIG.external_ad_url, '_blank'); }
-      state.coins += 10; // Reduced to 10 PTS
+      state.coins += 50; 
       updateUI();
-      showModal("Sponsor Reward", "🎉 +10 Points earned!");
+      showModal("Sponsor Reward", "🎉 +50 Points earned!");
     }
 
     function triggerRewardedAd() {
       if (window.Adsgram) {
         window.Adsgram.init({ blockId: ADSCONFIG.rewarded_id }).show()
-          .then(() => { state.spins += 2; updateUI(); showModal("Success!", "+2 Free Spins added!"); })
-          .catch(() => { state.spins += 2; updateUI(); showModal("Reward", "+2 Free Spins added!"); });
+          .then(() => { state.spins += 5; updateUI(); showModal("Success!", "+5 Free Spins added!"); })
+          .catch(() => { state.spins += 5; updateUI(); showModal("Reward", "+5 Free Spins added!"); });
       } else {
-        state.spins += 2; updateUI(); showModal("Reward", "+2 Free Spins added!");
+        state.spins += 5; updateUI(); showModal("Reward", "+5 Free Spins added!");
       }
     }
 
     function triggerTaskAd() {
       if (window.Adsgram) {
         window.Adsgram.init({ blockId: ADSCONFIG.task_id }).show()
-          .then(() => { state.coins += 15; updateUI(); showModal("Task Success", "+15 Points earned!"); })
-          .catch(() => { state.coins += 10; updateUI(); showModal("Task Reward", "+10 Points earned!"); });
+          .then(() => { state.coins += 100; updateUI(); showModal("Task Success", "+100 Points earned!"); })
+          .catch(() => { state.coins += 50; updateUI(); showModal("Task Reward", "+50 Points earned!"); });
       } else {
-        state.coins += 10; updateUI(); showModal("Task Reward", "+10 Points earned!");
+        state.coins += 50; updateUI(); showModal("Task Reward", "+50 Points earned!");
       }
     }
 
@@ -377,7 +395,7 @@
       if (isSpinning) return;
 
       if (state.spins <= 0) {
-        showModal("Out of Spins!", "Watch a video ad to get +2 Free Spins.");
+        showModal("Out of Spins!", "Watch a video ad to get +5 Free Spins.");
         triggerRewardedAd();
         return;
       }
@@ -389,7 +407,7 @@
       document.getElementById('winScore').innerText = "SPINNING...";
 
       let currentBorderIndex = 0;
-      let totalBorderSteps = 14 * 2 + Math.floor(Math.random() * 14);
+      let totalBorderSteps = 16 * 2 + Math.floor(Math.random() * 16);
       let stepCount = 0;
 
       let slot1 = document.getElementById('slot1');
@@ -399,7 +417,7 @@
       function rotateBorder() {
         document.querySelectorAll('.cell').forEach(c => c.classList.remove('active'));
 
-        let activeCellId = "c" + borderSequence[currentBorderIndex % 14];
+        let activeCellId = "c" + borderSequence[currentBorderIndex % 16];
         document.getElementById(activeCellId).classList.add('active');
 
         if (stepCount < totalBorderSteps - 4) {
@@ -414,7 +432,7 @@
         if (stepCount < totalBorderSteps) {
           setTimeout(rotateBorder, 50);
         } else {
-          let finalCellId = borderSequence[(currentBorderIndex - 1) % 14];
+          let finalCellId = borderSequence[(currentBorderIndex - 1) % 16];
           finishSpin(finalCellId, slot1.innerText, slot2.innerText, slot3.innerText);
         }
       }
@@ -422,7 +440,7 @@
       rotateBorder();
     }
 
-    /* Controlled Reward Logic */
+    /* Optimized Reward Values */
     function finishSpin(borderCellIndex, s1, s2, s3) {
       isSpinning = false;
       document.getElementById('goBtn').disabled = false;
@@ -431,19 +449,19 @@
       let centerFruits = [s1, s2, s3];
       let matches = centerFruits.filter(f => f === stoppedFruit).length;
       
-      let baseCoins = 2; // Default 2 PTS
+      let baseCoins = 5; // Base 5 PTS
 
-      if (matches === 1) baseCoins = 4;
-      else if (matches === 2) baseCoins = 8;
-      else if (matches === 3) baseCoins = 15;
+      if (matches === 1) baseCoins = 15;
+      else if (matches === 2) baseCoins = 30;
+      else if (matches === 3) baseCoins = 50;
 
-      if (stoppedFruit === "X2") { baseCoins = 10; }
+      if (stoppedFruit === "X3") { baseCoins = 100; }
 
       state.coins += baseCoins;
       document.getElementById('winScore').innerText = `+${baseCoins} PTS`;
       updateUI();
 
-      if (Math.random() < 0.35) {
+      if (Math.random() < 0.3) {
         showAdsgramInterstitial();
       }
     }
@@ -451,4 +469,4 @@
     updateUI();
   </script>
 </body>
-  </html>
+</html>
