@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Fruit Frenzy - Perfectly Balanced Grid</title>
 
+  <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+  <!-- Adsgram Official SDK Script -->
+  <script src="https://adsgram.ai/js/adv_adsgram.js"></script>
 
   <style>
     :root { 
@@ -37,7 +39,7 @@
     .badge-spins { color: #0284c7; }
     .app-title { font-size: 14px; font-weight: 900; font-style: italic; color: #831843; }
 
-    /* Fully Filled 6x4 Seamless Grid Board */
+    /* 6x4 Seamless Grid Board */
     .game-board { 
       background: #ea580c; 
       border-radius: 14px; 
@@ -172,11 +174,11 @@
     <!-- Header -->
     <div class="top-header">
       <div class="badge badge-coins">🟡 <span id="coinCount">0</span> PTS</div>
-      <div class="app-title">FRUIT FRENZY</div>
+      <div class="app-title">FOR U AI</div>
       <div class="badge badge-spins">⚡ <span id="spinCount">10</span> SPINS</div>
     </div>
 
-    <!-- Complete 16 Outer Cells Grid Board -->
+    <!-- 16 Outer Sequential Cells Grid Board -->
     <div class="game-board">
       <div class="cell c-0" id="c0"><span>🍒</span>Cherry</div>
       <div class="cell c-1" id="c1"><span>🍋</span>Lemon</div>
@@ -214,15 +216,15 @@
 
     <!-- Sponsor Banner Box -->
     <div class="ads-container-box">
-      <a class="ad-link-btn" onclick="openExternalAd()">🎁 Visit Sponsor Ad (+50 Points)</a>
+      <a class="ad-link-btn" onclick="openExternalAd()">🎁 Visit Sponsor Link (+50 Points)</a>
     </div>
   </div>
 
   <!-- Bottom Navigation -->
   <div class="nav-bar">
-    <a class="nav-item active"><span>▶️</span>PLAY</a>
-    <a class="nav-item" onclick="triggerTaskAd()"><span>📋</span>TASKS</a>
-    <a class="nav-item" onclick="triggerRewardedAd()"><span>🎬</span>FREE SPINS</a>
+    <a class="nav-item active"><span>▶️️</span>PLAY</a>
+    <a class="nav-item" onclick="triggerRewardAd('50894', 100, 'points')"><span>📋</span>TASKS</a>
+    <a class="nav-item" onclick="triggerRewardAd('50893', 5, 'spins')"><span>🎬</span>FREE SPINS</a>
     <a class="nav-item" onclick="openWithdrawModal()"><span>💰</span>WITHDRAW</a>
   </div>
 
@@ -235,7 +237,7 @@
     </div>
   </div>
 
-  <!-- Real Withdraw Modal -->
+  <!-- Withdraw Modal -->
   <div class="modal" id="withdrawModal">
     <div class="modal-box">
       <div style="font-size:16px;font-weight:bold;color:#db2777;margin-bottom:4px;">Withdraw Earnings</div>
@@ -249,7 +251,6 @@
       
       <button style="width:100%;padding:10px;background:#16a34a;color:#fff;border:none;border-radius:6px;font-weight:bold;margin-bottom:6px;" onclick="processWithdraw()">CONFIRM WITHDRAW</button>
       
-      <!-- History List Toggle -->
       <div style="font-size:12px;font-weight:bold;color:#1e1b4b;margin-top:8px;text-align:left;">Withdrawal Records:</div>
       <div class="history-list" id="historyList">
         <div style="color:#9ca3af;text-align:center;">No withdrawal records found.</div>
@@ -260,15 +261,14 @@
   </div>
 
   <script>
-    // Updated Adsgram Block IDs
+    // All 3 IDs assigned as Reward Block IDs
     const ADSCONFIG = {
-      rewarded_id: "50811",
-      interstitial_id: "50812",
-      task_id: "50813",
+      reward_id_1: "50893", // Spin Reward Ad
+      reward_id_2: "50894", // Task Reward Ad
+      reward_id_3: "50895", // Extra Bonus Reward Ad
       external_ad_url: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475"
     };
 
-    // Complete 16 Outer Sequential Cells
     const borderSequence = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
     const fruits = ["🍒", "🍋", "🍎", "🍉"];
     const cellFruits = {
@@ -355,7 +355,32 @@
       `).join('');
     }
 
-    /* Strict Adsgram Integration (Case 5 Rejection Fix) */
+    /* Unified Universal Adsgram Reward Handler */
+    function triggerRewardAd(blockId, amount, type) {
+      if (window.Adsgram) {
+        const AdController = window.Adsgram.init({ blockId: blockId, debug: false });
+        AdController.show()
+          .then((result) => {
+            if (result && result.done) {
+              if (type === 'spins') {
+                state.spins += amount;
+                showModal("Success!", `+${amount} Free Spins added!`);
+              } else {
+                state.coins += amount;
+                showModal("Task Reward", `+${amount} Points earned!`);
+              }
+              updateUI();
+            }
+          })
+          .catch((error) => {
+            console.log("Ad Error / Dismissed:", error);
+            showModal("Notice", "Ad was not completed or no ads available.");
+          });
+      } else {
+        showModal("Notice", "Adsgram SDK is loading. Please try again in a moment.");
+      }
+    }
+
     function openExternalAd() {
       if (tg && tg.openLink) { tg.openLink(ADSCONFIG.external_ad_url); } 
       else { window.open(ADSCONFIG.external_ad_url, '_blank'); }
@@ -364,55 +389,13 @@
       showModal("Sponsor Reward", "🎉 +50 Points earned!");
     }
 
-    function triggerRewardedAd() {
-      if (window.Adsgram) {
-        const AdController = window.Adsgram.init({ blockId: ADSCONFIG.rewarded_id });
-        AdController.show()
-          .then((result) => {
-            // Reward only on full completion
-            state.spins += 5; 
-            updateUI(); 
-            showModal("Success!", "+5 Free Spins added!");
-          })
-          .catch((error) => {
-            console.log("Ad dismissed or failed:", error);
-          });
-      } else {
-        showModal("Notice", "Ad network is initializing. Please try again in a moment.");
-      }
-    }
-
-    function triggerTaskAd() {
-      if (window.Adsgram) {
-        const AdController = window.Adsgram.init({ blockId: ADSCONFIG.task_id });
-        AdController.show()
-          .then((result) => {
-            state.coins += 100; 
-            updateUI(); 
-            showModal("Task Success", "+100 Points earned!");
-          })
-          .catch((error) => {
-            console.log("Task ad dismissed or failed:", error);
-          });
-      } else {
-        showModal("Notice", "Ad network is initializing. Please try again in a moment.");
-      }
-    }
-
-    function showAdsgramInterstitial() {
-      if (window.Adsgram) {
-        const AdController = window.Adsgram.init({ blockId: ADSCONFIG.interstitial_id });
-        AdController.show().catch((e) => console.log("Interstitial skipped:", e));
-      }
-    }
-
     /* Balanced Spin Engine */
     function handleSpin() {
       if (isSpinning) return;
 
       if (state.spins <= 0) {
         showModal("Out of Spins!", "Watch a video ad to get +5 Free Spins.");
-        triggerRewardedAd();
+        triggerRewardAd(ADSCONFIG.reward_id_1, 5, 'spins');
         return;
       }
 
@@ -477,8 +460,9 @@
       document.getElementById('winScore').innerText = `+${baseCoins} PTS`;
       updateUI();
 
-      if (Math.random() < 0.3) {
-        showAdsgramInterstitial();
+      // Trigger Extra Reward Ad randomly after spins (using 50895)
+      if (Math.random() < 0.25) {
+        triggerRewardAd(ADSCONFIG.reward_id_3, 20, 'points');
       }
     }
 
