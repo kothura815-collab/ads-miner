@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Fruit Frenzy - Perfectly Balanced Grid</title>
+  <title>For U AI - Mini App</title>
 
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <!-- Adsgram Official SDK Script -->
+  <!-- Adsgram Official SDK -->
   <script src="https://adsgram.ai/js/adv_adsgram.js"></script>
 
   <style>
@@ -39,7 +39,7 @@
     .badge-spins { color: #0284c7; }
     .app-title { font-size: 14px; font-weight: 900; font-style: italic; color: #831843; }
 
-    /* 6x4 Seamless Grid Board */
+    /* 6x4 Grid Board */
     .game-board { 
       background: #ea580c; 
       border-radius: 14px; 
@@ -48,7 +48,7 @@
       grid-template-columns: repeat(6, 1fr); 
       grid-template-rows: repeat(4, 1fr); 
       gap: 4px; 
-      margin-bottom: 10px; 
+      margin-bottom: 12px; 
       box-shadow: 0 4px 10px rgba(234,88,12,0.25); 
       width: 100%;
     }
@@ -75,7 +75,7 @@
       box-shadow: 0 0 8px #ef4444;
     }
 
-    /* Grid Layout Positions */
+    /* Grid Layout */
     .c-0 { grid-column: 1; grid-row: 1; }
     .c-1 { grid-column: 2; grid-row: 1; }
     .c-2 { grid-column: 3; grid-row: 1; }
@@ -96,7 +96,7 @@
     .c-14 { grid-column: 1; grid-row: 3; }
     .c-15 { grid-column: 1; grid-row: 2; }
 
-    /* Center Screen Display */
+    /* Center Display */
     .center-screen { 
       grid-column: 2 / span 4; 
       grid-row: 2 / span 2; 
@@ -121,49 +121,27 @@
       color: #fff; 
       border: none; 
       border-radius: 10px; 
-      padding: 12px; 
+      padding: 14px; 
       font-size: 16px; 
       font-weight: 900; 
       text-transform: uppercase; 
       cursor: pointer; 
-      margin-bottom: 8px; 
+      margin-bottom: 12px; 
       box-shadow: 0 3px 8px rgba(22,163,74,0.3); 
     }
     .go-btn:disabled { background: #9ca3af; box-shadow: none; }
 
-    /* Sponsor Link Box */
-    .ads-container-box {
-      background: #fff;
-      border: 1px dashed #db2777;
-      border-radius: 10px;
-      padding: 8px;
-      text-align: center;
-    }
-    .ad-link-btn {
-      display: block;
-      background: #fdf2f8;
-      border: 1px solid #f472b6;
-      border-radius: 6px;
-      padding: 6px;
-      color: #be185d;
-      font-weight: bold;
-      font-size: 11px;
-      text-decoration: none;
-      cursor: pointer;
-    }
-
     /* Bottom Navigation Bar */
-    .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; padding: 8px 0; border-top: 1px solid #f3e8ff; z-index: 1000; }
-    .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: var(--sub); text-decoration: none; font-weight: bold; cursor: pointer; }
+    .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #f3e8ff; z-index: 1000; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 11px; color: var(--sub); text-decoration: none; font-weight: bold; cursor: pointer; }
     .nav-item.active { color: var(--primary); }
-    .nav-item span { font-size: 16px; }
+    .nav-item span { font-size: 18px; margin-bottom: 2px; }
 
     /* Modals */
     .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 9999; }
     .modal-box { background: #fff; border-radius: 14px; padding: 18px; width: 85%; max-width: 320px; text-align: center; }
     .input-field { width: 100%; padding: 8px; margin: 10px 0; border: 1px solid #ccc; border-radius: 6px; font-size: 12px; box-sizing: border-box; }
     
-    /* History List */
     .history-list { max-height: 110px; overflow-y: auto; text-align: left; font-size: 11px; margin-top: 8px; border-top: 1px solid #eee; padding-top: 6px; }
     .history-item { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #f3f4f6; }
   </style>
@@ -178,7 +156,7 @@
       <div class="badge badge-spins">⚡ <span id="spinCount">10</span> SPINS</div>
     </div>
 
-    <!-- 16 Outer Sequential Cells Grid Board -->
+    <!-- 16 Outer Sequential Cells Board -->
     <div class="game-board">
       <div class="cell c-0" id="c0"><span>🍒</span>Cherry</div>
       <div class="cell c-1" id="c1"><span>🍋</span>Lemon</div>
@@ -200,7 +178,7 @@
       <div class="cell c-14" id="c14"><span>🍋</span>Lemon</div>
       <div class="cell c-15" id="c15"><span>🍎</span>Apple</div>
 
-      <!-- Center Slot Display -->
+      <!-- Center Screen Display -->
       <div class="center-screen">
         <div class="slots">
           <span class="slot-item" id="slot1">🍎</span>
@@ -212,23 +190,18 @@
     </div>
 
     <!-- Spin Button -->
-    <button class="go-btn" id="goBtn" onclick="handleSpin()">GO</button>
-
-    <!-- Sponsor Banner Box -->
-    <div class="ads-container-box">
-      <a class="ad-link-btn" onclick="openExternalAd()">🎁 Visit Sponsor Link (+50 Points)</a>
-    </div>
+    <button class="go-btn" id="goBtn" onclick="handleSpin()">SPIN NOW</button>
   </div>
 
   <!-- Bottom Navigation -->
   <div class="nav-bar">
-    <a class="nav-item active"><span>▶️️</span>PLAY</a>
-    <a class="nav-item" onclick="triggerRewardAd('50894', 100, 'points')"><span>📋</span>TASKS</a>
-    <a class="nav-item" onclick="triggerRewardAd('50893', 5, 'spins')"><span>🎬</span>FREE SPINS</a>
+    <a class="nav-item active"><span>▶</span>PLAY</a>
+    <a class="nav-item" onclick="triggerRewardedAd()"><span>🎬</span>FREE SPINS</a>
+    <a class="nav-item" onclick="triggerInterstitialAd()"><span>⭐</span>BONUS</a>
     <a class="nav-item" onclick="openWithdrawModal()"><span>💰</span>WITHDRAW</a>
   </div>
 
-  <!-- General Alert Modal -->
+  <!-- Alert Modal -->
   <div class="modal" id="modal">
     <div class="modal-box">
       <div style="font-size:15px;font-weight:bold;margin-bottom:8px;color:#db2777;" id="mTitle">Alert</div>
@@ -261,12 +234,10 @@
   </div>
 
   <script>
-    // All 3 IDs assigned as Reward Block IDs
+    // Configured Block IDs
     const ADSCONFIG = {
-      reward_id_1: "50893", // Spin Reward Ad
-      reward_id_2: "50894", // Task Reward Ad
-      reward_id_3: "50895", // Extra Bonus Reward Ad
-      external_ad_url: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475"
+      reward_id: "50921",
+      interstitial_id: "50922"
     };
 
     const borderSequence = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
@@ -355,47 +326,50 @@
       `).join('');
     }
 
-    /* Unified Universal Adsgram Reward Handler */
-    function triggerRewardAd(blockId, amount, type) {
+    /* Direct Adsgram Trigger Functions (User-Initiated Only) */
+    function triggerRewardedAd() {
       if (window.Adsgram) {
-        const AdController = window.Adsgram.init({ blockId: blockId, debug: false });
+        const AdController = window.Adsgram.init({ blockId: ADSCONFIG.reward_id, debug: false });
         AdController.show()
           .then((result) => {
             if (result && result.done) {
-              if (type === 'spins') {
-                state.spins += amount;
-                showModal("Success!", `+${amount} Free Spins added!`);
-              } else {
-                state.coins += amount;
-                showModal("Task Reward", `+${amount} Points earned!`);
-              }
+              state.spins += 5;
               updateUI();
+              showModal("Success!", "+5 Free Spins added!");
             }
           })
           .catch((error) => {
-            console.log("Ad Error / Dismissed:", error);
-            showModal("Notice", "Ad was not completed or no ads available.");
+            console.log("Ad skipped or failed:", error);
+            showModal("Notice", "Ad was not completed or currently unavailable.");
           });
       } else {
-        showModal("Notice", "Adsgram SDK is loading. Please try again in a moment.");
+        showModal("Notice", "Adsgram SDK is loading. Please try again.");
       }
     }
 
-    function openExternalAd() {
-      if (tg && tg.openLink) { tg.openLink(ADSCONFIG.external_ad_url); } 
-      else { window.open(ADSCONFIG.external_ad_url, '_blank'); }
-      state.coins += 50; 
-      updateUI();
-      showModal("Sponsor Reward", "🎉 +50 Points earned!");
+    function triggerInterstitialAd() {
+      if (window.Adsgram) {
+        const AdController = window.Adsgram.init({ blockId: ADSCONFIG.interstitial_id, debug: false });
+        AdController.show()
+          .then((result) => {
+            state.coins += 50;
+            updateUI();
+            showModal("Bonus", "+50 Bonus Points received!");
+          })
+          .catch((error) => {
+            console.log("Interstitial Ad skipped/failed:", error);
+          });
+      } else {
+        showModal("Notice", "Adsgram SDK is loading. Please try again.");
+      }
     }
 
-    /* Balanced Spin Engine */
+    /* Clean Spin Logic (Zero Auto-Ads) */
     function handleSpin() {
       if (isSpinning) return;
 
       if (state.spins <= 0) {
-        showModal("Out of Spins!", "Watch a video ad to get +5 Free Spins.");
-        triggerRewardAd(ADSCONFIG.reward_id_1, 5, 'spins');
+        showModal("Out of Spins!", "Click 'FREE SPINS' in the navigation bar to watch an ad for +5 Spins.");
         return;
       }
 
@@ -439,7 +413,6 @@
       rotateBorder();
     }
 
-    /* Optimized Reward Logic */
     function finishSpin(borderCellIndex, s1, s2, s3) {
       isSpinning = false;
       document.getElementById('goBtn').disabled = false;
@@ -459,11 +432,6 @@
       state.coins += baseCoins;
       document.getElementById('winScore').innerText = `+${baseCoins} PTS`;
       updateUI();
-
-      // Trigger Extra Reward Ad randomly after spins (using 50895)
-      if (Math.random() < 0.25) {
-        triggerRewardAd(ADSCONFIG.reward_id_3, 20, 'points');
-      }
     }
 
     updateUI();
