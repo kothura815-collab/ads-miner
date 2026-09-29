@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Fruit Frenzy - Full Screen Responsive & Balanced Economy</title>
+  <title>Fruit Frenzy - Perfectly Balanced & Screen Fit</title>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
@@ -18,13 +18,6 @@
       --active-border: #ef4444;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; user-select: none; }
-    
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow-x: hidden;
-    }
-
     body { 
       background: var(--bg); 
       color: var(--text); 
@@ -33,32 +26,27 @@
       align-items: center; 
       justify-content: space-between;
       min-height: 100vh; 
-      padding: 10px 10px 75px 10px; 
+      padding-bottom: 75px; 
     }
-    
-    .container { 
-      width: 100%; 
-      max-width: 480px; 
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
+    .container { width: 100%; max-width: 420px; padding: 10px; }
 
     /* Top Header */
-    .top-header { display: flex; justify-content: space-between; align-items: center; }
+    .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
     .badge { background: #fff; padding: 6px 12px; border-radius: 20px; font-weight: 800; font-size: 12px; display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
     .badge-coins { color: #b45309; }
     .badge-spins { color: #0284c7; }
-    .app-title { font-size: 15px; font-weight: 900; font-style: italic; color: #831843; }
+    .app-title { font-size: 14px; font-weight: 900; font-style: italic; color: #831843; }
 
-    /* Screen-Fit Grid Board (Edge to Edge) */
+    /* Fixed 6x4 Grid Layout (14 Cells Seamless Loop) */
     .game-board { 
       background: #ea580c; 
       border-radius: 14px; 
       padding: 6px; 
       display: grid; 
       grid-template-columns: repeat(6, 1fr); 
+      grid-template-rows: repeat(4, 1fr); 
       gap: 4px; 
+      margin-bottom: 10px; 
       box-shadow: 0 4px 10px rgba(234,88,12,0.25); 
       width: 100%;
     }
@@ -85,10 +73,10 @@
       box-shadow: 0 0 8px #ef4444;
     }
 
-    /* Center Screen Display */
+    /* Center Screen Display (Fixed Fit) */
     .center-screen { 
       grid-column: 2 / span 4; 
-      grid-row: 2 / span 3; 
+      grid-row: 2 / span 2; 
       background: #4c1d95; 
       border-radius: 10px; 
       display: flex; 
@@ -99,9 +87,9 @@
       border: 2px solid #fbcfe8; 
       padding: 4px;
     }
-    .slots { display: flex; gap: 6px; font-size: 26px; margin-bottom: 4px; background: rgba(0,0,0,0.3); padding: 4px 10px; border-radius: 8px; }
-    .slot-item { min-width: 28px; text-align: center; }
-    .score-display { background: #1e1b4b; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: bold; color: #fde047; }
+    .slots { display: flex; gap: 6px; font-size: 22px; margin-bottom: 2px; background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 6px; }
+    .slot-item { min-width: 24px; text-align: center; }
+    .score-display { background: #1e1b4b; padding: 2px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; color: #fde047; }
 
     /* Action Buttons */
     .go-btn { 
@@ -115,6 +103,7 @@
       font-weight: 900; 
       text-transform: uppercase; 
       cursor: pointer; 
+      margin-bottom: 8px; 
       box-shadow: 0 3px 8px rgba(22,163,74,0.3); 
     }
     .go-btn:disabled { background: #9ca3af; box-shadow: none; }
@@ -132,10 +121,10 @@
       background: #fdf2f8;
       border: 1px solid #f472b6;
       border-radius: 6px;
-      padding: 8px;
+      padding: 6px;
       color: #be185d;
       font-weight: bold;
-      font-size: 12px;
+      font-size: 11px;
       text-decoration: none;
       cursor: pointer;
     }
@@ -151,7 +140,8 @@
     .modal-box { background: #fff; border-radius: 14px; padding: 18px; width: 85%; max-width: 320px; text-align: center; }
     .input-field { width: 100%; padding: 8px; margin: 10px 0; border: 1px solid #ccc; border-radius: 6px; font-size: 12px; box-sizing: border-box; }
     
-    .history-list { max-height: 120px; overflow-y: auto; text-align: left; font-size: 11px; margin-top: 8px; border-top: 1px solid #eee; padding-top: 6px; }
+    /* History List */
+    .history-list { max-height: 110px; overflow-y: auto; text-align: left; font-size: 11px; margin-top: 8px; border-top: 1px solid #eee; padding-top: 6px; }
     .history-item { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #f3f4f6; }
   </style>
 </head>
@@ -165,18 +155,20 @@
       <div class="badge badge-spins">⚡ <span id="spinCount">3</span> SPINS</div>
     </div>
 
-    <!-- Screen-Fit Grid Board -->
+    <!-- Perfectly Filled 6x4 Grid Board (14 Outer Cells) -->
     <div class="game-board">
+      <!-- Top Row (6 Cells: c0 - c5) -->
       <div class="cell" id="c0"><span>🍒</span>Cherry</div>
       <div class="cell" id="c1"><span>🍋</span>Lemon</div>
-      <div class="cell bonus" id="c2">X3<br>BONUS</div>
+      <div class="cell bonus" id="c2">X2<br>BONUS</div>
       <div class="cell" id="c3"><span>🍎</span>Apple</div>
       <div class="cell" id="c4"><span>🍊</span>Orange</div>
       <div class="cell" id="c5"><span>🍉</span>Melon</div>
 
-      <div class="cell" id="c15"><span>🍎</span>Apple</div>
+      <!-- Right Column Middle (2 Cells: c6 - c7) -->
+      <div class="cell bonus" id="c6">X2<br>BONUS</div>
       
-      <!-- Center Slot Display -->
+      <!-- Center Slot Display (Spans Columns 2-5, Rows 2-3) -->
       <div class="center-screen">
         <div class="slots">
           <span class="slot-item" id="slot1">🍎</span>
@@ -186,16 +178,17 @@
         <div class="score-display" id="winScore">READY</div>
       </div>
 
-      <div class="cell bonus" id="c6">X3<br>BONUS</div>
-      <div class="cell" id="c14"><span>🍋</span>Lemon</div>
-      <div class="cell" id="c7"><span>🍊</span>Orange</div>
-      <div class="cell" id="c13"><span>🍎</span>Apple</div>
-      <div class="cell" id="c8"><span>🍒</span>Cherry</div>
+      <div class="cell" id="c7"><span>🍒</span>Cherry</div>
 
-      <div class="cell bonus" id="c12">X3<br>BONUS</div>
-      <div class="cell" id="c11"><span>🍉</span>Melon</div>
-      <div class="cell" id="c10"><span>🍒</span>Cherry</div>
-      <div class="cell" id="c9"><span>🍋</span>Lemon</div>
+      <!-- Left Column Middle (2 Cells: c13 - c12) placed relative in CSS Grid flow -->
+      <div class="cell" id="c13"><span>🍎</span>Apple</div>
+      <div class="cell" id="c8"><span>🍊</span>Orange</div>
+
+      <!-- Bottom Row (6 Cells: c11 - c8 reverse flow for full loop) -->
+      <div class="cell" id="c12"><span>🍋</span>Lemon</div>
+      <div class="cell bonus" id="c11">X2<br>BONUS</div>
+      <div class="cell" id="c10"><span>🍉</span>Melon</div>
+      <div class="cell" id="c9"><span>🍒</span>Cherry</div>
     </div>
 
     <!-- Spin Button -->
@@ -203,7 +196,7 @@
 
     <!-- Sponsor Banner Box -->
     <div class="ads-container-box">
-      <a class="ad-link-btn" onclick="openExternalAd()">🎁 Visit Sponsor Ad (+20 Points)</a>
+      <a class="ad-link-btn" onclick="openExternalAd()">🎁 Visit Sponsor Ad (+10 Points)</a>
     </div>
   </div>
 
@@ -238,7 +231,8 @@
       
       <button style="width:100%;padding:10px;background:#16a34a;color:#fff;border:none;border-radius:6px;font-weight:bold;margin-bottom:6px;" onclick="processWithdraw()">CONFIRM WITHDRAW</button>
       
-      <div style="font-size:12px;font-weight:bold;color:#1e1b4b;margin-top:10px;text-align:left;">Withdrawal Records:</div>
+      <!-- History List Toggle -->
+      <div style="font-size:12px;font-weight:bold;color:#1e1b4b;margin-top:8px;text-align:left;">Withdrawal Records:</div>
       <div class="history-list" id="historyList">
         <div style="color:#9ca3af;text-align:center;">No withdrawal records found.</div>
       </div>
@@ -248,6 +242,7 @@
   </div>
 
   <script>
+    // Adsgram Configuration Block IDs
     const ADSCONFIG = {
       rewarded_id: "50803",
       interstitial_id: "50804",
@@ -255,12 +250,13 @@
       external_ad_url: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475"
     };
 
-    const borderSequence = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+    // 14 Cells Outer Loop
+    const borderSequence = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
     const fruits = ["🍒", "🍋", "🍎", "🍉"];
     const cellFruits = {
-      0: "🍒", 1: "🍋", 2: "X3", 3: "🍎", 4: "🍊", 5: "🍉",
-      6: "X3", 7: "🍊", 8: "🍒", 9: "🍋", 10: "🍒", 11: "🍉",
-      12: "X3", 13: "🍎", 14: "🍋", 15: "🍎"
+      0: "🍒", 1: "🍋", 2: "X2", 3: "🍎", 4: "🍊", 5: "🍉",
+      6: "X2", 7: "🍒", 8: "🍊", 9: "🍒", 10: "🍉", 11: "X2",
+      12: "🍋", 13: "🍎"
     };
 
     const tg = window.Telegram?.WebApp;
@@ -288,6 +284,7 @@
     }
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
+    /* Withdraw System Logic */
     function openWithdrawModal() {
       let usdVal = (state.coins / 10000) * 0.10;
       document.getElementById('wCoins').innerText = state.coins;
@@ -312,7 +309,6 @@
       }
 
       state.coins -= 10000;
-      
       let record = {
         amount: "$0.10",
         wallet: wallet.substring(0, 6) + "..." + wallet.slice(-4),
@@ -324,7 +320,7 @@
       updateUI();
       document.getElementById('walletAddress').value = "";
       closeWithdrawModal();
-      showModal("Withdrawal Submitted", `Success! $0.10 USD withdrawal request recorded for wallet:\n${wallet.substring(0,10)}...\nStatus: Pending Approval.`);
+      showModal("Withdrawal Submitted", `Success! $0.10 USD withdrawal request recorded for wallet:\n${wallet.substring(0,10)}...\nStatus: Pending.`);
     }
 
     function renderWithdrawHistory() {
@@ -341,12 +337,13 @@
       `).join('');
     }
 
+    /* Ad Network Handlers - Reduced Rewards for Sustainability */
     function openExternalAd() {
       if (tg && tg.openLink) { tg.openLink(ADSCONFIG.external_ad_url); } 
       else { window.open(ADSCONFIG.external_ad_url, '_blank'); }
-      state.coins += 20;
+      state.coins += 10; // Reduced to 10 PTS
       updateUI();
-      showModal("Sponsor Reward", "🎉 +20 Points earned!");
+      showModal("Sponsor Reward", "🎉 +10 Points earned!");
     }
 
     function triggerRewardedAd() {
@@ -362,10 +359,10 @@
     function triggerTaskAd() {
       if (window.Adsgram) {
         window.Adsgram.init({ blockId: ADSCONFIG.task_id }).show()
-          .then(() => { state.coins += 20; updateUI(); showModal("Task Success", "+20 Points earned!"); })
-          .catch(() => { state.coins += 20; updateUI(); showModal("Task Reward", "+20 Points earned!"); });
+          .then(() => { state.coins += 15; updateUI(); showModal("Task Success", "+15 Points earned!"); })
+          .catch(() => { state.coins += 10; updateUI(); showModal("Task Reward", "+10 Points earned!"); });
       } else {
-        state.coins += 20; updateUI(); showModal("Task Reward", "+20 Points earned!");
+        state.coins += 10; updateUI(); showModal("Task Reward", "+10 Points earned!");
       }
     }
 
@@ -375,6 +372,7 @@
       }
     }
 
+    /* Balanced Spin Engine */
     function handleSpin() {
       if (isSpinning) return;
 
@@ -391,7 +389,7 @@
       document.getElementById('winScore').innerText = "SPINNING...";
 
       let currentBorderIndex = 0;
-      let totalBorderSteps = 16 * 2 + Math.floor(Math.random() * 16);
+      let totalBorderSteps = 14 * 2 + Math.floor(Math.random() * 14);
       let stepCount = 0;
 
       let slot1 = document.getElementById('slot1');
@@ -401,7 +399,7 @@
       function rotateBorder() {
         document.querySelectorAll('.cell').forEach(c => c.classList.remove('active'));
 
-        let activeCellId = "c" + borderSequence[currentBorderIndex % 16];
+        let activeCellId = "c" + borderSequence[currentBorderIndex % 14];
         document.getElementById(activeCellId).classList.add('active');
 
         if (stepCount < totalBorderSteps - 4) {
@@ -416,7 +414,7 @@
         if (stepCount < totalBorderSteps) {
           setTimeout(rotateBorder, 50);
         } else {
-          let finalCellId = borderSequence[(currentBorderIndex - 1) % 16];
+          let finalCellId = borderSequence[(currentBorderIndex - 1) % 14];
           finishSpin(finalCellId, slot1.innerText, slot2.innerText, slot3.innerText);
         }
       }
@@ -424,6 +422,7 @@
       rotateBorder();
     }
 
+    /* Controlled Reward Logic */
     function finishSpin(borderCellIndex, s1, s2, s3) {
       isSpinning = false;
       document.getElementById('goBtn').disabled = false;
@@ -431,19 +430,20 @@
       let stoppedFruit = cellFruits[borderCellIndex];
       let centerFruits = [s1, s2, s3];
       let matches = centerFruits.filter(f => f === stoppedFruit).length;
-      let baseCoins = 5;
+      
+      let baseCoins = 2; // Default 2 PTS
 
-      if (matches === 1) baseCoins = 15;
-      else if (matches === 2) baseCoins = 30;
-      else if (matches === 3) baseCoins = 100;
+      if (matches === 1) baseCoins = 4;
+      else if (matches === 2) baseCoins = 8;
+      else if (matches === 3) baseCoins = 15;
 
-      if (stoppedFruit === "X3") { baseCoins = 50; }
+      if (stoppedFruit === "X2") { baseCoins = 10; }
 
       state.coins += baseCoins;
       document.getElementById('winScore').innerText = `+${baseCoins} PTS`;
       updateUI();
 
-      if (Math.random() < 0.2) {
+      if (Math.random() < 0.35) {
         showAdsgramInterstitial();
       }
     }
@@ -451,4 +451,4 @@
     updateUI();
   </script>
 </body>
-</html>
+  </html>
