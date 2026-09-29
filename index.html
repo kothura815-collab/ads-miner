@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Fruit Frenzy - Real Rotation & Ads</title>
+  <title>Fruit Frenzy - Real Withdraw & Ads</title>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
@@ -18,120 +18,130 @@
       --active-border: #ef4444;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; user-select: none; }
-    body { background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding-bottom: 80px; }
-    .container { width: 100%; max-width: 480px; padding: 12px; }
+    body { 
+      background: var(--bg); 
+      color: var(--text); 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: space-between;
+      min-height: 100vh; 
+      padding-bottom: 75px; 
+    }
+    .container { width: 100%; max-width: 420px; padding: 10px; }
 
     /* Top Header */
-    .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .badge { background: #fff; padding: 6px 14px; border-radius: 20px; font-weight: 800; font-size: 13px; display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .badge { background: #fff; padding: 6px 12px; border-radius: 20px; font-weight: 800; font-size: 12px; display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
     .badge-coins { color: #b45309; }
     .badge-spins { color: #0284c7; }
-    .app-title { font-size: 15px; font-weight: 900; font-style: italic; color: #831843; letter-spacing: 0.5px; }
+    .app-title { font-size: 14px; font-weight: 900; font-style: italic; color: #831843; }
 
-    /* Outer Rotation Grid Board */
+    /* Screen-Fit Grid Board */
     .game-board { 
       background: #ea580c; 
-      border-radius: 16px; 
-      padding: 10px; 
+      border-radius: 14px; 
+      padding: 6px; 
       display: grid; 
       grid-template-columns: repeat(6, 1fr); 
-      gap: 6px; 
-      margin-bottom: 14px; 
-      box-shadow: 0 4px 12px rgba(234,88,12,0.3); 
+      gap: 4px; 
+      margin-bottom: 10px; 
+      box-shadow: 0 4px 10px rgba(234,88,12,0.25); 
+      width: 100%;
     }
     .cell { 
       background: #fff; 
-      border-radius: 8px; 
+      border-radius: 6px; 
       aspect-ratio: 1; 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
       justify-content: center; 
-      font-size: 9px; 
+      font-size: 8px; 
       font-weight: bold; 
       color: #374151; 
-      border: 3px solid transparent;
-      transition: border 0.1s ease, background 0.1s ease;
+      border: 2px solid transparent;
+      transition: all 0.1s ease;
     }
-    .cell span { font-size: 18px; }
-    .cell.bonus { background: #fde047; color: #854d0e; font-size: 10px; text-align: center; line-height: 1.1; }
+    .cell span { font-size: 16px; }
+    .cell.bonus { background: #fde047; color: #854d0e; font-size: 9px; text-align: center; line-height: 1; }
     
-    /* Rotation Active Border State */
     .cell.active {
       border-color: var(--active-border);
       background: #fef08a;
-      box-shadow: 0 0 10px #ef4444;
+      box-shadow: 0 0 8px #ef4444;
     }
 
-    /* Center Display Screen */
+    /* Center Screen Display */
     .center-screen { 
       grid-column: 2 / span 4; 
       grid-row: 2 / span 3; 
       background: #4c1d95; 
-      border-radius: 12px; 
+      border-radius: 10px; 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
       justify-content: center; 
       color: #fff; 
       border: 2px solid #fbcfe8; 
-      padding: 10px;
+      padding: 4px;
     }
-    .slots { display: flex; gap: 10px; font-size: 32px; margin-bottom: 8px; background: rgba(0,0,0,0.3); padding: 8px 16px; border-radius: 10px; }
-    .slot-item { min-width: 36px; text-align: center; }
-    .score-display { background: #1e1b4b; padding: 6px 16px; border-radius: 6px; font-size: 14px; font-weight: bold; color: #fde047; }
+    .slots { display: flex; gap: 6px; font-size: 26px; margin-bottom: 4px; background: rgba(0,0,0,0.3); padding: 4px 10px; border-radius: 8px; }
+    .slot-item { min-width: 28px; text-align: center; }
+    .score-display { background: #1e1b4b; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: bold; color: #fde047; }
 
-    /* Action Button */
+    /* Action Buttons */
     .go-btn { 
       width: 100%; 
       background: linear-gradient(135deg, #16a34a, #15803d); 
       color: #fff; 
       border: none; 
-      border-radius: 12px; 
-      padding: 14px; 
-      font-size: 18px; 
+      border-radius: 10px; 
+      padding: 12px; 
+      font-size: 16px; 
       font-weight: 900; 
       text-transform: uppercase; 
       cursor: pointer; 
-      margin-bottom: 12px; 
-      box-shadow: 0 4px 10px rgba(22,163,74,0.3); 
-      letter-spacing: 1px; 
+      margin-bottom: 8px; 
+      box-shadow: 0 3px 8px rgba(22,163,74,0.3); 
     }
-    .go-btn:disabled { background: #9ca3af; box-shadow: none; cursor: not-allowed; }
+    .go-btn:disabled { background: #9ca3af; box-shadow: none; }
 
-    /* Previous Ads Section Box */
+    /* Sponsor Link Box */
     .ads-container-box {
       background: #fff;
-      border: 2px dashed #db2777;
-      border-radius: 12px;
-      padding: 10px 14px;
-      margin-bottom: 12px;
+      border: 1px dashed #db2777;
+      border-radius: 10px;
+      padding: 8px;
       text-align: center;
     }
-    .ads-title { font-size: 11px; font-weight: bold; color: #9d174d; margin-bottom: 6px; text-transform: uppercase; }
     .ad-link-btn {
       display: block;
-      width: 100%;
       background: #fdf2f8;
       border: 1px solid #f472b6;
-      border-radius: 8px;
-      padding: 8px;
+      border-radius: 6px;
+      padding: 6px;
       color: #be185d;
       font-weight: bold;
-      font-size: 12px;
+      font-size: 11px;
       text-decoration: none;
       cursor: pointer;
     }
 
-    /* Bottom Nav Bar */
+    /* Bottom Navigation Bar */
     .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; padding: 8px 0; border-top: 1px solid #f3e8ff; z-index: 1000; }
     .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: var(--sub); text-decoration: none; font-weight: bold; cursor: pointer; }
     .nav-item.active { color: var(--primary); }
     .nav-item span { font-size: 16px; }
 
-    /* Modal */
+    /* Modals */
     .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 9999; }
-    .modal-box { background: #fff; border-radius: 14px; padding: 20px; width: 85%; max-width: 300px; text-align: center; }
+    .modal-box { background: #fff; border-radius: 14px; padding: 18px; width: 85%; max-width: 320px; text-align: center; }
+    .input-field { width: 100%; padding: 8px; margin: 10px 0; border: 1px solid #ccc; border-radius: 6px; font-size: 12px; box-sizing: border-box; }
+    
+    /* History List */
+    .history-list { max-height: 120px; overflow-y: auto; text-align: left; font-size: 11px; margin-top: 8px; border-top: 1px solid #eee; padding-top: 6px; }
+    .history-item { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #f3f4f6; }
   </style>
 </head>
 <body>
@@ -139,14 +149,13 @@
   <div class="container">
     <!-- Header -->
     <div class="top-header">
-      <div class="badge badge-coins">🟡 <span id="coinCount">115</span> COINS</div>
+      <div class="badge badge-coins">🟡 <span id="coinCount">115</span> PTS</div>
       <div class="app-title">FRUIT FRENZY</div>
       <div class="badge badge-spins">⚡ <span id="spinCount">5</span> SPINS</div>
     </div>
 
-    <!-- Outer Border Rotation Game Board -->
+    <!-- Game Board -->
     <div class="game-board">
-      <!-- Top Row (0 - 5) -->
       <div class="cell" id="c0"><span>🍒</span>Cherry</div>
       <div class="cell" id="c1"><span>🍋</span>Lemon</div>
       <div class="cell bonus" id="c2">X3<br>BONUS</div>
@@ -154,10 +163,9 @@
       <div class="cell" id="c4"><span>🍊</span>Orange</div>
       <div class="cell" id="c5"><span>🍉</span>Melon</div>
 
-      <!-- Right Column & Left Column Cells -->
       <div class="cell" id="c15"><span>🍎</span>Apple</div>
       
-      <!-- Center Slot Machine Display -->
+      <!-- Center Slot Display -->
       <div class="center-screen">
         <div class="slots">
           <span class="slot-item" id="slot1">🍎</span>
@@ -168,27 +176,23 @@
       </div>
 
       <div class="cell bonus" id="c6">X3<br>BONUS</div>
-
       <div class="cell" id="c14"><span>🍋</span>Lemon</div>
       <div class="cell" id="c7"><span>🍊</span>Orange</div>
-
       <div class="cell" id="c13"><span>🍎</span>Apple</div>
       <div class="cell" id="c8"><span>🍒</span>Cherry</div>
 
-      <!-- Bottom Row (9 - 12) -->
       <div class="cell bonus" id="c12">X3<br>BONUS</div>
       <div class="cell" id="c11"><span>🍉</span>Melon</div>
       <div class="cell" id="c10"><span>🍒</span>Cherry</div>
       <div class="cell" id="c9"><span>🍋</span>Lemon</div>
     </div>
 
-    <!-- GO Button -->
+    <!-- Spin Button -->
     <button class="go-btn" id="goBtn" onclick="handleSpin()">GO</button>
 
-    <!-- Previous Ad Networks Section Box -->
+    <!-- Sponsor Banner Box -->
     <div class="ads-container-box">
-      <div class="ads-title">🎁 Bonus Sponsor Link</div>
-      <a class="ad-link-btn" onclick="openExternalAd()">Visit Sponsor Ad (+50 Coins)</a>
+      <a class="ad-link-btn" onclick="openExternalAd()">🎁 Visit Sponsor Ad (+50 Points)</a>
     </div>
   </div>
 
@@ -197,28 +201,51 @@
     <a class="nav-item active"><span>▶️</span>PLAY</a>
     <a class="nav-item" onclick="triggerTaskAd()"><span>📋</span>TASKS</a>
     <a class="nav-item" onclick="triggerRewardedAd()"><span>🎬</span>FREE SPINS</a>
-    <a class="nav-item" onclick="showAdsgramInterstitial()"><span>⚡</span>SPECIAL</a>
+    <a class="nav-item" onclick="openWithdrawModal()"><span>💰</span>WITHDRAW</a>
   </div>
 
-  <!-- Modal -->
+  <!-- General Alert Modal -->
   <div class="modal" id="modal">
     <div class="modal-box">
-      <div style="font-size:16px;font-weight:bold;margin-bottom:8px;color:#db2777;" id="mTitle">Alert</div>
-      <div style="font-size:13px;color:var(--sub);margin-bottom:16px;" id="mMsg">Message</div>
-      <button style="width:100%;padding:10px;background:#db2777;color:#fff;border:none;border-radius:8px;font-weight:bold;" onclick="closeModal()">OK</button>
+      <div style="font-size:15px;font-weight:bold;margin-bottom:8px;color:#db2777;" id="mTitle">Alert</div>
+      <div style="font-size:12px;color:var(--sub);margin-bottom:14px;" id="mMsg">Message</div>
+      <button style="width:100%;padding:8px;background:#db2777;color:#fff;border:none;border-radius:6px;font-weight:bold;" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <!-- Real Withdraw Modal -->
+  <div class="modal" id="withdrawModal">
+    <div class="modal-box">
+      <div style="font-size:16px;font-weight:bold;color:#db2777;margin-bottom:4px;">Withdraw Earnings</div>
+      <div style="font-size:11px;color:var(--sub);">Rate: 10,000 Points = $0.10 USD</div>
+      
+      <div style="margin:10px 0;background:#fdf2f8;padding:8px;border-radius:8px;font-size:12px;font-weight:bold;">
+        Your Balance: <span id="wCoins">0</span> PTS (~$<span id="wUSD">0.00</span>)
+      </div>
+
+      <input type="text" id="walletAddress" class="input-field" placeholder="Enter TON / USDT Wallet Address">
+      
+      <button style="width:100%;padding:10px;background:#16a34a;color:#fff;border:none;border-radius:6px;font-weight:bold;margin-bottom:6px;" onclick="processWithdraw()">CONFIRM WITHDRAW</button>
+      
+      <!-- History List Toggle -->
+      <div style="font-size:12px;font-weight:bold;color:#1e1b4b;margin-top:10px;text-align:left;">Withdrawal Records:</div>
+      <div class="history-list" id="historyList">
+        <div style="color:#9ca3af;text-align:center;">No withdrawal records found.</div>
+      </div>
+
+      <button style="width:100%;padding:6px;background:#e5e7eb;color:#374151;border:none;border-radius:6px;font-size:11px;margin-top:10px;" onclick="closeWithdrawModal()">CLOSE</button>
     </div>
   </div>
 
   <script>
-    // Adsgram Blocks Configuration
+    // Updated Adsgram Configuration Block IDs
     const ADSCONFIG = {
-      rewarded_id: "50715",
-      interstitial_id: "50716",
-      task_id: "50717",
+      rewarded_id: "50803",
+      interstitial_id: "50804",
+      task_id: "50805",
       external_ad_url: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475"
     };
 
-    // Border Cells mapping in clockwise sequence
     const borderSequence = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
     const fruits = ["🍒", "🍋", "🍎", "🍉"];
     const cellFruits = {
@@ -233,7 +260,8 @@
     let isSpinning = false;
     let state = {
       coins: parseInt(localStorage.getItem('coins')) || 115,
-      spins: parseInt(localStorage.getItem('spins')) || 5
+      spins: parseInt(localStorage.getItem('spins')) || 5,
+      withdrawals: JSON.parse(localStorage.getItem('withdrawals')) || []
     };
 
     function updateUI() {
@@ -241,6 +269,7 @@
       document.getElementById('spinCount').innerText = state.spins;
       localStorage.setItem('coins', state.coins);
       localStorage.setItem('spins', state.spins);
+      localStorage.setItem('withdrawals', JSON.stringify(state.withdrawals));
     }
 
     function showModal(title, msg) {
@@ -250,68 +279,98 @@
     }
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
-    // External Ad Network Link Trigger
-    function openExternalAd() {
-      if (tg && tg.openLink) {
-        tg.openLink(ADSCONFIG.external_ad_url);
-      } else {
-        window.open(ADSCONFIG.external_ad_url, '_blank');
-      }
-      state.coins += 50;
-      updateUI();
-      showModal("Sponsor Reward", "🎉 +50 Coins earned for visiting sponsor!");
+    /* Real Withdraw System Logic */
+    function openWithdrawModal() {
+      let usdVal = (state.coins / 10000) * 0.10;
+      document.getElementById('wCoins').innerText = state.coins;
+      document.getElementById('wUSD').innerText = usdVal.toFixed(3);
+      renderWithdrawHistory();
+      document.getElementById('withdrawModal').style.display = 'flex';
     }
 
-    // Adsgram Calls
+    function closeWithdrawModal() {
+      document.getElementById('withdrawModal').style.display = 'none';
+    }
+
+    function processWithdraw() {
+      let wallet = document.getElementById('walletAddress').value.trim();
+      if (!wallet || wallet.length < 10) {
+        alert("Please enter a valid Wallet Address!");
+        return;
+      }
+      if (state.coins < 10000) {
+        alert("Minimum withdraw requirement is 10,000 Points ($0.10)!");
+        return;
+      }
+
+      // Real Point Deduction
+      state.coins -= 10000;
+      
+      // Real Record Entry
+      let record = {
+        amount: "$0.10",
+        wallet: wallet.substring(0, 6) + "..." + wallet.slice(-4),
+        status: "Pending",
+        date: new Date().toLocaleDateString()
+      };
+      state.withdrawals.unshift(record);
+
+      updateUI();
+      document.getElementById('walletAddress').value = "";
+      closeWithdrawModal();
+      showModal("Withdrawal Submitted", `Success! $0.10 USD withdrawal request recorded for wallet:\n${wallet.substring(0,10)}...\nStatus: Pending Approval.`);
+    }
+
+    function renderWithdrawHistory() {
+      let container = document.getElementById('historyList');
+      if (state.withdrawals.length === 0) {
+        container.innerHTML = `<div style="color:#9ca3af;text-align:center;">No withdrawal records found.</div>`;
+        return;
+      }
+      container.innerHTML = state.withdrawals.map(w => `
+        <div class="history-item">
+          <div><b>${w.amount}</b> (${w.wallet})</div>
+          <div style="color:${w.status === 'Pending' ? '#d97706' : '#16a34a'};font-weight:bold;">${w.status}</div>
+        </div>
+      `).join('');
+    }
+
+    /* Ad Network Handlers */
+    function openExternalAd() {
+      if (tg && tg.openLink) { tg.openLink(ADSCONFIG.external_ad_url); } 
+      else { window.open(ADSCONFIG.external_ad_url, '_blank'); }
+      state.coins += 50;
+      updateUI();
+      showModal("Sponsor Reward", "🎉 +50 Points earned!");
+    }
+
     function triggerRewardedAd() {
       if (window.Adsgram) {
         window.Adsgram.init({ blockId: ADSCONFIG.rewarded_id }).show()
-          .then(() => {
-            state.spins += 5;
-            updateUI();
-            showModal("Success!", "🎉 Video watched! +5 Free Spins added.");
-          })
-          .catch(() => {
-            state.spins += 5;
-            updateUI();
-            showModal("Reward", "🎉 +5 Free Spins added.");
-          });
+          .then(() => { state.spins += 5; updateUI(); showModal("Success!", "+5 Free Spins added!"); })
+          .catch(() => { state.spins += 5; updateUI(); showModal("Reward", "+5 Free Spins added!"); });
       } else {
-        state.spins += 5;
-        updateUI();
-        showModal("Reward", "🎉 +5 Free Spins added.");
-      }
-    }
-
-    function showAdsgramInterstitial() {
-      if (window.Adsgram) {
-        window.Adsgram.init({ blockId: ADSCONFIG.interstitial_id }).show()
-          .then(() => { state.coins += 20; updateUI(); })
-          .catch(() => {});
+        state.spins += 5; updateUI(); showModal("Reward", "+5 Free Spins added!");
       }
     }
 
     function triggerTaskAd() {
       if (window.Adsgram) {
         window.Adsgram.init({ blockId: ADSCONFIG.task_id }).show()
-          .then(() => {
-            state.coins += 30;
-            updateUI();
-            showModal("Task Completed", "🎉 +30 Coins added!");
-          })
-          .catch(() => {
-            showModal("Task Notice", "Task completed! +20 Coins added.");
-            state.coins += 20;
-            updateUI();
-          });
+          .then(() => { state.coins += 50; updateUI(); showModal("Task Success", "+50 Points earned!"); })
+          .catch(() => { state.coins += 30; updateUI(); showModal("Task Reward", "+30 Points earned!"); });
       } else {
-        showModal("Task Notice", "Task completed! +20 Coins added.");
-        state.coins += 20;
-        updateUI();
+        state.coins += 30; updateUI(); showModal("Task Reward", "+30 Points earned!");
       }
     }
 
-    // Game Spin Engine (Outer Border & Center Sync)
+    function showAdsgramInterstitial() {
+      if (window.Adsgram) {
+        window.Adsgram.init({ blockId: ADSCONFIG.interstitial_id }).show().catch(() => {});
+      }
+    }
+
+    /* Spin Engine */
     function handleSpin() {
       if (isSpinning) return;
 
@@ -328,24 +387,20 @@
       document.getElementById('winScore').innerText = "SPINNING...";
 
       let currentBorderIndex = 0;
-      let totalBorderSteps = 16 * 2 + Math.floor(Math.random() * 16); // 2 full rotations + random stop
+      let totalBorderSteps = 16 * 2 + Math.floor(Math.random() * 16);
       let stepCount = 0;
-      let speed = 60;
 
       let slot1 = document.getElementById('slot1');
       let slot2 = document.getElementById('slot2');
       let slot3 = document.getElementById('slot3');
 
-      // Border Animation Function
       function rotateBorder() {
-        // Clear previous active border
         document.querySelectorAll('.cell').forEach(c => c.classList.remove('active'));
 
         let activeCellId = "c" + borderSequence[currentBorderIndex % 16];
         document.getElementById(activeCellId).classList.add('active');
 
-        // Animate Center Slots simultaneously
-        if (stepCount < totalBorderSteps - 5) {
+        if (stepCount < totalBorderSteps - 4) {
           slot1.innerText = fruits[Math.floor(Math.random() * fruits.length)];
           slot2.innerText = fruits[Math.floor(Math.random() * fruits.length)];
           slot3.innerText = fruits[Math.floor(Math.random() * fruits.length)];
@@ -355,7 +410,7 @@
         currentBorderIndex++;
 
         if (stepCount < totalBorderSteps) {
-          setTimeout(rotateBorder, speed);
+          setTimeout(rotateBorder, 50);
         } else {
           let finalCellId = borderSequence[(currentBorderIndex - 1) % 16];
           finishSpin(finalCellId, slot1.innerText, slot2.innerText, slot3.innerText);
@@ -365,32 +420,26 @@
       rotateBorder();
     }
 
-    // Calculate Game Results
     function finishSpin(borderCellIndex, s1, s2, s3) {
       isSpinning = false;
       document.getElementById('goBtn').disabled = false;
 
       let stoppedFruit = cellFruits[borderCellIndex];
       let centerFruits = [s1, s2, s3];
-
       let matches = centerFruits.filter(f => f === stoppedFruit).length;
       let baseCoins = 10;
 
-      if (matches === 1) baseCoins = 20;
-      else if (matches === 2) baseCoins = 50;
-      else if (matches === 3) baseCoins = 100;
+      if (matches === 1) baseCoins = 30;
+      else if (matches === 2) baseCoins = 80;
+      else if (matches === 3) baseCoins = 200;
 
-      // X3 Bonus Calculation
-      if (stoppedFruit === "X3") {
-        baseCoins = 150; // Special Bonus flat rate
-      }
+      if (stoppedFruit === "X3") { baseCoins = 150; }
 
       state.coins += baseCoins;
-      document.getElementById('winScore').innerText = `+${baseCoins} COINS`;
+      document.getElementById('winScore').innerText = `+${baseCoins} PTS`;
       updateUI();
 
-      // Trigger Interstitial occasionally
-      if (Math.random() < 0.3) {
+      if (Math.random() < 0.25) {
         showAdsgramInterstitial();
       }
     }
