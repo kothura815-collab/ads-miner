@@ -176,7 +176,7 @@
       <div class="badge badge-spins">⚡ <span id="spinCount">10</span> SPINS</div>
     </div>
 
-    <!-- Complete 16 Outer Cells Grid (No Empty Spaces) -->
+    <!-- Complete 16 Outer Cells Grid Board -->
     <div class="game-board">
       <div class="cell c-0" id="c0"><span>🍒</span>Cherry</div>
       <div class="cell c-1" id="c1"><span>🍋</span>Lemon</div>
@@ -260,11 +260,11 @@
   </div>
 
   <script>
-    // Adsgram Block IDs
+    // Updated Adsgram Block IDs
     const ADSCONFIG = {
-      rewarded_id: "50803",
-      interstitial_id: "50804",
-      task_id: "50805",
+      rewarded_id: "50811",
+      interstitial_id: "50812",
+      task_id: "50813",
       external_ad_url: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475"
     };
 
@@ -355,7 +355,7 @@
       `).join('');
     }
 
-    /* Ad Rewards System */
+    /* Strict Adsgram Integration (Case 5 Rejection Fix) */
     function openExternalAd() {
       if (tg && tg.openLink) { tg.openLink(ADSCONFIG.external_ad_url); } 
       else { window.open(ADSCONFIG.external_ad_url, '_blank'); }
@@ -366,27 +366,43 @@
 
     function triggerRewardedAd() {
       if (window.Adsgram) {
-        window.Adsgram.init({ blockId: ADSCONFIG.rewarded_id }).show()
-          .then(() => { state.spins += 5; updateUI(); showModal("Success!", "+5 Free Spins added!"); })
-          .catch(() => { state.spins += 5; updateUI(); showModal("Reward", "+5 Free Spins added!"); });
+        const AdController = window.Adsgram.init({ blockId: ADSCONFIG.rewarded_id });
+        AdController.show()
+          .then((result) => {
+            // Reward only on full completion
+            state.spins += 5; 
+            updateUI(); 
+            showModal("Success!", "+5 Free Spins added!");
+          })
+          .catch((error) => {
+            console.log("Ad dismissed or failed:", error);
+          });
       } else {
-        state.spins += 5; updateUI(); showModal("Reward", "+5 Free Spins added!");
+        showModal("Notice", "Ad network is initializing. Please try again in a moment.");
       }
     }
 
     function triggerTaskAd() {
       if (window.Adsgram) {
-        window.Adsgram.init({ blockId: ADSCONFIG.task_id }).show()
-          .then(() => { state.coins += 100; updateUI(); showModal("Task Success", "+100 Points earned!"); })
-          .catch(() => { state.coins += 50; updateUI(); showModal("Task Reward", "+50 Points earned!"); });
+        const AdController = window.Adsgram.init({ blockId: ADSCONFIG.task_id });
+        AdController.show()
+          .then((result) => {
+            state.coins += 100; 
+            updateUI(); 
+            showModal("Task Success", "+100 Points earned!");
+          })
+          .catch((error) => {
+            console.log("Task ad dismissed or failed:", error);
+          });
       } else {
-        state.coins += 50; updateUI(); showModal("Task Reward", "+50 Points earned!");
+        showModal("Notice", "Ad network is initializing. Please try again in a moment.");
       }
     }
 
     function showAdsgramInterstitial() {
       if (window.Adsgram) {
-        window.Adsgram.init({ blockId: ADSCONFIG.interstitial_id }).show().catch(() => {});
+        const AdController = window.Adsgram.init({ blockId: ADSCONFIG.interstitial_id });
+        AdController.show().catch((e) => console.log("Interstitial skipped:", e));
       }
     }
 
@@ -440,7 +456,7 @@
       rotateBorder();
     }
 
-    /* Optimized Reward Values */
+    /* Optimized Reward Logic */
     function finishSpin(borderCellIndex, s1, s2, s3) {
       isSpinning = false;
       document.getElementById('goBtn').disabled = false;
@@ -449,7 +465,7 @@
       let centerFruits = [s1, s2, s3];
       let matches = centerFruits.filter(f => f === stoppedFruit).length;
       
-      let baseCoins = 5; // Base 5 PTS
+      let baseCoins = 5;
 
       if (matches === 1) baseCoins = 15;
       else if (matches === 2) baseCoins = 30;
