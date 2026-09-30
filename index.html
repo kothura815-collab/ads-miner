@@ -3,12 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Fruit Frenzy - Multi-Ad Platform</title>
+  <title>Fruit Frenzy - All-in-One Monetization App</title>
 
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <!-- Adsgram SDK -->
-  <script src="https://adsgram.ai/js/adv_adsgram.js"></script>
+  
+  <!-- Adsgram Official SDK -->
+  <script src="https://adsgram.ai/js/adv_adsgram.js" async></script>
+
+  <!-- Adsterra Social Bar & Popunder Scripts -->
+  <script type="text/javascript" src="//pl12345678.highcpmgate.com/socialbar.js" async></script>
+  <script type="text/javascript" src="//pl87654321.highcpmgate.com/popunder.js" async></script>
+
+  <!-- RichAds & Monetag Native Scripts -->
+  <script src="https://richinfo.co/code/work.js" data-pubid="YOUR_RICHADS_ID" async></script>
 
   <style>
     :root { 
@@ -32,14 +40,12 @@
     }
     .container { width: 100%; max-width: 420px; padding: 10px; }
 
-    /* Top Header */
     .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
     .badge { background: #fff; padding: 6px 12px; border-radius: 20px; font-weight: 800; font-size: 12px; display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
     .badge-coins { color: #b45309; }
     .badge-spins { color: #0284c7; }
     .app-title { font-size: 14px; font-weight: 900; font-style: italic; color: #831843; }
 
-    /* 6x4 Grid Board */
     .game-board { 
       background: #ea580c; 
       border-radius: 14px; 
@@ -196,7 +202,7 @@
     <button class="go-btn" id="goBtn" onclick="handleSpin()">SPIN NOW</button>
 
     <div class="ads-container-box">
-      <a class="ad-link-btn" onclick="openDirectAdLink()">🌐 Visit Sponsor (+50 PTS)</a>
+      <a class="ad-link-btn" onclick="triggerAdsterraDirectLink()">🌐 Visit Direct Sponsor (+50 PTS)</a>
     </div>
   </div>
 
@@ -215,7 +221,7 @@
     </div>
   </div>
 
-  <!-- Withdraw Modal with Live Channel Bot Sync -->
+  <!-- Withdraw Modal -->
   <div class="modal" id="withdrawModal">
     <div class="modal-box">
       <div style="font-size:16px;font-weight:bold;color:#db2777;margin-bottom:4px;">Withdraw USD / USDT</div>
@@ -240,16 +246,15 @@
   </div>
 
   <script>
-    // Configuration Settings
     const CONFIG = {
-      bot_token: "8600671562:AAFYO8KewkhoCIrw_wxvfoEQvfFF4EW5iLw", // Replace with your active Bot Token
-      channel_id: "-1004291919386", // Target Channel ID
+      bot_token: "8600671562:AAFYO8KewkhoCIrw_wxvfoEQvfFF4EW5iLw",
+      channel_id: "-1004291919386",
       adsgram: {
         rewarded_id: "48592",
         interstitial_id: "48593",
         task_id: "48595"
       },
-      direct_ad_link: "https://www.highcpmgate.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475"
+      adsterra_link: "https://www.highcpmgate.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475"
     };
 
     const borderSequence = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
@@ -272,7 +277,6 @@
       withdrawals: JSON.parse(localStorage.getItem('withdrawals')) || []
     };
 
-    // Reset Daily Withdrawals
     const today = new Date().toLocaleDateString();
     if (state.lastWithdrawDate !== today) {
       state.dailyWithdraws = 0;
@@ -296,7 +300,50 @@
     }
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
-    /* Open Withdraw Modal */
+    /* Smart Ad Trigger with Auto Fallback */
+    function triggerAdsgramRewarded() {
+      if (window.Adsgram) {
+        const AdController = window.Adsgram.init({ blockId: CONFIG.adsgram.rewarded_id, debug: false });
+        AdController.show().then((result) => {
+          if (result && result.done) {
+            state.spins += 5;
+            updateUI();
+            showModal("Success!", "+5 Free Spins added!");
+          }
+        }).catch(() => {
+          triggerAdsterraDirectLink();
+        });
+      } else {
+        triggerAdsterraDirectLink();
+      }
+    }
+
+    function triggerAdsgramTask() {
+      if (window.Adsgram) {
+        const AdController = window.Adsgram.init({ blockId: CONFIG.adsgram.task_id, debug: false });
+        AdController.show().then((result) => {
+          if (result && result.done) {
+            state.coins += 100;
+            updateUI();
+            showModal("Task Success", "+100 Points earned!");
+          }
+        }).catch(() => {
+          triggerAdsterraDirectLink();
+        });
+      } else {
+        triggerAdsterraDirectLink();
+      }
+    }
+
+    function triggerAdsterraDirectLink() {
+      if (tg && tg.openLink) { tg.openLink(CONFIG.adsterra_link); } 
+      else { window.open(CONFIG.adsterra_link, '_blank'); }
+      state.coins += 50;
+      updateUI();
+      showModal("Sponsor Reward", "🎉 +50 Points earned via Direct Ad!");
+    }
+
+    /* Withdraw System with Live Telegram Channel Sync */
     function openWithdrawModal() {
       let usdVal = (state.coins / 1000) * 0.01;
       document.getElementById('wCoins').innerText = state.coins;
@@ -308,18 +355,15 @@
 
     function closeWithdrawModal() { document.getElementById('withdrawModal').style.display = 'none'; }
 
-    /* Process Withdraw with Telegram Channel Sync */
     async function processWithdraw() {
       let wallet = document.getElementById('walletAddress').value.trim();
       let username = document.getElementById('tgUsername').value.trim() || (tg?.initDataUnsafe?.user?.username ? "@" + tg.initDataUnsafe.user.username : "@User");
 
-      // Daily Limit Check
       if (state.dailyWithdraws >= 5) {
-        alert("Daily Limit Reached! You can only withdraw 5 times per day.");
+        alert("Daily Limit Reached! (Maximum 5 withdrawals per day).");
         return;
       }
 
-      // Minimum Balance & Keep 1,000 Points Limit Check
       if (state.coins < 2000) {
         alert("Minimum balance required is 2,000 Points! (1,000 PTS to withdraw + 1,000 PTS mandatory reserve).");
         return;
@@ -330,9 +374,7 @@
         return;
       }
 
-      // Deduct 1,000 Points
-      const withdrawPts = 1000;
-      state.coins -= withdrawPts;
+      state.coins -= 1000;
       state.dailyWithdraws += 1;
 
       let record = {
@@ -344,7 +386,6 @@
       state.withdrawals.unshift(record);
       updateUI();
 
-      // Post Message to Telegram Channel
       const postMsg = `<b>New Withdrawal Request</b>\n\n` +
                       `<b>User:</b> ${username}\n` +
                       `<b>Amount:</b> $0.01 USDT (1,000 PTS)\n` +
@@ -366,7 +407,7 @@
       }
 
       closeWithdrawModal();
-      showModal("Withdrawal Submitted", `Success! $0.01 USDT withdrawal request posted to history channel.`);
+      showModal("Withdrawal Submitted", `Success! Request recorded and sent to history channel.`);
       
       if (tg) tg.openTelegramLink("https://t.me/Allwithdrawhistory");
     }
@@ -385,51 +426,12 @@
       `).join('');
     }
 
-    /* Ad Trigger Logic */
-    function openDirectAdLink() {
-      if (tg && tg.openLink) { tg.openLink(CONFIG.direct_ad_link); } 
-      else { window.open(CONFIG.direct_ad_link, '_blank'); }
-      state.coins += 50;
-      updateUI();
-      showModal("Sponsor Reward", "🎉 +50 Points earned!");
-    }
-
-    function triggerAdsgramRewarded() {
-      if (window.Adsgram) {
-        const AdController = window.Adsgram.init({ blockId: CONFIG.adsgram.rewarded_id, debug: false });
-        AdController.show().then((result) => {
-          if (result && result.done) {
-            state.spins += 5;
-            updateUI();
-            showModal("Success!", "+5 Free Spins added!");
-          }
-        }).catch(() => { showModal("Notice", "Ad skipped or currently unavailable."); });
-      } else {
-        showModal("Notice", "Ad network initializing. Try again in a moment.");
-      }
-    }
-
-    function triggerAdsgramTask() {
-      if (window.Adsgram) {
-        const AdController = window.Adsgram.init({ blockId: CONFIG.adsgram.task_id, debug: false });
-        AdController.show().then((result) => {
-          if (result && result.done) {
-            state.coins += 100;
-            updateUI();
-            showModal("Task Success", "+100 Points earned!");
-          }
-        }).catch(() => { showModal("Notice", "Task ad not completed."); });
-      } else {
-        showModal("Notice", "Ad network initializing. Try again in a moment.");
-      }
-    }
-
-    /* Spin Logic */
+    /* Game Engine */
     function handleSpin() {
       if (isSpinning) return;
 
       if (state.spins <= 0) {
-        showModal("Out of Spins!", "Watch a Video Ad in FREE SPINS to get +5 Spins.");
+        showModal("Out of Spins!", "Click FREE SPINS to watch an ad and get +5 Spins.");
         return;
       }
 
