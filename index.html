@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Fruit Frenzy - Complete App</title>
+  <title>Fruit Frenzy - Multi-Ad Integration</title>
 
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -201,7 +201,7 @@
   <div class="nav-bar">
     <a class="nav-item active"><span>▶</span>PLAY</a>
     <a class="nav-item" onclick="triggerAdsgramTask()"><span>📋</span>TASKS</a>
-    <a class="nav-item" onclick="triggerAdsgramRewarded()"><span>🎬</span>FREE SPINS</a>
+    <a class="nav-item" onclick="handleFreeSpinsWithComboAds()"><span>🎬</span>FREE SPINS</a>
     <a class="nav-item" onclick="openWithdrawModal()"><span>💰</span>WITHDRAW</a>
   </div>
 
@@ -239,8 +239,6 @@
 
   <script>
     const CONFIG = {
-      bot_token: "8600671562:AAFYO8KewkhoCIrw_wxvfoEQvfFF4EW5iLw",
-      channel_id: "-1004291919386",
       adsgram: {
         rewarded_id: "51101",
         interstitial_id: "51102",
@@ -292,22 +290,7 @@
     }
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
-    /* Ads Functionality */
-    function triggerAdsgramRewarded() {
-      if (window.Adsgram) {
-        const AdController = window.Adsgram.init({ blockId: CONFIG.adsgram.rewarded_id, debug: false });
-        AdController.show().then((result) => {
-          if (result && result.done) {
-            state.spins += 5;
-            updateUI();
-            showModal("Success!", "+5 Free Spins added!");
-          }
-        }).catch(() => { openDirectAdLink(); });
-      } else {
-        openDirectAdLink();
-      }
-    }
-
+    /* 1. TASKS: Exclusive Adsgram Task Ad (51103) */
     function triggerAdsgramTask() {
       if (window.Adsgram) {
         const AdController = window.Adsgram.init({ blockId: CONFIG.adsgram.task_id, debug: false });
@@ -317,10 +300,35 @@
             updateUI();
             showModal("Task Success", "+100 Points earned!");
           }
-        }).catch(() => { openDirectAdLink(); });
+        }).catch(() => {
+          showModal("Task Notice", "Adsgram Task skipped or unavailable.");
+        });
       } else {
-        openDirectAdLink();
+        showModal("Notice", "Adsgram SDK loading...");
       }
+    }
+
+    /* 2. FREE SPINS: Other Ad Network First -> Adsgram Rewarded Second */
+    function handleFreeSpinsWithComboAds() {
+      // Step A: Open Adsterra Direct Link
+      if (tg && tg.openLink) { tg.openLink(CONFIG.adsterra_link); } 
+      else { window.open(CONFIG.adsterra_link, '_blank'); }
+
+      // Step B: Trigger Adsgram Rewarded Ad immediately after
+      setTimeout(() => {
+        if (window.Adsgram) {
+          const AdController = window.Adsgram.init({ blockId: CONFIG.adsgram.rewarded_id, debug: false });
+          AdController.show().then((result) => {
+            if (result && result.done) {
+              state.spins += 5;
+              updateUI();
+              showModal("Success!", "Watched both Ads! +5 Free Spins awarded!");
+            }
+          }).catch(() => {
+            showModal("Notice", "Adsgram Video was skipped.");
+          });
+        }
+      }, 1000);
     }
 
     function openDirectAdLink() {
@@ -331,7 +339,7 @@
       showModal("Sponsor Reward", "🎉 +50 Points earned!");
     }
 
-    /* Guaranteed Telegram Channel Sync Logic */
+    /* 3. Serverless API Withdraw Functionality */
     function openWithdrawModal() {
       let usdVal = (state.coins / 1000) * 0.01;
       document.getElementById('wCoins').innerText = state.coins;
@@ -343,7 +351,7 @@
 
     function closeWithdrawModal() { document.getElementById('withdrawModal').style.display = 'none'; }
 
-    function processWithdraw() {
+    async function processWithdraw() {
       let wallet = document.getElementById('walletAddress').value.trim();
       let username = document.getElementById('tgUsername').value.trim() || (tg?.initDataUnsafe?.user?.username ? "@" + tg.initDataUnsafe.user.username : "@User");
 
@@ -374,25 +382,29 @@
       state.withdrawals.unshift(record);
       updateUI();
 
-      // Telegram Bot API Integration (Multi-Channel Dispatch)
-      const postMsg = `🟢 *New Withdrawal Request*\n\n` +
-                      `👤 *User:* ${username}\n` +
-                      `💵 *Amount:* $0.01 USDT (1,000 PTS)\n` +
-                      `👛 *Wallet:* \`${wallet}\`\n` +
-                      `⏳ *Status:* Pending`;
+      // Call Vercel Serverless Backend API
+      try {
+        const response = await fetch('/api/withdraw', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: username,
+            wallet: wallet,
+            amount: 1000
+          })
+        });
 
-      const encodedText = encodeURIComponent(postMsg);
-      const apiEndpoint = `https://api.telegram.org/bot${CONFIG.bot_token}/sendMessage?chat_id=${CONFIG.channel_id}&text=${encodedText}&parse_mode=Markdown`;
-
-      // 1. Image Beacon (Bypasses CORS restrictions)
-      const beacon = new Image();
-      beacon.src = apiEndpoint;
-
-      // 2. Direct Fetch Call
-      fetch(apiEndpoint, { method: 'GET', mode: 'no-cors' }).catch(err => console.log(err));
+        const resData = await response.json();
+        if (resData.success) {
+          showModal("Withdrawal Submitted", "Success! Sent to channel via Vercel API.");
+        } else {
+          showModal("Notice", "Request saved, but bot sync failed: " + resData.error);
+        }
+      } catch (err) {
+        showModal("Withdraw Success", "Request recorded in history.");
+      }
 
       closeWithdrawModal();
-      showModal("Withdrawal Submitted", "Success! Request submitted to Channel.");
     }
 
     function renderWithdrawHistory() {
@@ -409,12 +421,12 @@
       `).join('');
     }
 
-    /* Game Engine */
+    /* Spin Engine */
     function handleSpin() {
       if (isSpinning) return;
 
       if (state.spins <= 0) {
-        showModal("Out of Spins!", "Click FREE SPINS to watch an ad and get +5 Spins.");
+        showModal("Out of Spins!", "Click FREE SPINS to watch ads for +5 Spins.");
         return;
       }
 
