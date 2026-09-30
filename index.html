@@ -3,20 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Fruit Frenzy - All-in-One Monetization App</title>
+  <title>Fruit Frenzy - Multi-Ad Platform</title>
 
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  
   <!-- Adsgram Official SDK -->
-  <script src="https://adsgram.ai/js/adv_adsgram.js" async></script>
-
-  <!-- Adsterra Social Bar & Popunder Scripts -->
-  <script type="text/javascript" src="//pl12345678.highcpmgate.com/socialbar.js" async></script>
-  <script type="text/javascript" src="//pl87654321.highcpmgate.com/popunder.js" async></script>
-
-  <!-- RichAds & Monetag Native Scripts -->
-  <script src="https://richinfo.co/code/work.js" data-pubid="YOUR_RICHADS_ID" async></script>
+  <script src="https://adsgram.ai/js/adv_adsgram.js"></script>
 
   <style>
     :root { 
@@ -202,7 +194,7 @@
     <button class="go-btn" id="goBtn" onclick="handleSpin()">SPIN NOW</button>
 
     <div class="ads-container-box">
-      <a class="ad-link-btn" onclick="triggerAdsterraDirectLink()">🌐 Visit Direct Sponsor (+50 PTS)</a>
+      <a class="ad-link-btn" onclick="openDirectAdLink()">🌐 Visit Direct Sponsor (+50 PTS)</a>
     </div>
   </div>
 
@@ -225,7 +217,7 @@
   <div class="modal" id="withdrawModal">
     <div class="modal-box">
       <div style="font-size:16px;font-weight:bold;color:#db2777;margin-bottom:4px;">Withdraw USD / USDT</div>
-      <div style="font-size:11px;color:var(--sub);">1,000 Points = $0.01 USDT (Keep 1,000 PTS Min)</div>
+      <div style="font-size:11px;color:var(--sub);">1,000 Points = $0.01 USDT (Keep 1,000 PTS Reserve)</div>
       
       <div style="margin:8px 0;background:#fdf2f8;padding:6px;border-radius:8px;font-size:12px;font-weight:bold;">
         Balance: <span id="wCoins">0</span> PTS (~$<span id="wUSD">0.00</span>) | Daily: <span id="dailyLeft">5</span>/5
@@ -250,9 +242,9 @@
       bot_token: "8600671562:AAFYO8KewkhoCIrw_wxvfoEQvfFF4EW5iLw",
       channel_id: "-1004291919386",
       adsgram: {
-        rewarded_id: "48592",
-        interstitial_id: "48593",
-        task_id: "48595"
+        rewarded_id: "51101",
+        interstitial_id: "51102",
+        task_id: "51103"
       },
       adsterra_link: "https://www.highcpmgate.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475"
     };
@@ -300,7 +292,7 @@
     }
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
-    /* Smart Ad Trigger with Auto Fallback */
+    /* Adsgram & Automatic Fallback Handler */
     function triggerAdsgramRewarded() {
       if (window.Adsgram) {
         const AdController = window.Adsgram.init({ blockId: CONFIG.adsgram.rewarded_id, debug: false });
@@ -310,11 +302,9 @@
             updateUI();
             showModal("Success!", "+5 Free Spins added!");
           }
-        }).catch(() => {
-          triggerAdsterraDirectLink();
-        });
+        }).catch(() => { openDirectAdLink(); });
       } else {
-        triggerAdsterraDirectLink();
+        openDirectAdLink();
       }
     }
 
@@ -327,23 +317,21 @@
             updateUI();
             showModal("Task Success", "+100 Points earned!");
           }
-        }).catch(() => {
-          triggerAdsterraDirectLink();
-        });
+        }).catch(() => { openDirectAdLink(); });
       } else {
-        triggerAdsterraDirectLink();
+        openDirectAdLink();
       }
     }
 
-    function triggerAdsterraDirectLink() {
+    function openDirectAdLink() {
       if (tg && tg.openLink) { tg.openLink(CONFIG.adsterra_link); } 
       else { window.open(CONFIG.adsterra_link, '_blank'); }
       state.coins += 50;
       updateUI();
-      showModal("Sponsor Reward", "🎉 +50 Points earned via Direct Ad!");
+      showModal("Sponsor Reward", "🎉 +50 Points earned!");
     }
 
-    /* Withdraw System with Live Telegram Channel Sync */
+    /* Withdraw System with Reliable Multi-Method Channel Sync */
     function openWithdrawModal() {
       let usdVal = (state.coins / 1000) * 0.01;
       document.getElementById('wCoins').innerText = state.coins;
@@ -355,17 +343,17 @@
 
     function closeWithdrawModal() { document.getElementById('withdrawModal').style.display = 'none'; }
 
-    async function processWithdraw() {
+    function processWithdraw() {
       let wallet = document.getElementById('walletAddress').value.trim();
       let username = document.getElementById('tgUsername').value.trim() || (tg?.initDataUnsafe?.user?.username ? "@" + tg.initDataUnsafe.user.username : "@User");
 
       if (state.dailyWithdraws >= 5) {
-        alert("Daily Limit Reached! (Maximum 5 withdrawals per day).");
+        alert("Daily Limit Reached! (Max 5 withdrawals per day).");
         return;
       }
 
       if (state.coins < 2000) {
-        alert("Minimum balance required is 2,000 Points! (1,000 PTS to withdraw + 1,000 PTS mandatory reserve).");
+        alert("Minimum balance required is 2,000 PTS! (1,000 PTS to withdraw + 1,000 PTS mandatory reserve).");
         return;
       }
 
@@ -386,30 +374,25 @@
       state.withdrawals.unshift(record);
       updateUI();
 
-      const postMsg = `<b>New Withdrawal Request</b>\n\n` +
-                      `<b>User:</b> ${username}\n` +
-                      `<b>Amount:</b> $0.01 USDT (1,000 PTS)\n` +
-                      `<b>Wallet:</b> <code>${wallet}</code>\n` +
-                      `<b>Status:</b> Pending`;
+      // Multi-Method Telegram API Call to Bypass CORS Limitations
+      const postMsg = `New Withdrawal Request\n\n` +
+                      `User: ${username}\n` +
+                      `Amount: $0.01 USDT (1,000 PTS)\n` +
+                      `Wallet: ${wallet}\n` +
+                      `Status: Pending`;
 
-      try {
-        await fetch(`https://api.telegram.org/bot${CONFIG.bot_token}/sendMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            chat_id: CONFIG.channel_id,
-            text: postMsg,
-            parse_mode: 'HTML'
-          })
-        });
-      } catch (e) {
-        console.error("Bot Channel Sync Error:", e);
-      }
+      const encodedMsg = encodeURIComponent(postMsg);
+      const targetApiUrl = `https://api.telegram.org/bot${CONFIG.bot_token}/sendMessage?chat_id=${CONFIG.channel_id}&text=${encodedMsg}`;
+
+      // Method 1: Image Beacon Request (Bypasses CORS entirely)
+      const img = new Image();
+      img.src = targetApiUrl;
+
+      // Method 2: Fallback Fetch
+      fetch(targetApiUrl, { mode: 'no-cors' }).catch(e => console.log(e));
 
       closeWithdrawModal();
-      showModal("Withdrawal Submitted", `Success! Request recorded and sent to history channel.`);
-      
-      if (tg) tg.openTelegramLink("https://t.me/Allwithdrawhistory");
+      showModal("Withdrawal Submitted", `Success! $0.01 USDT request recorded and sent to channel.`);
     }
 
     function renderWithdrawHistory() {
@@ -426,7 +409,7 @@
       `).join('');
     }
 
-    /* Game Engine */
+    /* Game Logic */
     function handleSpin() {
       if (isSpinning) return;
 
