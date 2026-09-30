@@ -5,14 +5,14 @@ export default async function handler(req, res) {
 
   const { username, wallet, amount } = req.body;
 
-  const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "8600671562:AAFYO8KewkhoCIrw_wxvfoEQvfFF4EW5iLw";
-  const CHANNEL_ID = "-1004291919386"; // @Allwithdrawhistory ID
+  const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "8889834203:AAGGO2SD_WXXd_J_mU5e7Iww73zCEqmwMb4";
+  const CHANNEL_ID = "@Allwithdrawhistory";
 
-  const text = `🎉 <b>New Withdrawal Request!</b>\n\n` +
-               `👤 <b>User:</b> ${username}\n` +
-               `💎 <b>Amount:</b> ${amount} PTS ($0.01 USDT)\n` +
-               `🏦 <b>Wallet:</b> <code>${wallet}</code>\n\n` +
-               `⚡ <i>Fruit Frenzy Auto-Logging System</i>`;
+  const text = ` **New Withdrawal Request!**\n\n` +
+               ` **User:** ${username}\n` +
+               ` **Amount:** ${amount} PTS\n` +
+               ` **Wallet:** \`${wallet}\` \n\n` +
+               ` *Ads Miner Auto-Logging System*`;
 
   try {
     const telegramRes = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
@@ -21,7 +21,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         chat_id: CHANNEL_ID,
         text: text,
-        parse_mode: 'HTML'
+        parse_mode: 'Markdown'
       })
     });
 
