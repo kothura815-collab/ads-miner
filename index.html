@@ -3,26 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ADS MINER - Official Platform</title>
+  <title>ADS MINER</title>
 
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <!-- Adsgram SDK -->
-  <script src="https://adsgram.ai/js/adv_adsgram.js" async></script>
+  <script src="https://adsgram.ai/js/adv_adsgram.js"></script>
 
-  <!-- Multi-Ad Network Scripts -->
+  <!-- Adsterra Social Bar & Popunder Scripts -->
   <script type="text/javascript" src="//pl12345678.highcpmgate.com/socialbar.js" async></script>
   <script type="text/javascript" src="//pl87654321.highcpmgate.com/popunder.js" async></script>
-  <script src="https://richinfo.co/code/work.js" data-pubid="YOUR_RICHADS_PUB_ID" async></script>
 
   <style>
     :root { 
       --bg: #0f172a; 
       --card: #1e293b; 
-      --primary: #0088cc; 
-      --accent: #38bdf8; 
+      --primary: #38bdf8; 
+      --accent: #f59e0b;
       --text: #f8fafc; 
       --sub: #94a3b8; 
+      --active-border: #38bdf8;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; user-select: none; }
     body { 
@@ -35,120 +35,215 @@
       min-height: 100vh; 
       padding-bottom: 75px; 
     }
-    .container { width: 100%; max-width: 420px; padding: 20px; text-align: center; }
+    .container { width: 100%; max-width: 420px; padding: 12px; }
 
-    .header-title { font-size: 22px; font-weight: 900; color: var(--accent); margin-bottom: 15px; letter-spacing: 1px; }
+    /* Top Header */
+    .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .badge { background: var(--card); padding: 8px 14px; border-radius: 20px; font-weight: 800; font-size: 13px; display: flex; align-items: center; gap: 6px; border: 1px solid #334155; }
+    .badge-coins { color: var(--accent); }
+    .badge-spins { color: var(--primary); }
+    .app-title { font-size: 18px; font-weight: 900; letter-spacing: 1px; color: #f8fafc; text-transform: uppercase; }
 
-    .balance-card {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-    }
-    .balance-title { font-size: 13px; color: var(--sub); text-transform: uppercase; letter-spacing: 0.5px; }
-    .balance-value { font-size: 34px; font-weight: 800; color: #fff; margin-top: 6px; }
-
-    .action-btn {
+    /* 6x4 Grid Board */
+    .game-board { 
+      background: #1e293b; 
+      border: 2px solid #334155;
+      border-radius: 16px; 
+      padding: 8px; 
+      display: grid; 
+      grid-template-columns: repeat(6, 1fr); 
+      grid-template-rows: repeat(4, 1fr); 
+      gap: 6px; 
+      margin-bottom: 12px; 
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4); 
       width: 100%;
-      background: linear-gradient(135deg, #0088cc, #005588);
-      color: white;
-      border: none;
-      padding: 16px;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-bottom: 12px;
-      box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4);
-      transition: transform 0.1s;
     }
-    .action-btn:active { transform: scale(0.98); }
+    .cell { 
+      background: #0f172a; 
+      border-radius: 8px; 
+      aspect-ratio: 1; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center; 
+      font-size: 9px; 
+      font-weight: bold; 
+      color: #94a3b8; 
+      border: 1px solid #334155;
+      transition: all 0.1s ease;
+    }
+    .cell span { font-size: 18px; }
+    .cell.bonus { background: #0284c7; color: #fff; font-size: 10px; text-align: center; line-height: 1.1; }
+    .cell.active { border-color: var(--active-border); background: #0369a1; box-shadow: 0 0 12px var(--primary); color: #fff; }
 
-    .ad-banner-box {
-      background: rgba(255,255,255,0.02);
-      border: 1px dashed var(--accent);
+    .c-0 { grid-column: 1; grid-row: 1; }
+    .c-1 { grid-column: 2; grid-row: 1; }
+    .c-2 { grid-column: 3; grid-row: 1; }
+    .c-3 { grid-column: 4; grid-row: 1; }
+    .c-4 { grid-column: 5; grid-row: 1; }
+    .c-5 { grid-column: 6; grid-row: 1; }
+    .c-6 { grid-column: 6; grid-row: 2; }
+    .c-7 { grid-column: 6; grid-row: 3; }
+    .c-8 { grid-column: 6; grid-row: 4; }
+    .c-9 { grid-column: 5; grid-row: 4; }
+    .c-10 { grid-column: 4; grid-row: 4; }
+    .c-11 { grid-column: 3; grid-row: 4; }
+    .c-12 { grid-column: 2; grid-row: 4; }
+    .c-13 { grid-column: 1; grid-row: 4; }
+    .c-14 { grid-column: 1; grid-row: 3; }
+    .c-15 { grid-column: 1; grid-row: 2; }
+
+    .center-screen { 
+      grid-column: 2 / span 4; 
+      grid-row: 2 / span 2; 
+      background: #0284c7; 
+      border-radius: 12px; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center; 
+      color: #fff; 
+      border: 1px solid #38bdf8; 
+      padding: 6px;
+    }
+    .slots { display: flex; gap: 8px; font-size: 24px; margin-bottom: 4px; background: rgba(0,0,0,0.3); padding: 4px 12px; border-radius: 8px; }
+    .slot-item { min-width: 28px; text-align: center; }
+    .score-display { background: #0f172a; padding: 3px 12px; border-radius: 6px; font-size: 12px; font-weight: bold; color: var(--accent); }
+
+    .go-btn { 
+      width: 100%; 
+      background: linear-gradient(135deg, #0284c7, #0369a1); 
+      color: #fff; 
+      border: none; 
+      border-radius: 12px; 
+      padding: 14px; 
+      font-size: 16px; 
+      font-weight: 900; 
+      text-transform: uppercase; 
+      cursor: pointer; 
+      margin-bottom: 10px; 
+      box-shadow: 0 4px 12px rgba(2,132,199,0.4); 
+    }
+    .go-btn:disabled { background: #475569; box-shadow: none; }
+
+    .ads-container-box {
+      background: var(--card);
+      border: 1px dashed #38bdf8;
       border-radius: 12px;
       padding: 10px;
-      margin-top: 10px;
+      text-align: center;
     }
     .ad-link-btn {
       display: block;
-      color: var(--accent);
+      background: #0f172a;
+      border: 1px solid #0284c7;
+      border-radius: 8px;
+      padding: 8px;
+      color: var(--primary);
       font-weight: bold;
       font-size: 12px;
       text-decoration: none;
       cursor: pointer;
     }
 
-    .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(255,255,255,0.05); z-index: 1000; }
+    /* Bottom Navigation */
+    .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #1e293b; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #334155; z-index: 1000; }
     .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 11px; color: var(--sub); text-decoration: none; font-weight: bold; cursor: pointer; }
-    .nav-item.active { color: var(--accent); }
+    .nav-item.active { color: var(--primary); }
     .nav-item span { font-size: 18px; margin-bottom: 2px; }
 
-    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); display: none; justify-content: center; align-items: center; z-index: 9999; }
-    .modal-box { background: var(--card); border-radius: 16px; padding: 20px; width: 85%; max-width: 320px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
-    .input-field { width: 100%; padding: 10px; margin: 8px 0; background: #0f172a; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #fff; font-size: 12px; box-sizing: border-box; }
-
-    .history-list { max-height: 120px; overflow-y: auto; text-align: left; font-size: 11px; margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 6px; }
-    .history-item { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px dashed rgba(255,255,255,0.05); }
+    /* Modals */
+    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 9999; }
+    .modal-box { background: var(--card); border-radius: 16px; padding: 20px; width: 85%; max-width: 320px; text-align: center; border: 1px solid #334155; }
+    .input-field { width: 100%; padding: 10px; margin: 8px 0; background: #0f172a; border: 1px solid #334155; border-radius: 8px; font-size: 12px; color: #fff; box-sizing: border-box; }
+    
+    .history-list { max-height: 120px; overflow-y: auto; text-align: left; font-size: 11px; margin-top: 10px; border-top: 1px solid #334155; padding-top: 8px; }
+    .history-item { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #334155; }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <div class="header-title">ADS MINER</div>
-
-    <div class="balance-card">
-      <div class="balance-title">Current Balance</div>
-      <div class="balance-value"><span id="userBalance">0</span> PTS</div>
-      <div style="font-size: 12px; color: var(--sub); margin-top: 4px;">1,000 PTS = $0.01 USDT</div>
+    <div class="top-header">
+      <div class="badge badge-coins">🪙 <span id="coinCount">0</span> PTS</div>
+      <div class="app-title">ADS MINER</div>
+      <div class="badge badge-spins">⚡ <span id="spinCount">10</span> SPINS</div>
     </div>
 
-    <button class="action-btn" id="mineBtn" onclick="triggerMining()">⚡ START MINING (+25 PTS)</button>
+    <div class="game-board">
+      <div class="cell c-0" id="c0"><span>💎</span>Gem</div>
+      <div class="cell c-1" id="c1"><span>🪙</span>Coin</div>
+      <div class="cell bonus c-2" id="c2">X3<br>BONUS</div>
+      <div class="cell c-3" id="c3"><span>⚡</span>Energy</div>
+      <div class="cell c-4" id="c4"><span>💎</span>Gem</div>
+      <div class="cell c-5" id="c5"><span>🪙</span>Coin</div>
 
-    <div class="ad-banner-box">
-      <a class="ad-link-btn" onclick="openDirectAdLink()">🌐 Visit Sponsor Ad (+50 PTS)</a>
+      <div class="cell bonus c-6" id="c6">X3<br>BONUS</div>
+      <div class="cell c-7" id="c7"><span>⚡</span>Energy</div>
+
+      <div class="cell c-8" id="c8"><span>💎</span>Gem</div>
+      <div class="cell c-9" id="c9"><span>🪙</span>Coin</div>
+      <div class="cell c-10" id="c10"><span>⚡</span>Energy</div>
+      <div class="cell bonus c-11" id="c11">X3<br>BONUS</div>
+      <div class="cell c-12" id="c12"><span>💎</span>Gem</div>
+      <div class="cell c-13" id="c13"><span>🪙</span>Coin</div>
+
+      <div class="cell c-14" id="c14"><span>⚡</span>Energy</div>
+      <div class="cell c-15" id="c15"><span>💎</span>Gem</div>
+
+      <div class="center-screen">
+        <div class="slots">
+          <span class="slot-item" id="slot1">💎</span>
+          <span class="slot-item" id="slot2">🪙</span>
+          <span class="slot-item" id="slot3">⚡</span>
+        </div>
+        <div class="score-display" id="winScore">READY</div>
+      </div>
+    </div>
+
+    <button class="go-btn" id="goBtn" onclick="handleSpin()">START MINING</button>
+
+    <div class="ads-container-box">
+      <a class="ad-link-btn" onclick="openDirectAdLink()">🌐 Visit Sponsor Network (+50 PTS)</a>
     </div>
   </div>
 
   <div class="nav-bar">
-    <a class="nav-item active"><span>⚡</span>MINER</a>
+    <a class="nav-item active"><span>⛏️</span>MINE</a>
     <a class="nav-item" onclick="triggerAdsgramTask()"><span>📋</span>TASKS</a>
-    <a class="nav-item" onclick="handleComboAdsForSpins()"><span>🎬</span>FREE BONUS</a>
+    <a class="nav-item" onclick="handleFreeSpinsWithComboAds()"><span>🎬</span>FREE SPINS</a>
     <a class="nav-item" onclick="openWithdrawModal()"><span>💰</span>WITHDRAW</a>
   </div>
 
   <div class="modal" id="modal">
     <div class="modal-box">
-      <div style="font-size:16px;font-weight:bold;margin-bottom:8px;color:var(--accent);" id="mTitle">Notification</div>
-      <div style="font-size:12px;color:var(--sub);margin-bottom:14px;" id="mMsg">Message</div>
-      <button style="width:100%;padding:10px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-weight:bold;" onclick="closeModal()">OK</button>
+      <div style="font-size:16px;font-weight:bold;margin-bottom:8px;color:var(--primary);" id="mTitle">Alert</div>
+      <div style="font-size:12px;color:var(--sub);margin-bottom:16px;" id="mMsg">Message</div>
+      <button style="width:100%;padding:10px;background:var(--primary);color:#0f172a;border:none;border-radius:8px;font-weight:bold;" onclick="closeModal()">OK</button>
     </div>
   </div>
 
   <!-- Withdraw Modal -->
   <div class="modal" id="withdrawModal">
     <div class="modal-box">
-      <div style="font-size:16px;font-weight:bold;color:var(--accent);margin-bottom:4px;">Withdraw USDT</div>
-      <div style="font-size:11px;color:var(--sub);">Keep 1,000 PTS Reserve in Account</div>
+      <div style="font-size:16px;font-weight:bold;color:var(--primary);margin-bottom:4px;">Withdraw USD / USDT</div>
+      <div style="font-size:11px;color:var(--sub);">1,000 PTS = $0.01 USDT (Keep 1,000 PTS Reserve)</div>
       
-      <div style="margin:10px 0;background:rgba(255,255,255,0.05);padding:8px;border-radius:8px;font-size:12px;font-weight:bold;">
+      <div style="margin:10px 0;background:#0f172a;padding:8px;border-radius:8px;font-size:12px;font-weight:bold;border:1px solid #334155;">
         Balance: <span id="wCoins">0</span> PTS (~$<span id="wUSD">0.00</span>) | Daily: <span id="dailyLeft">5</span>/5
       </div>
 
       <input type="text" id="tgUsername" class="input-field" placeholder="@username (Optional)">
       <input type="text" id="walletAddress" class="input-field" placeholder="Enter TON / USDT Wallet Address">
       
-      <button style="width:100%;padding:10px;background:#22c55e;color:#fff;border:none;border-radius:8px;font-weight:bold;margin-top:6px;" onclick="processWithdraw()">CONFIRM WITHDRAW</button>
+      <button style="width:100%;padding:10px;background:#10b981;color:#fff;border:none;border-radius:8px;font-weight:bold;margin-top:6px;" onclick="processWithdraw()">CONFIRM WITHDRAW</button>
       
-      <div style="font-size:12px;font-weight:bold;color:#fff;margin-top:10px;text-align:left;">Withdrawal Records:</div>
+      <div style="font-size:12px;font-weight:bold;color:var(--sub);margin-top:10px;text-align:left;">Withdrawal Records:</div>
       <div class="history-list" id="historyList">
-        <div style="color:var(--sub);text-align:center;">No records found.</div>
+        <div style="color:#64748b;text-align:center;">No withdrawal records found.</div>
       </div>
 
-      <button style="width:100%;padding:8px;background:#475569;color:#fff;border:none;border-radius:8px;font-size:11px;margin-top:10px;" onclick="closeWithdrawModal()">CLOSE</button>
+      <button style="width:100%;padding:8px;background:#334155;color:#fff;border:none;border-radius:8px;font-size:12px;margin-top:10px;" onclick="closeWithdrawModal()">CLOSE</button>
     </div>
   </div>
 
@@ -162,12 +257,21 @@
       adsterra_link: "https://www.highcpmgate.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475"
     };
 
+    const borderSequence = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+    const fruits = ["💎", "🪙", "⚡"];
+    const cellFruits = {
+      0: "💎", 1: "🪙", 2: "X3", 3: "⚡", 4: "💎", 5: "🪙",
+      6: "X3", 7: "⚡", 8: "💎", 9: "🪙", 10: "⚡", 11: "X3",
+      12: "💎", 13: "🪙", 14: "⚡", 15: "💎"
+    };
+
     const tg = window.Telegram?.WebApp;
     if(tg) { tg.expand(); tg.ready(); }
 
-    let isMining = false;
+    let isSpinning = false;
     let state = {
       coins: parseInt(localStorage.getItem('coins')) || 0,
+      spins: parseInt(localStorage.getItem('spins')) || 10,
       dailyWithdraws: parseInt(localStorage.getItem('dailyWithdraws')) || 0,
       lastWithdrawDate: localStorage.getItem('lastWithdrawDate') || "",
       withdrawals: JSON.parse(localStorage.getItem('withdrawals')) || []
@@ -180,8 +284,10 @@
     }
 
     function updateUI() {
-      document.getElementById('userBalance').innerText = state.coins;
+      document.getElementById('coinCount').innerText = state.coins;
+      document.getElementById('spinCount').innerText = state.spins;
       localStorage.setItem('coins', state.coins);
+      localStorage.setItem('spins', state.spins);
       localStorage.setItem('dailyWithdraws', state.dailyWithdraws);
       localStorage.setItem('lastWithdrawDate', state.lastWithdrawDate);
       localStorage.setItem('withdrawals', JSON.stringify(state.withdrawals));
@@ -194,29 +300,7 @@
     }
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
-    /* Mining Mechanic */
-    function triggerMining() {
-      if (isMining) return;
-      isMining = true;
-      const btn = document.getElementById('mineBtn');
-      btn.innerText = "⏳ MINING IN PROGRESS...";
-      btn.disabled = true;
-
-      setTimeout(() => {
-        state.coins += 25;
-        updateUI();
-        btn.innerText = "⚡ START MINING (+25 PTS)";
-        btn.disabled = false;
-        isMining = false;
-
-        if (Math.random() < 0.3 && window.Adsgram) {
-          const AdController = window.Adsgram.init({ blockId: CONFIG.adsgram.interstitial_id, debug: false });
-          AdController.show().catch(() => {});
-        }
-      }, 3000);
-    }
-
-    /* Ad Trigger Functions */
+    /* 1. TASKS: Exclusive Adsgram Task Ad (51103) */
     function triggerAdsgramTask() {
       if (window.Adsgram) {
         const AdController = window.Adsgram.init({ blockId: CONFIG.adsgram.task_id, debug: false });
@@ -224,24 +308,29 @@
           if (result && result.done) {
             state.coins += 100;
             updateUI();
-            showModal("Task Success", "+100 Points earned!");
+            showModal("Task Completed", "+100 Points added!");
           }
-        }).catch(() => { openDirectAdLink(); });
+        }).catch(() => {
+          openDirectAdLink();
+        });
       } else {
         openDirectAdLink();
       }
     }
 
-    function handleComboAdsForSpins() {
-      openDirectAdLink();
+    /* 2. FREE SPINS: Adsterra Link -> Adsgram Rewarded (51101) Combo */
+    function handleFreeSpinsWithComboAds() {
+      if (tg && tg.openLink) { tg.openLink(CONFIG.adsterra_link); } 
+      else { window.open(CONFIG.adsterra_link, '_blank'); }
+
       setTimeout(() => {
         if (window.Adsgram) {
           const AdController = window.Adsgram.init({ blockId: CONFIG.adsgram.rewarded_id, debug: false });
           AdController.show().then((result) => {
             if (result && result.done) {
-              state.coins += 50;
+              state.spins += 5;
               updateUI();
-              showModal("Bonus Granted", "+50 Points added!");
+              showModal("Mining Power Boosted", "+5 Free Spins added!");
             }
           }).catch(() => {});
         }
@@ -253,9 +342,10 @@
       else { window.open(CONFIG.adsterra_link, '_blank'); }
       state.coins += 50;
       updateUI();
+      showModal("Sponsor Reward", "🎉 +50 Points earned!");
     }
 
-    /* Withdraw Integration */
+    /* 3. Serverless API Withdrawal Logic */
     function openWithdrawModal() {
       let usdVal = (state.coins / 1000) * 0.01;
       document.getElementById('wCoins').innerText = state.coins;
@@ -311,12 +401,12 @@
 
         const resData = await response.json();
         if (resData.success) {
-          showModal("Withdrawal Submitted", "Success! Request sent to history channel.");
+          showModal("Withdrawal Submitted", "Success! Sent to channel.");
         } else {
-          showModal("Submitted", "Recorded in history. Bot Sync Error: " + resData.error);
+          showModal("Notice", "Saved to history. Sync response: " + resData.error);
         }
       } catch (err) {
-        showModal("Submitted", "Request recorded in history.");
+        showModal("Withdraw Success", "Request recorded in history.");
       }
 
       closeWithdrawModal();
@@ -325,15 +415,85 @@
     function renderWithdrawHistory() {
       let container = document.getElementById('historyList');
       if (state.withdrawals.length === 0) {
-        container.innerHTML = `<div style="color:var(--sub);text-align:center;">No records found.</div>`;
+        container.innerHTML = `<div style="color:#64748b;text-align:center;">No withdrawal records found.</div>`;
         return;
       }
       container.innerHTML = state.withdrawals.map(w => `
         <div class="history-item">
           <div><b>${w.amount}</b> (${w.wallet})</div>
-          <div style="color:${w.status === 'Pending' ? '#eab308' : '#22c55e'};font-weight:bold;">${w.status}</div>
+          <div style="color:${w.status === 'Pending' ? '#f59e0b' : '#10b981'};font-weight:bold;">${w.status}</div>
         </div>
       `).join('');
+    }
+
+    /* Game Engine */
+    function handleSpin() {
+      if (isSpinning) return;
+
+      if (state.spins <= 0) {
+        showModal("Out of Spins!", "Watch ads in FREE SPINS to get +5 Spins.");
+        return;
+      }
+
+      isSpinning = true;
+      state.spins--;
+      updateUI();
+      document.getElementById('goBtn').disabled = true;
+      document.getElementById('winScore').innerText = "MINING...";
+
+      let currentBorderIndex = 0;
+      let totalBorderSteps = 16 * 2 + Math.floor(Math.random() * 16);
+      let stepCount = 0;
+
+      let slot1 = document.getElementById('slot1');
+      let slot2 = document.getElementById('slot2');
+      let slot3 = document.getElementById('slot3');
+
+      function rotateBorder() {
+        document.querySelectorAll('.cell').forEach(c => c.classList.remove('active'));
+
+        let activeCellId = "c" + borderSequence[currentBorderIndex % 16];
+        document.getElementById(activeCellId).classList.add('active');
+
+        if (stepCount < totalBorderSteps - 4) {
+          slot1.innerText = fruits[Math.floor(Math.random() * fruits.length)];
+          slot2.innerText = fruits[Math.floor(Math.random() * fruits.length)];
+          slot3.innerText = fruits[Math.floor(Math.random() * fruits.length)];
+        }
+
+        stepCount++;
+        currentBorderIndex++;
+
+        if (stepCount < totalBorderSteps) {
+          setTimeout(rotateBorder, 50);
+        } else {
+          let finalCellId = borderSequence[(currentBorderIndex - 1) % 16];
+          finishSpin(finalCellId, slot1.innerText, slot2.innerText, slot3.innerText);
+        }
+      }
+
+      rotateBorder();
+    }
+
+    function finishSpin(borderCellIndex, s1, s2, s3) {
+      isSpinning = false;
+      document.getElementById('goBtn').disabled = false;
+
+      let stoppedFruit = cellFruits[borderCellIndex];
+      let centerFruits = [s1, s2, s3];
+      let matches = centerFruits.filter(f => f === stoppedFruit).length;
+      
+      let baseCoins = 10;
+
+      if (matches === 1) baseCoins = 20;
+      else if (matches === 2) baseCoins = 50;
+      else if (matches === 3) baseCoins = 80;
+
+      if (stoppedFruit === "X3") { baseCoins = 100; }
+
+      state.coins += baseCoins;
+      document.getElementById('winScore').innerText = `+${baseCoins} PTS`;
+      updateUI();
     }
 
     updateUI();
