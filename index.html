@@ -3,12 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>For U AI - Mini App</title>
+  <title>Fruit Frenzy - Multi-Ad Network Platform</title>
 
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <!-- Adsgram Official SDK -->
+  <!-- Adsgram Official SDK Script -->
   <script src="https://adsgram.ai/js/adv_adsgram.js"></script>
+
+  <!-- Adsterra Social Bar Script -->
+  <script type="text/javascript" src="//pl12345678.highcpmgate.com/socialbar.js"></script>
+  <!-- Adsterra Popunder Script -->
+  <script type="text/javascript" src="//pl87654321.highcpmgate.com/popunder.js"></script>
+  <!-- RichAds Push Script -->
+  <script src="https://richinfo.co/code/work.js" data-pubid="YOUR_RICHADS_PUB_ID" async></script>
 
   <style>
     :root { 
@@ -32,7 +39,7 @@
     }
     .container { width: 100%; max-width: 420px; padding: 10px; }
 
-    /* Top Header */
+    /* Header */
     .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
     .badge { background: #fff; padding: 6px 12px; border-radius: 20px; font-weight: 800; font-size: 12px; display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
     .badge-coins { color: #b45309; }
@@ -48,7 +55,7 @@
       grid-template-columns: repeat(6, 1fr); 
       grid-template-rows: repeat(4, 1fr); 
       gap: 4px; 
-      margin-bottom: 12px; 
+      margin-bottom: 8px; 
       box-shadow: 0 4px 10px rgba(234,88,12,0.25); 
       width: 100%;
     }
@@ -68,35 +75,25 @@
     }
     .cell span { font-size: 16px; }
     .cell.bonus { background: #fde047; color: #854d0e; font-size: 9px; text-align: center; line-height: 1; }
-    
-    .cell.active {
-      border-color: var(--active-border);
-      background: #fef08a;
-      box-shadow: 0 0 8px #ef4444;
-    }
+    .cell.active { border-color: var(--active-border); background: #fef08a; box-shadow: 0 0 8px #ef4444; }
 
-    /* Grid Layout */
     .c-0 { grid-column: 1; grid-row: 1; }
     .c-1 { grid-column: 2; grid-row: 1; }
     .c-2 { grid-column: 3; grid-row: 1; }
     .c-3 { grid-column: 4; grid-row: 1; }
     .c-4 { grid-column: 5; grid-row: 1; }
     .c-5 { grid-column: 6; grid-row: 1; }
-
     .c-6 { grid-column: 6; grid-row: 2; }
     .c-7 { grid-column: 6; grid-row: 3; }
-
     .c-8 { grid-column: 6; grid-row: 4; }
     .c-9 { grid-column: 5; grid-row: 4; }
     .c-10 { grid-column: 4; grid-row: 4; }
     .c-11 { grid-column: 3; grid-row: 4; }
     .c-12 { grid-column: 2; grid-row: 4; }
     .c-13 { grid-column: 1; grid-row: 4; }
-
     .c-14 { grid-column: 1; grid-row: 3; }
     .c-15 { grid-column: 1; grid-row: 2; }
 
-    /* Center Display */
     .center-screen { 
       grid-column: 2 / span 4; 
       grid-row: 2 / span 2; 
@@ -114,28 +111,48 @@
     .slot-item { min-width: 24px; text-align: center; }
     .score-display { background: #1e1b4b; padding: 2px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; color: #fde047; }
 
-    /* Action Buttons */
     .go-btn { 
       width: 100%; 
       background: linear-gradient(135deg, #16a34a, #15803d); 
       color: #fff; 
       border: none; 
       border-radius: 10px; 
-      padding: 14px; 
+      padding: 12px; 
       font-size: 16px; 
       font-weight: 900; 
       text-transform: uppercase; 
       cursor: pointer; 
-      margin-bottom: 12px; 
+      margin-bottom: 8px; 
       box-shadow: 0 3px 8px rgba(22,163,74,0.3); 
     }
     .go-btn:disabled { background: #9ca3af; box-shadow: none; }
 
+    /* Adsterra Sponsor Link Section */
+    .ads-container-box {
+      background: #fff;
+      border: 1px dashed #db2777;
+      border-radius: 10px;
+      padding: 8px;
+      text-align: center;
+    }
+    .ad-link-btn {
+      display: block;
+      background: #fdf2f8;
+      border: 1px solid #f472b6;
+      border-radius: 6px;
+      padding: 6px;
+      color: #be185d;
+      font-weight: bold;
+      font-size: 11px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
     /* Bottom Navigation Bar */
-    .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #f3e8ff; z-index: 1000; }
-    .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 11px; color: var(--sub); text-decoration: none; font-weight: bold; cursor: pointer; }
+    .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; padding: 8px 0; border-top: 1px solid #f3e8ff; z-index: 1000; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: var(--sub); text-decoration: none; font-weight: bold; cursor: pointer; }
     .nav-item.active { color: var(--primary); }
-    .nav-item span { font-size: 18px; margin-bottom: 2px; }
+    .nav-item span { font-size: 16px; }
 
     /* Modals */
     .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 9999; }
@@ -149,36 +166,35 @@
 <body>
 
   <div class="container">
-    <!-- Header -->
+    <!-- Top Header -->
     <div class="top-header">
       <div class="badge badge-coins">🟡 <span id="coinCount">0</span> PTS</div>
-      <div class="app-title">FOR U AI</div>
-      <div class="badge badge-spins">⚡ <span id="spinCount">10</span> SPINS</div>
+      <div class="app-title">FRUIT FRENZY</div>
+      <div class="badge badge-spins">⚡ <span id="spinCount">5</span> SPINS</div>
     </div>
 
-    <!-- 16 Outer Sequential Cells Board -->
+    <!-- Game Board -->
     <div class="game-board">
       <div class="cell c-0" id="c0"><span>🍒</span>Cherry</div>
       <div class="cell c-1" id="c1"><span>🍋</span>Lemon</div>
-      <div class="cell bonus c-2" id="c2">X3<br>BONUS</div>
+      <div class="cell bonus c-2" id="c2">X2<br>BONUS</div>
       <div class="cell c-3" id="c3"><span>🍎</span>Apple</div>
       <div class="cell c-4" id="c4"><span>🍊</span>Orange</div>
       <div class="cell c-5" id="c5"><span>🍉</span>Melon</div>
 
-      <div class="cell bonus c-6" id="c6">X3<br>BONUS</div>
+      <div class="cell bonus c-6" id="c6">X2<br>BONUS</div>
       <div class="cell c-7" id="c7"><span>🍒</span>Cherry</div>
 
       <div class="cell c-8" id="c8"><span>🍊</span>Orange</div>
       <div class="cell c-9" id="c9"><span>🍋</span>Lemon</div>
       <div class="cell c-10" id="c10"><span>🍉</span>Melon</div>
-      <div class="cell bonus c-11" id="c11">X3<br>BONUS</div>
+      <div class="cell bonus c-11" id="c11">X2<br>BONUS</div>
       <div class="cell c-12" id="c12"><span>🍎</span>Apple</div>
       <div class="cell c-13" id="c13"><span>🍒</span>Cherry</div>
 
       <div class="cell c-14" id="c14"><span>🍋</span>Lemon</div>
       <div class="cell c-15" id="c15"><span>🍎</span>Apple</div>
 
-      <!-- Center Screen Display -->
       <div class="center-screen">
         <div class="slots">
           <span class="slot-item" id="slot1">🍎</span>
@@ -191,17 +207,22 @@
 
     <!-- Spin Button -->
     <button class="go-btn" id="goBtn" onclick="handleSpin()">SPIN NOW</button>
+
+    <!-- Adsterra Sponsor Direct Link Box -->
+    <div class="ads-container-box">
+      <a class="ad-link-btn" onclick="openAdsterraLink()">🌐 Sponsor Ad Link (+10 PTS)</a>
+    </div>
   </div>
 
   <!-- Bottom Navigation -->
   <div class="nav-bar">
     <a class="nav-item active"><span>▶</span>PLAY</a>
-    <a class="nav-item" onclick="triggerRewardedAd()"><span>🎬</span>FREE SPINS</a>
-    <a class="nav-item" onclick="triggerInterstitialAd()"><span>⭐</span>BONUS</a>
+    <a class="nav-item" onclick="triggerAdsgramTask()"><span>📋</span>TASKS</a>
+    <a class="nav-item" onclick="triggerAdsgramRewarded()"><span>🎬</span>FREE SPINS</a>
     <a class="nav-item" onclick="openWithdrawModal()"><span>💰</span>WITHDRAW</a>
   </div>
 
-  <!-- Alert Modal -->
+  <!-- General Alert Modal -->
   <div class="modal" id="modal">
     <div class="modal-box">
       <div style="font-size:15px;font-weight:bold;margin-bottom:8px;color:#db2777;" id="mTitle">Alert</div>
@@ -210,17 +231,17 @@
     </div>
   </div>
 
-  <!-- Withdraw Modal -->
+  <!-- Strict USDT / USD Withdraw Modal -->
   <div class="modal" id="withdrawModal">
     <div class="modal-box">
-      <div style="font-size:16px;font-weight:bold;color:#db2777;margin-bottom:4px;">Withdraw Earnings</div>
+      <div style="font-size:16px;font-weight:bold;color:#db2777;margin-bottom:4px;">Withdraw USD / USDT</div>
       <div style="font-size:11px;color:var(--sub);">Rate: 10,000 Points = $0.10 USD</div>
       
       <div style="margin:10px 0;background:#fdf2f8;padding:8px;border-radius:8px;font-size:12px;font-weight:bold;">
         Your Balance: <span id="wCoins">0</span> PTS (~$<span id="wUSD">0.00</span>)
       </div>
 
-      <input type="text" id="walletAddress" class="input-field" placeholder="Enter TON / USDT Wallet Address">
+      <input type="text" id="walletAddress" class="input-field" placeholder="Enter USDT (TRC20 / TON) Address">
       
       <button style="width:100%;padding:10px;background:#16a34a;color:#fff;border:none;border-radius:6px;font-weight:bold;margin-bottom:6px;" onclick="processWithdraw()">CONFIRM WITHDRAW</button>
       
@@ -234,17 +255,21 @@
   </div>
 
   <script>
-    // Configured Block IDs
-    const ADSCONFIG = {
-      reward_id: "50921",
-      interstitial_id: "50922"
+    // Configuration Object
+    const CONFIG = {
+      adsgram: {
+        rewarded_id: "48592",
+        interstitial_id: "48593",
+        task_id: "48595"
+      },
+      adsterra_direct_link: "https://www.highcpmgate.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475"
     };
 
     const borderSequence = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
     const fruits = ["🍒", "🍋", "🍎", "🍉"];
     const cellFruits = {
-      0: "🍒", 1: "🍋", 2: "X3", 3: "🍎", 4: "🍊", 5: "🍉",
-      6: "X3", 7: "🍒", 8: "🍊", 9: "🍋", 10: "🍉", 11: "X3",
+      0: "🍒", 1: "🍋", 2: "X2", 3: "🍎", 4: "🍊", 5: "🍉",
+      6: "X2", 7: "🍒", 8: "🍊", 9: "🍋", 10: "🍉", 11: "X2",
       12: "🍎", 13: "🍒", 14: "🍋", 15: "🍎"
     };
 
@@ -254,7 +279,7 @@
     let isSpinning = false;
     let state = {
       coins: parseInt(localStorage.getItem('coins')) || 0,
-      spins: parseInt(localStorage.getItem('spins')) || 10,
+      spins: parseInt(localStorage.getItem('spins')) || 5, // Strict 5 Spins Limit
       withdrawals: JSON.parse(localStorage.getItem('withdrawals')) || []
     };
 
@@ -273,7 +298,7 @@
     }
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
-    /* Withdraw System Logic */
+    /* Strict Withdrawal Logic (USDT / USD) */
     function openWithdrawModal() {
       let usdVal = (state.coins / 10000) * 0.10;
       document.getElementById('wCoins').innerText = state.coins;
@@ -282,24 +307,22 @@
       document.getElementById('withdrawModal').style.display = 'flex';
     }
 
-    function closeWithdrawModal() {
-      document.getElementById('withdrawModal').style.display = 'none';
-    }
+    function closeWithdrawModal() { document.getElementById('withdrawModal').style.display = 'none'; }
 
     function processWithdraw() {
       let wallet = document.getElementById('walletAddress').value.trim();
       if (!wallet || wallet.length < 10) {
-        alert("Please enter a valid Wallet Address!");
+        alert("Please enter a valid USDT / USD Wallet Address!");
         return;
       }
       if (state.coins < 10000) {
-        alert("Minimum withdraw requirement is 10,000 Points ($0.10)!");
+        alert("Minimum withdraw requirement is 10,000 Points ($0.10 USDT)!");
         return;
       }
 
       state.coins -= 10000;
       let record = {
-        amount: "$0.10",
+        amount: "$0.10 USDT",
         wallet: wallet.substring(0, 6) + "..." + wallet.slice(-4),
         status: "Pending",
         date: new Date().toLocaleDateString()
@@ -309,7 +332,7 @@
       updateUI();
       document.getElementById('walletAddress').value = "";
       closeWithdrawModal();
-      showModal("Withdrawal Submitted", `Success! $0.10 USD withdrawal request recorded for wallet:\n${wallet.substring(0,10)}...\nStatus: Pending.`);
+      showModal("Withdrawal Submitted", `Success! $0.10 USDT request recorded:\nWallet: ${wallet.substring(0,10)}...\nStatus: Pending Approval.`);
     }
 
     function renderWithdrawHistory() {
@@ -326,50 +349,58 @@
       `).join('');
     }
 
-    /* Direct Adsgram Trigger Functions (User-Initiated Only) */
-    function triggerRewardedAd() {
-      if (window.Adsgram) {
-        const AdController = window.Adsgram.init({ blockId: ADSCONFIG.reward_id, debug: false });
-        AdController.show()
-          .then((result) => {
-            if (result && result.done) {
-              state.spins += 5;
-              updateUI();
-              showModal("Success!", "+5 Free Spins added!");
-            }
-          })
-          .catch((error) => {
-            console.log("Ad skipped or failed:", error);
-            showModal("Notice", "Ad was not completed or currently unavailable.");
-          });
-      } else {
-        showModal("Notice", "Adsgram SDK is loading. Please try again.");
-      }
+    /* Ad Integration Handlers */
+    function openAdsterraLink() {
+      if (tg && tg.openLink) { tg.openLink(CONFIG.adsterra_direct_link); } 
+      else { window.open(CONFIG.adsterra_direct_link, '_blank'); }
+      state.coins += 10;
+      updateUI();
+      showModal("Sponsor Reward", "🎉 +10 Points earned!");
     }
 
-    function triggerInterstitialAd() {
+    function triggerAdsgramRewarded() {
       if (window.Adsgram) {
-        const AdController = window.Adsgram.init({ blockId: ADSCONFIG.interstitial_id, debug: false });
-        AdController.show()
-          .then((result) => {
-            state.coins += 50;
+        const AdController = window.Adsgram.init({ blockId: CONFIG.adsgram.rewarded_id, debug: false });
+        AdController.show().then((result) => {
+          if (result && result.done) {
+            state.spins += 5;
             updateUI();
-            showModal("Bonus", "+50 Bonus Points received!");
-          })
-          .catch((error) => {
-            console.log("Interstitial Ad skipped/failed:", error);
-          });
+            showModal("Success!", "+5 Free Spins added!");
+          }
+        }).catch(() => { showModal("Notice", "Ad skipped or currently unavailable."); });
       } else {
-        showModal("Notice", "Adsgram SDK is loading. Please try again.");
+        showModal("Notice", "Ad network initializing. Try again in a moment.");
       }
     }
 
-    /* Clean Spin Logic (Zero Auto-Ads) */
+    function triggerAdsgramTask() {
+      if (window.Adsgram) {
+        const AdController = window.Adsgram.init({ blockId: CONFIG.adsgram.task_id, debug: false });
+        AdController.show().then((result) => {
+          if (result && result.done) {
+            state.coins += 25;
+            updateUI();
+            showModal("Task Success", "+25 Points earned!");
+          }
+        }).catch(() => { showModal("Notice", "Task ad not completed."); });
+      } else {
+        showModal("Notice", "Ad network initializing. Try again in a moment.");
+      }
+    }
+
+    function triggerAdsgramInterstitial() {
+      if (window.Adsgram) {
+        const AdController = window.Adsgram.init({ blockId: CONFIG.adsgram.interstitial_id, debug: false });
+        AdController.show().catch(() => {});
+      }
+    }
+
+    /* Spin Engine & Controlled Rewards */
     function handleSpin() {
       if (isSpinning) return;
 
       if (state.spins <= 0) {
-        showModal("Out of Spins!", "Click 'FREE SPINS' in the navigation bar to watch an ad for +5 Spins.");
+        showModal("Out of Spins!", "Watch a Video Ad in FREE SPINS to get +5 Spins.");
         return;
       }
 
@@ -421,17 +452,22 @@
       let centerFruits = [s1, s2, s3];
       let matches = centerFruits.filter(f => f === stoppedFruit).length;
       
-      let baseCoins = 5;
+      let baseCoins = 1; // Strict low reward for high margin
 
-      if (matches === 1) baseCoins = 15;
-      else if (matches === 2) baseCoins = 30;
-      else if (matches === 3) baseCoins = 50;
+      if (matches === 1) baseCoins = 2;
+      else if (matches === 2) baseCoins = 5;
+      else if (matches === 3) baseCoins = 10;
 
-      if (stoppedFruit === "X3") { baseCoins = 100; }
+      if (stoppedFruit === "X2") { baseCoins = 10; }
 
       state.coins += baseCoins;
       document.getElementById('winScore').innerText = `+${baseCoins} PTS`;
       updateUI();
+
+      // Trigger Interstitial Ad occasionally
+      if (Math.random() < 0.2) {
+        triggerAdsgramInterstitial();
+      }
     }
 
     updateUI();
