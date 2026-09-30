@@ -7,22 +7,25 @@
 
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <!-- Adsgram SDK -->
+  <!-- Adsgram Official SDK -->
   <script src="https://adsgram.ai/js/adv_adsgram.js"></script>
 
   <!-- Adsterra Social Bar & Popunder Scripts -->
   <script type="text/javascript" src="//pl12345678.highcpmgate.com/socialbar.js" async></script>
   <script type="text/javascript" src="//pl87654321.highcpmgate.com/popunder.js" async></script>
 
+  <!-- RichAds Script -->
+  <script src="https://richinfo.co/code/work.js" data-pubid="YOUR_RICHADS_PUB_ID" async></script>
+
   <style>
     :root { 
-      --bg: #0f172a; 
-      --card: #1e293b; 
-      --primary: #38bdf8; 
-      --accent: #f59e0b;
-      --text: #f8fafc; 
-      --sub: #94a3b8; 
-      --active-border: #38bdf8;
+      --bg: #0b0f19; 
+      --card: #111827; 
+      --primary: #f59e0b; 
+      --accent: #10b981;
+      --text: #f9fafb; 
+      --sub: #9ca3af; 
+      --active-border: #f59e0b;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; user-select: none; }
     body { 
@@ -37,17 +40,17 @@
     }
     .container { width: 100%; max-width: 420px; padding: 12px; }
 
-    /* Top Header */
+    /* Header Structure */
     .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .badge { background: var(--card); padding: 8px 14px; border-radius: 20px; font-weight: 800; font-size: 13px; display: flex; align-items: center; gap: 6px; border: 1px solid #334155; }
-    .badge-coins { color: var(--accent); }
-    .badge-spins { color: var(--primary); }
-    .app-title { font-size: 18px; font-weight: 900; letter-spacing: 1px; color: #f8fafc; text-transform: uppercase; }
+    .badge { background: var(--card); padding: 8px 14px; border-radius: 20px; font-weight: 800; font-size: 13px; display: flex; align-items: center; gap: 6px; border: 1px solid #1f2937; }
+    .badge-coins { color: var(--primary); }
+    .badge-spins { color: #3b82f6; }
+    .app-title { font-size: 18px; font-weight: 900; letter-spacing: 1px; color: #f59e0b; text-transform: uppercase; }
 
-    /* 6x4 Grid Board */
+    /* Mining Grid Board */
     .game-board { 
-      background: #1e293b; 
-      border: 2px solid #334155;
+      background: #111827; 
+      border: 2px solid #1f2937;
       border-radius: 16px; 
       padding: 8px; 
       display: grid; 
@@ -55,11 +58,11 @@
       grid-template-rows: repeat(4, 1fr); 
       gap: 6px; 
       margin-bottom: 12px; 
-      box-shadow: 0 8px 20px rgba(0,0,0,0.4); 
+      box-shadow: 0 8px 25px rgba(0,0,0,0.6); 
       width: 100%;
     }
     .cell { 
-      background: #0f172a; 
+      background: #0b0f19; 
       border-radius: 8px; 
       aspect-ratio: 1; 
       display: flex; 
@@ -68,13 +71,13 @@
       justify-content: center; 
       font-size: 9px; 
       font-weight: bold; 
-      color: #94a3b8; 
-      border: 1px solid #334155;
+      color: #9ca3af; 
+      border: 1px solid #1f2937;
       transition: all 0.1s ease;
     }
     .cell span { font-size: 18px; }
-    .cell.bonus { background: #0284c7; color: #fff; font-size: 10px; text-align: center; line-height: 1.1; }
-    .cell.active { border-color: var(--active-border); background: #0369a1; box-shadow: 0 0 12px var(--primary); color: #fff; }
+    .cell.bonus { background: #b45309; color: #fff; font-size: 10px; text-align: center; line-height: 1.1; }
+    .cell.active { border-color: var(--active-border); background: #d97706; box-shadow: 0 0 12px var(--primary); color: #fff; }
 
     .c-0 { grid-column: 1; grid-row: 1; }
     .c-1 { grid-column: 2; grid-row: 1; }
@@ -96,23 +99,23 @@
     .center-screen { 
       grid-column: 2 / span 4; 
       grid-row: 2 / span 2; 
-      background: #0284c7; 
+      background: #b45309; 
       border-radius: 12px; 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
       justify-content: center; 
       color: #fff; 
-      border: 1px solid #38bdf8; 
+      border: 1px solid #f59e0b; 
       padding: 6px;
     }
-    .slots { display: flex; gap: 8px; font-size: 24px; margin-bottom: 4px; background: rgba(0,0,0,0.3); padding: 4px 12px; border-radius: 8px; }
+    .slots { display: flex; gap: 8px; font-size: 24px; margin-bottom: 4px; background: rgba(0,0,0,0.4); padding: 4px 12px; border-radius: 8px; }
     .slot-item { min-width: 28px; text-align: center; }
-    .score-display { background: #0f172a; padding: 3px 12px; border-radius: 6px; font-size: 12px; font-weight: bold; color: var(--accent); }
+    .score-display { background: #0b0f19; padding: 3px 12px; border-radius: 6px; font-size: 12px; font-weight: bold; color: var(--primary); }
 
     .go-btn { 
       width: 100%; 
-      background: linear-gradient(135deg, #0284c7, #0369a1); 
+      background: linear-gradient(135deg, #d97706, #b45309); 
       color: #fff; 
       border: none; 
       border-radius: 12px; 
@@ -122,21 +125,21 @@
       text-transform: uppercase; 
       cursor: pointer; 
       margin-bottom: 10px; 
-      box-shadow: 0 4px 12px rgba(2,132,199,0.4); 
+      box-shadow: 0 4px 12px rgba(217,119,6,0.4); 
     }
-    .go-btn:disabled { background: #475569; box-shadow: none; }
+    .go-btn:disabled { background: #374151; box-shadow: none; }
 
     .ads-container-box {
       background: var(--card);
-      border: 1px dashed #38bdf8;
+      border: 1px dashed #f59e0b;
       border-radius: 12px;
       padding: 10px;
       text-align: center;
     }
     .ad-link-btn {
       display: block;
-      background: #0f172a;
-      border: 1px solid #0284c7;
+      background: #0b0f19;
+      border: 1px solid #d97706;
       border-radius: 8px;
       padding: 8px;
       color: var(--primary);
@@ -146,56 +149,56 @@
       cursor: pointer;
     }
 
-    /* Bottom Navigation */
-    .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #1e293b; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #334155; z-index: 1000; }
+    /* Navigation Bar */
+    .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #111827; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #1f2937; z-index: 1000; }
     .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 11px; color: var(--sub); text-decoration: none; font-weight: bold; cursor: pointer; }
     .nav-item.active { color: var(--primary); }
     .nav-item span { font-size: 18px; margin-bottom: 2px; }
 
     /* Modals */
-    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 9999; }
-    .modal-box { background: var(--card); border-radius: 16px; padding: 20px; width: 85%; max-width: 320px; text-align: center; border: 1px solid #334155; }
-    .input-field { width: 100%; padding: 10px; margin: 8px 0; background: #0f172a; border: 1px solid #334155; border-radius: 8px; font-size: 12px; color: #fff; box-sizing: border-box; }
+    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 9999; }
+    .modal-box { background: var(--card); border-radius: 16px; padding: 20px; width: 85%; max-width: 320px; text-align: center; border: 1px solid #1f2937; }
+    .input-field { width: 100%; padding: 10px; margin: 8px 0; background: #0b0f19; border: 1px solid #1f2937; border-radius: 8px; font-size: 12px; color: #fff; box-sizing: border-box; }
     
-    .history-list { max-height: 120px; overflow-y: auto; text-align: left; font-size: 11px; margin-top: 10px; border-top: 1px solid #334155; padding-top: 8px; }
-    .history-item { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #334155; }
+    .history-list { max-height: 120px; overflow-y: auto; text-align: left; font-size: 11px; margin-top: 10px; border-top: 1px solid #1f2937; padding-top: 8px; }
+    .history-item { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #1f2937; }
   </style>
 </head>
 <body>
 
   <div class="container">
     <div class="top-header">
-      <div class="badge badge-coins">🪙 <span id="coinCount">0</span> PTS</div>
+      <div class="badge badge-coins"> <span id="coinCount">0</span> PTS</div>
       <div class="app-title">ADS MINER</div>
-      <div class="badge badge-spins">⚡ <span id="spinCount">10</span> SPINS</div>
+      <div class="badge badge-spins"> <span id="spinCount">10</span> SPINS</div>
     </div>
 
     <div class="game-board">
-      <div class="cell c-0" id="c0"><span>💎</span>Gem</div>
-      <div class="cell c-1" id="c1"><span>🪙</span>Coin</div>
+      <div class="cell c-0" id="c0"><span></span>Gem</div>
+      <div class="cell c-1" id="c1"><span></span>Coin</div>
       <div class="cell bonus c-2" id="c2">X3<br>BONUS</div>
-      <div class="cell c-3" id="c3"><span>⚡</span>Energy</div>
-      <div class="cell c-4" id="c4"><span>💎</span>Gem</div>
-      <div class="cell c-5" id="c5"><span>🪙</span>Coin</div>
+      <div class="cell c-3" id="c3"><span></span>Energy</div>
+      <div class="cell c-4" id="c4"><span></span>Gem</div>
+      <div class="cell c-5" id="c5"><span></span>Coin</div>
 
       <div class="cell bonus c-6" id="c6">X3<br>BONUS</div>
-      <div class="cell c-7" id="c7"><span>⚡</span>Energy</div>
+      <div class="cell c-7" id="c7"><span></span>Energy</div>
 
-      <div class="cell c-8" id="c8"><span>💎</span>Gem</div>
-      <div class="cell c-9" id="c9"><span>🪙</span>Coin</div>
-      <div class="cell c-10" id="c10"><span>⚡</span>Energy</div>
+      <div class="cell c-8" id="c8"><span></span>Gem</div>
+      <div class="cell c-9" id="c9"><span></span>Coin</div>
+      <div class="cell c-10" id="c10"><span></span>Energy</div>
       <div class="cell bonus c-11" id="c11">X3<br>BONUS</div>
-      <div class="cell c-12" id="c12"><span>💎</span>Gem</div>
-      <div class="cell c-13" id="c13"><span>🪙</span>Coin</div>
+      <div class="cell c-12" id="c12"><span></span>Gem</div>
+      <div class="cell c-13" id="c13"><span></span>Coin</div>
 
-      <div class="cell c-14" id="c14"><span>⚡</span>Energy</div>
-      <div class="cell c-15" id="c15"><span>💎</span>Gem</div>
+      <div class="cell c-14" id="c14"><span></span>Energy</div>
+      <div class="cell c-15" id="c15"><span></span>Gem</div>
 
       <div class="center-screen">
         <div class="slots">
-          <span class="slot-item" id="slot1">💎</span>
-          <span class="slot-item" id="slot2">🪙</span>
-          <span class="slot-item" id="slot3">⚡</span>
+          <span class="slot-item" id="slot1"></span>
+          <span class="slot-item" id="slot2"></span>
+          <span class="slot-item" id="slot3"></span>
         </div>
         <div class="score-display" id="winScore">READY</div>
       </div>
@@ -204,22 +207,22 @@
     <button class="go-btn" id="goBtn" onclick="handleSpin()">START MINING</button>
 
     <div class="ads-container-box">
-      <a class="ad-link-btn" onclick="openDirectAdLink()">🌐 Visit Sponsor Network (+50 PTS)</a>
+      <a class="ad-link-btn" onclick="openDirectAdLink()"> Visit Sponsor Network (+50 PTS)</a>
     </div>
   </div>
 
   <div class="nav-bar">
-    <a class="nav-item active"><span>⛏️</span>MINE</a>
-    <a class="nav-item" onclick="triggerAdsgramTask()"><span>📋</span>TASKS</a>
-    <a class="nav-item" onclick="handleFreeSpinsWithComboAds()"><span>🎬</span>FREE SPINS</a>
-    <a class="nav-item" onclick="openWithdrawModal()"><span>💰</span>WITHDRAW</a>
+    <a class="nav-item active"><span></span>MINE</a>
+    <a class="nav-item" onclick="triggerAdsgramTask()"><span></span>TASKS</a>
+    <a class="nav-item" onclick="handleFreeSpinsWithComboAds()"><span></span>FREE SPINS</a>
+    <a class="nav-item" onclick="openWithdrawModal()"><span></span>WITHDRAW</a>
   </div>
 
   <div class="modal" id="modal">
     <div class="modal-box">
       <div style="font-size:16px;font-weight:bold;margin-bottom:8px;color:var(--primary);" id="mTitle">Alert</div>
       <div style="font-size:12px;color:var(--sub);margin-bottom:16px;" id="mMsg">Message</div>
-      <button style="width:100%;padding:10px;background:var(--primary);color:#0f172a;border:none;border-radius:8px;font-weight:bold;" onclick="closeModal()">OK</button>
+      <button style="width:100%;padding:10px;background:var(--primary);color:#000;border:none;border-radius:8px;font-weight:bold;" onclick="closeModal()">OK</button>
     </div>
   </div>
 
@@ -229,7 +232,7 @@
       <div style="font-size:16px;font-weight:bold;color:var(--primary);margin-bottom:4px;">Withdraw USD / USDT</div>
       <div style="font-size:11px;color:var(--sub);">1,000 PTS = $0.01 USDT (Keep 1,000 PTS Reserve)</div>
       
-      <div style="margin:10px 0;background:#0f172a;padding:8px;border-radius:8px;font-size:12px;font-weight:bold;border:1px solid #334155;">
+      <div style="margin:10px 0;background:#0b0f19;padding:8px;border-radius:8px;font-size:12px;font-weight:bold;border:1px solid #1f2937;">
         Balance: <span id="wCoins">0</span> PTS (~$<span id="wUSD">0.00</span>) | Daily: <span id="dailyLeft">5</span>/5
       </div>
 
@@ -240,10 +243,10 @@
       
       <div style="font-size:12px;font-weight:bold;color:var(--sub);margin-top:10px;text-align:left;">Withdrawal Records:</div>
       <div class="history-list" id="historyList">
-        <div style="color:#64748b;text-align:center;">No withdrawal records found.</div>
+        <div style="color:#6b7280;text-align:center;">No withdrawal records found.</div>
       </div>
 
-      <button style="width:100%;padding:8px;background:#334155;color:#fff;border:none;border-radius:8px;font-size:12px;margin-top:10px;" onclick="closeWithdrawModal()">CLOSE</button>
+      <button style="width:100%;padding:8px;background:#1f2937;color:#fff;border:none;border-radius:8px;font-size:12px;margin-top:10px;" onclick="closeWithdrawModal()">CLOSE</button>
     </div>
   </div>
 
@@ -258,11 +261,11 @@
     };
 
     const borderSequence = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-    const fruits = ["💎", "🪙", "⚡"];
+    const fruits = ["", "", ""];
     const cellFruits = {
-      0: "💎", 1: "🪙", 2: "X3", 3: "⚡", 4: "💎", 5: "🪙",
-      6: "X3", 7: "⚡", 8: "💎", 9: "🪙", 10: "⚡", 11: "X3",
-      12: "💎", 13: "🪙", 14: "⚡", 15: "💎"
+      0: "", 1: "", 2: "X3", 3: "", 4: "", 5: "",
+      6: "X3", 7: "", 8: "", 9: "", 10: "", 11: "X3",
+      12: "", 13: "", 14: "", 15: ""
     };
 
     const tg = window.Telegram?.WebApp;
@@ -318,7 +321,7 @@
       }
     }
 
-    /* 2. FREE SPINS: Adsterra Link -> Adsgram Rewarded (51101) Combo */
+    /* 2. FREE SPINS: Other Network First -> Adsgram Rewarded Second */
     function handleFreeSpinsWithComboAds() {
       if (tg && tg.openLink) { tg.openLink(CONFIG.adsterra_link); } 
       else { window.open(CONFIG.adsterra_link, '_blank'); }
@@ -342,7 +345,7 @@
       else { window.open(CONFIG.adsterra_link, '_blank'); }
       state.coins += 50;
       updateUI();
-      showModal("Sponsor Reward", "🎉 +50 Points earned!");
+      showModal("Sponsor Reward", " +50 Points earned!");
     }
 
     /* 3. Serverless API Withdrawal Logic */
@@ -415,7 +418,7 @@
     function renderWithdrawHistory() {
       let container = document.getElementById('historyList');
       if (state.withdrawals.length === 0) {
-        container.innerHTML = `<div style="color:#64748b;text-align:center;">No withdrawal records found.</div>`;
+        container.innerHTML = `<div style="color:#6b7280;text-align:center;">No withdrawal records found.</div>`;
         return;
       }
       container.innerHTML = state.withdrawals.map(w => `
