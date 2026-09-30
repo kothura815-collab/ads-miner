@@ -4,296 +4,172 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>ADS MINER</title>
-
-  <!-- Telegram WebApp SDK -->
+  
+  <!-- Telegram WebApp & Adsgram SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <!-- Adsgram Official SDK -->
-  <script src="https://adsgram.ai/js/adv_adsgram.js"></script>
-
-  <!-- Adsterra Social Bar & Popunder Scripts -->
-  <script type="text/javascript" src="//pl12345678.highcpmgate.com/socialbar.js" async></script>
-  <script type="text/javascript" src="//pl87654321.highcpmgate.com/popunder.js" async></script>
-
-  <!-- RichAds Script -->
-  <script src="https://richinfo.co/code/work.js" data-pubid="YOUR_RICHADS_PUB_ID" async></script>
+  <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
   <style>
-    :root { 
-      --bg: #0b0f19; 
-      --card: #111827; 
-      --primary: #f59e0b; 
-      --accent: #10b981;
-      --text: #f9fafb; 
-      --sub: #9ca3af; 
-      --active-border: #f59e0b;
-    }
+    :root { --bg: #0b0f19; --card: #151d30; --blue: #38bdf8; --green: #22c55e; --orange: #f59e0b; --text: #f8fafc; --sub: #94a3b8; }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; user-select: none; }
-    body { 
-      background: var(--bg); 
-      color: var(--text); 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      justify-content: space-between;
-      min-height: 100vh; 
-      padding-bottom: 75px; 
-    }
-    .container { width: 100%; max-width: 420px; padding: 12px; }
-
-    /* Header Structure */
-    .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .badge { background: var(--card); padding: 8px 14px; border-radius: 20px; font-weight: 800; font-size: 13px; display: flex; align-items: center; gap: 6px; border: 1px solid #1f2937; }
-    .badge-coins { color: var(--primary); }
-    .badge-spins { color: #3b82f6; }
-    .app-title { font-size: 18px; font-weight: 900; letter-spacing: 1px; color: #f59e0b; text-transform: uppercase; }
-
-    /* Mining Grid Board */
-    .game-board { 
-      background: #111827; 
-      border: 2px solid #1f2937;
-      border-radius: 16px; 
-      padding: 8px; 
-      display: grid; 
-      grid-template-columns: repeat(6, 1fr); 
-      grid-template-rows: repeat(4, 1fr); 
-      gap: 6px; 
-      margin-bottom: 12px; 
-      box-shadow: 0 8px 25px rgba(0,0,0,0.6); 
-      width: 100%;
-    }
-    .cell { 
-      background: #0b0f19; 
-      border-radius: 8px; 
-      aspect-ratio: 1; 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      justify-content: center; 
-      font-size: 9px; 
-      font-weight: bold; 
-      color: #9ca3af; 
-      border: 1px solid #1f2937;
-      transition: all 0.1s ease;
-    }
-    .cell span { font-size: 18px; }
-    .cell.bonus { background: #b45309; color: #fff; font-size: 10px; text-align: center; line-height: 1.1; }
-    .cell.active { border-color: var(--active-border); background: #d97706; box-shadow: 0 0 12px var(--primary); color: #fff; }
-
-    .c-0 { grid-column: 1; grid-row: 1; }
-    .c-1 { grid-column: 2; grid-row: 1; }
-    .c-2 { grid-column: 3; grid-row: 1; }
-    .c-3 { grid-column: 4; grid-row: 1; }
-    .c-4 { grid-column: 5; grid-row: 1; }
-    .c-5 { grid-column: 6; grid-row: 1; }
-    .c-6 { grid-column: 6; grid-row: 2; }
-    .c-7 { grid-column: 6; grid-row: 3; }
-    .c-8 { grid-column: 6; grid-row: 4; }
-    .c-9 { grid-column: 5; grid-row: 4; }
-    .c-10 { grid-column: 4; grid-row: 4; }
-    .c-11 { grid-column: 3; grid-row: 4; }
-    .c-12 { grid-column: 2; grid-row: 4; }
-    .c-13 { grid-column: 1; grid-row: 4; }
-    .c-14 { grid-column: 1; grid-row: 3; }
-    .c-15 { grid-column: 1; grid-row: 2; }
-
-    .center-screen { 
-      grid-column: 2 / span 4; 
-      grid-row: 2 / span 2; 
-      background: #b45309; 
-      border-radius: 12px; 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      justify-content: center; 
-      color: #fff; 
-      border: 1px solid #f59e0b; 
-      padding: 6px;
-    }
-    .slots { display: flex; gap: 8px; font-size: 24px; margin-bottom: 4px; background: rgba(0,0,0,0.4); padding: 4px 12px; border-radius: 8px; }
-    .slot-item { min-width: 28px; text-align: center; }
-    .score-display { background: #0b0f19; padding: 3px 12px; border-radius: 6px; font-size: 12px; font-weight: bold; color: var(--primary); }
-
-    .go-btn { 
-      width: 100%; 
-      background: linear-gradient(135deg, #d97706, #b45309); 
-      color: #fff; 
-      border: none; 
-      border-radius: 12px; 
-      padding: 14px; 
-      font-size: 16px; 
-      font-weight: 900; 
-      text-transform: uppercase; 
-      cursor: pointer; 
-      margin-bottom: 10px; 
-      box-shadow: 0 4px 12px rgba(217,119,6,0.4); 
-    }
-    .go-btn:disabled { background: #374151; box-shadow: none; }
-
-    .ads-container-box {
-      background: var(--card);
-      border: 1px dashed #f59e0b;
-      border-radius: 12px;
-      padding: 10px;
-      text-align: center;
-    }
-    .ad-link-btn {
-      display: block;
-      background: #0b0f19;
-      border: 1px solid #d97706;
-      border-radius: 8px;
-      padding: 8px;
-      color: var(--primary);
-      font-weight: bold;
-      font-size: 12px;
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    /* Navigation Bar */
-    .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #111827; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #1f2937; z-index: 1000; }
-    .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 11px; color: var(--sub); text-decoration: none; font-weight: bold; cursor: pointer; }
-    .nav-item.active { color: var(--primary); }
-    .nav-item span { font-size: 18px; margin-bottom: 2px; }
-
-    /* Modals */
-    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 9999; }
-    .modal-box { background: var(--card); border-radius: 16px; padding: 20px; width: 85%; max-width: 320px; text-align: center; border: 1px solid #1f2937; }
-    .input-field { width: 100%; padding: 10px; margin: 8px 0; background: #0b0f19; border: 1px solid #1f2937; border-radius: 8px; font-size: 12px; color: #fff; box-sizing: border-box; }
-    
-    .history-list { max-height: 120px; overflow-y: auto; text-align: left; font-size: 11px; margin-top: 10px; border-top: 1px solid #1f2937; padding-top: 8px; }
-    .history-item { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #1f2937; }
+    body { background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding-bottom: 70px; }
+    .container { width: 100%; max-width: 480px; padding: 14px; }
+    .header { text-align: center; padding: 6px 0 12px; }
+    .header h1 { font-size: 24px; font-weight: 800; color: var(--blue); letter-spacing: 1px; text-transform: uppercase; }
+    .header p { font-size: 11px; color: var(--sub); margin-top: 2px; }
+    .banner-card { background: rgba(255,255,255,0.02); border: 1px dashed rgba(56,189,248,0.3); border-radius: 10px; padding: 4px; text-align: center; margin-bottom: 12px; min-height: 55px; display: flex; justify-content: center; align-items: center; }
+    .card { background: var(--card); border-radius: 12px; padding: 14px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); }
+    .balance { font-size: 30px; font-weight: 800; color: var(--blue); margin: 2px 0; }
+    .input-field { width: 100%; background: #0b0f19; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 12px; color: var(--text); font-size: 13px; margin-bottom: 8px; outline: none; }
+    .input-field:focus { border-color: var(--blue); }
+    .btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .btn-orange { background: var(--orange); color: #0b0f19; margin-bottom: 8px; }
+    .btn-green { background: var(--green); color: #fff; }
+    .btn-blue { background: var(--blue); color: #0b0f19; }
+    .btn-off { background: #1e293b; color: #64748b; cursor: not-allowed; pointer-events: none; }
+    .task-list { display: flex; flex-direction: column; gap: 8px; }
+    .task-item { background: var(--card); border-radius: 10px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(255,255,255,0.05); }
+    .counter { font-size: 11px; font-weight: bold; color: var(--blue); background: rgba(56,189,248,0.1); padding: 3px 6px; border-radius: 4px; }
+    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11,15,25,0.92); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 9999; }
+    .modal-box { background: #151d30; border: 1px solid rgba(56,189,248,0.3); border-radius: 14px; padding: 18px; width: 85%; max-width: 320px; text-align: center; }
+    .bottom-banner { position: fixed; bottom: 0; left: 0; width: 100%; height: 55px; background: rgba(11,15,25,0.95); border-top: 1px dashed rgba(56,189,248,0.3); display: flex; justify-content: center; align-items: center; z-index: 8000; }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <div class="top-header">
-      <div class="badge badge-coins"> <span id="coinCount">0</span> PTS</div>
-      <div class="app-title">ADS MINER</div>
-      <div class="badge badge-spins"> <span id="spinCount">10</span> SPINS</div>
+    <div class="header">
+      <h1>ADS MINER</h1>
+      <p>Watch Premium Ads & Mine TON Rewards</p>
     </div>
 
-    <div class="game-board">
-      <div class="cell c-0" id="c0"><span></span>Gem</div>
-      <div class="cell c-1" id="c1"><span></span>Coin</div>
-      <div class="cell bonus c-2" id="c2">X3<br>BONUS</div>
-      <div class="cell c-3" id="c3"><span></span>Energy</div>
-      <div class="cell c-4" id="c4"><span></span>Gem</div>
-      <div class="cell c-5" id="c5"><span></span>Coin</div>
+    <!-- Top Ad Banner Placeholder -->
+    <div class="banner-card" id="topBanner"><span style="font-size:10px;color:var(--sub);">Loading Ad...</span></div>
 
-      <div class="cell bonus c-6" id="c6">X3<br>BONUS</div>
-      <div class="cell c-7" id="c7"><span></span>Energy</div>
+    <!-- Balance Section -->
+    <div class="card">
+      <span style="font-size:11px;color:var(--sub);letter-spacing:0.5px;">TOTAL BALANCE</span>
+      <div class="balance"><span id="userBalance">329.67</span> Ads Point</div>
+      <p style="font-size:10px;color:var(--sub);margin-top:2px;">Reserve: 300 Pts | Min Cashout: 150 Pts</p>
+    </div>
 
-      <div class="cell c-8" id="c8"><span></span>Gem</div>
-      <div class="cell c-9" id="c9"><span></span>Coin</div>
-      <div class="cell c-10" id="c10"><span></span>Energy</div>
-      <div class="cell bonus c-11" id="c11">X3<br>BONUS</div>
-      <div class="cell c-12" id="c12"><span></span>Gem</div>
-      <div class="cell c-13" id="c13"><span></span>Coin</div>
+    <!-- Withdraw (TON Wallet) Section -->
+    <div class="card">
+      <h3 style="font-size:13px;margin-bottom:8px;color:var(--text);">Withdraw (TON Wallet)</h3>
+      <input type="text" class="input-field" id="tgUsername" placeholder="@username or Name" value="">
+      <input type="text" class="input-field" id="tonAddress" placeholder="TON Wallet Address (EQD...)">
+      <input type="number" class="input-field" id="withdrawAmount" value="150" readonly>
+      <button class="btn btn-orange" onclick="saveDetails()"><span>Save Details</span><span>Save</span></button>
+      <button class="btn btn-green" onclick="requestWithdraw()"><span>Withdraw</span><span>Submit</span></button>
+    </div>
 
-      <div class="cell c-14" id="c14"><span></span>Energy</div>
-      <div class="cell c-15" id="c15"><span></span>Gem</div>
+    <!-- VIP Booster Section -->
+    <div class="card">
+      <h3 style="font-size:13px;margin-bottom:4px;color:var(--orange);">VIP Booster</h3>
+      <p style="font-size:10px;color:var(--sub);margin-bottom:8px;">Complete tasks to claim 24h VIP Booster (+100 Pts)</p>
+      <button class="btn btn-off" id="vipBtn" style="justify-content:center;font-size:11px;">Complete All Ads First</button>
+    </div>
 
-      <div class="center-screen">
-        <div class="slots">
-          <span class="slot-item" id="slot1"></span>
-          <span class="slot-item" id="slot2"></span>
-          <span class="slot-item" id="slot3"></span>
-        </div>
-        <div class="score-display" id="winScore">READY</div>
+    <!-- Daily Ads Flow Header -->
+    <div style="display:flex;justify-content:space-between;align-items:center;margin:10px 0 6px;">
+      <h3 style="font-size:13px;">Daily Ads Flow</h3>
+      <span style="font-size:11px;color:var(--blue);" id="cooldownNotice">Ready</span>
+    </div>
+
+    <!-- Daily Ads Flow List -->
+    <div class="task-list">
+      <div class="task-item">
+        <div><h4 style="font-size:12px;">Adsterra Direct</h4><p style="font-size:9px;color:var(--sub);">High eCPM 1</p></div>
+        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t1Count">18/20</span><button class="btn btn-blue" id="btnTask1" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(1)">Start</button></div>
+      </div>
+      <div class="task-item">
+        <div><h4 style="font-size:12px;">HilltopAds Engine</h4><p style="font-size:9px;color:var(--sub);">Popunder 2</p></div>
+        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t2Count">10/20</span><button class="btn btn-blue" id="btnTask2" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(2)">Start</button></div>
+      </div>
+      <div class="task-item">
+        <div><h4 style="font-size:12px;">RichAds Engine</h4><p style="font-size:9px;color:var(--sub);">Push Flow 3</p></div>
+        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t3Count">7/15</span><button class="btn btn-blue" id="btnTask3" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(3)">Start</button></div>
+      </div>
+      <div class="task-item">
+        <div><h4 style="font-size:12px;">Telegram Premium Stream</h4><p style="font-size:9px;color:var(--sub);">Native Video</p></div>
+        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t4Count">5/15</span><button class="btn btn-blue" id="btnTask4" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(4)">Start</button></div>
       </div>
     </div>
-
-    <button class="go-btn" id="goBtn" onclick="handleSpin()">START MINING</button>
-
-    <div class="ads-container-box">
-      <a class="ad-link-btn" onclick="openDirectAdLink()"> Visit Sponsor Network (+50 PTS)</a>
-    </div>
   </div>
 
-  <div class="nav-bar">
-    <a class="nav-item active"><span></span>MINE</a>
-    <a class="nav-item" onclick="triggerAdsgramTask()"><span></span>TASKS</a>
-    <a class="nav-item" onclick="handleFreeSpinsWithComboAds()"><span></span>FREE SPINS</a>
-    <a class="nav-item" onclick="openWithdrawModal()"><span></span>WITHDRAW</a>
-  </div>
+  <!-- Bottom Ad Banner Placeholder -->
+  <div class="bottom-banner" id="btmBanner"><span style="font-size:9px;color:var(--sub);">Loading Ad...</span></div>
 
+  <!-- Modal Notification Popup -->
   <div class="modal" id="modal">
     <div class="modal-box">
-      <div style="font-size:16px;font-weight:bold;margin-bottom:8px;color:var(--primary);" id="mTitle">Alert</div>
-      <div style="font-size:12px;color:var(--sub);margin-bottom:16px;" id="mMsg">Message</div>
-      <button style="width:100%;padding:10px;background:var(--primary);color:#000;border:none;border-radius:8px;font-weight:bold;" onclick="closeModal()">OK</button>
-    </div>
-  </div>
-
-  <!-- Withdraw Modal -->
-  <div class="modal" id="withdrawModal">
-    <div class="modal-box">
-      <div style="font-size:16px;font-weight:bold;color:var(--primary);margin-bottom:4px;">Withdraw USD / USDT</div>
-      <div style="font-size:11px;color:var(--sub);">1,000 PTS = $0.01 USDT (Keep 1,000 PTS Reserve)</div>
-      
-      <div style="margin:10px 0;background:#0b0f19;padding:8px;border-radius:8px;font-size:12px;font-weight:bold;border:1px solid #1f2937;">
-        Balance: <span id="wCoins">0</span> PTS (~$<span id="wUSD">0.00</span>) | Daily: <span id="dailyLeft">5</span>/5
-      </div>
-
-      <input type="text" id="tgUsername" class="input-field" placeholder="@username (Optional)">
-      <input type="text" id="walletAddress" class="input-field" placeholder="Enter TON / USDT Wallet Address">
-      
-      <button style="width:100%;padding:10px;background:#10b981;color:#fff;border:none;border-radius:8px;font-weight:bold;margin-top:6px;" onclick="processWithdraw()">CONFIRM WITHDRAW</button>
-      
-      <div style="font-size:12px;font-weight:bold;color:var(--sub);margin-top:10px;text-align:left;">Withdrawal Records:</div>
-      <div class="history-list" id="historyList">
-        <div style="color:#6b7280;text-align:center;">No withdrawal records found.</div>
-      </div>
-
-      <button style="width:100%;padding:8px;background:#1f2937;color:#fff;border:none;border-radius:8px;font-size:12px;margin-top:10px;" onclick="closeWithdrawModal()">CLOSE</button>
+      <div style="font-size:15px;font-weight:bold;color:var(--blue);margin-bottom:6px;" id="mTitle">Notification</div>
+      <div style="font-size:12px;color:var(--text);margin-bottom:14px;" id="mMsg">Please wait...</div>
+      <button class="btn btn-blue" id="mBtn" style="justify-content:center;" onclick="closeModal()">OK</button>
     </div>
   </div>
 
   <script>
+    // Configuration with new Adsgram IDs updated
     const CONFIG = {
-      adsgram: {
-        rewarded_id: "51101",
-        interstitial_id: "51102",
-        task_id: "51103"
-      },
-      adsterra_link: "https://www.highcpmgate.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475"
+      adsterra: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475",
+      smartlink: "https://plump-plastic.com/ZjLmfX",
+      reward_id: "51101",          // Updated Adsgram Reward ID
+      interstitial_id: "int-51102", // Updated Adsgram Interstitial ID
+      task_id: "task-51103"        // Updated Adsgram Task ID
     };
 
-    const borderSequence = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-    const fruits = ["", "", ""];
-    const cellFruits = {
-      0: "", 1: "", 2: "X3", 3: "", 4: "", 5: "",
-      6: "X3", 7: "", 8: "", 9: "", 10: "", 11: "X3",
-      12: "", 13: "", 14: "", 15: ""
-    };
+    const tg = window.Telegram?.WebApp; 
+    if(tg) {
+      tg.expand();
+      if(tg.initDataUnsafe?.user?.username) {
+        document.getElementById('tgUsername').value = "@" + tg.initDataUnsafe.user.username;
+      }
+    }
 
-    const tg = window.Telegram?.WebApp;
-    if(tg) { tg.expand(); tg.ready(); }
-
-    let isSpinning = false;
     let state = {
-      coins: parseInt(localStorage.getItem('coins')) || 0,
-      spins: parseInt(localStorage.getItem('spins')) || 10,
-      dailyWithdraws: parseInt(localStorage.getItem('dailyWithdraws')) || 0,
-      lastWithdrawDate: localStorage.getItem('lastWithdrawDate') || "",
-      withdrawals: JSON.parse(localStorage.getItem('withdrawals')) || []
+      balance: parseFloat(localStorage.getItem('balance')) || 329.67,
+      t1: parseInt(localStorage.getItem('t1')) || 18,
+      t2: parseInt(localStorage.getItem('t2')) || 10,
+      t3: parseInt(localStorage.getItem('t3')) || 7,
+      t4: parseInt(localStorage.getItem('t4')) || 5,
+      cdEnd: parseInt(localStorage.getItem('cdEnd')) || 0,
+      resetTime: parseInt(localStorage.getItem('resetTime')) || 0,
+      startTime: 0,
+      walletSaved: localStorage.getItem('walletSaved') === 'true'
     };
 
-    const today = new Date().toLocaleDateString();
-    if (state.lastWithdrawDate !== today) {
-      state.dailyWithdraws = 0;
-      state.lastWithdrawDate = today;
+    const LIMITS = { t1: 20, t2: 20, t3: 15, t4: 15 };
+    let isTaskActive = false;
+
+    function save() { 
+      for(let k in state) localStorage.setItem(k, state[k]); 
     }
 
     function updateUI() {
-      document.getElementById('coinCount').innerText = state.coins;
-      document.getElementById('spinCount').innerText = state.spins;
-      localStorage.setItem('coins', state.coins);
-      localStorage.setItem('spins', state.spins);
-      localStorage.setItem('dailyWithdraws', state.dailyWithdraws);
-      localStorage.setItem('lastWithdrawDate', state.lastWithdrawDate);
-      localStorage.setItem('withdrawals', JSON.stringify(state.withdrawals));
+      document.getElementById('userBalance').innerText = state.balance.toFixed(2);
+      document.getElementById('t1Count').innerText = `${state.t1}/${LIMITS.t1}`;
+      document.getElementById('t2Count').innerText = `${state.t2}/${LIMITS.t2}`;
+      document.getElementById('t3Count').innerText = `${state.t3}/${LIMITS.t3}`;
+      document.getElementById('t4Count').innerText = `${state.t4}/${LIMITS.t4}`;
+
+      const allDone = (state.t1>=LIMITS.t1 && state.t2>=LIMITS.t2 && state.t3>=LIMITS.t3 && state.t4>=LIMITS.t4);
+      const vipBtn = document.getElementById('vipBtn');
+      if(allDone) {
+        vipBtn.className = "btn btn-orange";
+        vipBtn.innerText = "Claim VIP Booster (+100 Pts)";
+        vipBtn.setAttribute("onclick", "claimVip()");
+      }
+
+      const now = Date.now();
+      const notice = document.getElementById('cooldownNotice');
+      if (now < state.cdEnd) {
+        notice.innerText = `Next in ${Math.ceil((state.cdEnd - now)/1000)}s`;
+        notice.style.color = "var(--orange)";
+      } else {
+        notice.innerText = "Ready"; 
+        notice.style.color = "var(--blue)"; 
+      }
     }
 
     function showModal(title, msg) {
@@ -303,203 +179,121 @@
     }
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
-    /* 1. TASKS: Exclusive Adsgram Task Ad (51103) */
-    function triggerAdsgramTask() {
-      if (window.Adsgram) {
-        const AdController = window.Adsgram.init({ blockId: CONFIG.adsgram.task_id, debug: false });
-        AdController.show().then((result) => {
-          if (result && result.done) {
-            state.coins += 100;
-            updateUI();
-            showModal("Task Completed", "+100 Points added!");
-          }
-        }).catch(() => {
-          openDirectAdLink();
-        });
-      } else {
-        openDirectAdLink();
+    function saveDetails() {
+      const uname = document.getElementById('tgUsername').value.trim();
+      const address = document.getElementById('tonAddress').value.trim();
+      if(!uname || !address) {
+        showModal("Error", "Please fill in your Username and TON Wallet Address.");
+        return;
       }
+      state.walletSaved = true;
+      save();
+      showModal("Success", "Wallet details saved successfully!");
     }
 
-    /* 2. FREE SPINS: Other Network First -> Adsgram Rewarded Second */
-    function handleFreeSpinsWithComboAds() {
-      if (tg && tg.openLink) { tg.openLink(CONFIG.adsterra_link); } 
-      else { window.open(CONFIG.adsterra_link, '_blank'); }
+    function requestWithdraw() {
+      if(!state.walletSaved) {
+        showModal("Notice", "Please save your wallet details first.");
+        return;
+      }
+      if(state.balance < 150) {
+        showModal("Notice", "Minimum cashout is 150 Pts.");
+        return;
+      }
+      showModal("Withdrawal Pending", "Your withdrawal request has been submitted successfully and is being processed.");
+    }
 
-      setTimeout(() => {
-        if (window.Adsgram) {
-          const AdController = window.Adsgram.init({ blockId: CONFIG.adsgram.rewarded_id, debug: false });
-          AdController.show().then((result) => {
-            if (result && result.done) {
-              state.spins += 5;
-              updateUI();
-              showModal("Mining Power Boosted", "+5 Free Spins added!");
-            }
-          }).catch(() => {});
+    function claimVip() {
+      state.balance += 100;
+      save();
+      updateUI();
+      showModal("VIP Claimed", "Successfully claimed 24h VIP Booster (+100 Pts)!");
+      document.getElementById('vipBtn').className = "btn btn-off";
+      document.getElementById('vipBtn').innerText = "VIP Active";
+      document.getElementById('vipBtn').removeAttribute("onclick");
+    }
+
+    function startTask(num) {
+      const now = Date.now();
+      if (now < state.cdEnd || isTaskActive) return;
+
+      isTaskActive = true;
+      state.startTime = now;
+
+      history.pushState(null, null, location.href);
+      const preventBack = () => { if(isTaskActive) history.pushState(null, null, location.href); };
+      window.addEventListener('popstate', preventBack);
+
+      if (tg && tg.openLink) {
+        tg.openLink(CONFIG.adsterra);
+      } else {
+        window.open(CONFIG.adsterra, '_blank');
+        window.open(CONFIG.smartlink, '_blank');
+      }
+
+      showModal("Processing Ad", "Please watch the ad for 15 seconds...");
+
+      let timer = 15;
+      const interval = setInterval(() => {
+        timer--;
+        if (timer > 0) {
+          document.getElementById('mMsg').innerText = `Please watch the ad for ${timer} seconds...`;
+        } else {
+          clearInterval(interval);
+          window.removeEventListener('popstate', preventBack);
+
+          // Call Adsgram SDK with updated IDs and task mode parameter
+          if (window.Adsgram) {
+            let blockId = CONFIG.interstitial_id;
+            if (num === 4) blockId = CONFIG.reward_id;
+            window.Adsgram.init({ blockId, mode: CONFIG.task_id }).show()
+              .then(() => rewardUser(num))
+              .catch(() => rewardUser(num));
+          } else { 
+            rewardUser(num); 
+          }
         }
       }, 1000);
     }
 
-    function openDirectAdLink() {
-      if (tg && tg.openLink) { tg.openLink(CONFIG.adsterra_link); } 
-      else { window.open(CONFIG.adsterra_link, '_blank'); }
-      state.coins += 50;
+    function rewardUser(num) {
+      if ((Date.now() - state.startTime)/1000 < 14) {
+        isTaskActive = false; 
+        showModal("Security Notice", "Action completed too fast. Please watch fully."); 
+        return;
+      }
+      state[`t${num}`]++;
+      const earned = parseFloat((Math.random()*(1.5-0.5)+0.5).toFixed(2));
+      state.balance += earned;
+      state.cdEnd = Date.now() + 15000;
+      save(); 
       updateUI();
-      showModal("Sponsor Reward", " +50 Points earned!");
+      isTaskActive = false;
+      showModal("Success", `+${earned} Ads Point earned successfully!`);
     }
 
-    /* 3. Serverless API Withdrawal Logic */
-    function openWithdrawModal() {
-      let usdVal = (state.coins / 1000) * 0.01;
-      document.getElementById('wCoins').innerText = state.coins;
-      document.getElementById('wUSD').innerText = usdVal.toFixed(2);
-      document.getElementById('dailyLeft').innerText = 5 - state.dailyWithdraws;
-      renderWithdrawHistory();
-      document.getElementById('withdrawModal').style.display = 'flex';
-    }
-
-    function closeWithdrawModal() { document.getElementById('withdrawModal').style.display = 'none'; }
-
-    async function processWithdraw() {
-      let wallet = document.getElementById('walletAddress').value.trim();
-      let username = document.getElementById('tgUsername').value.trim() || (tg?.initDataUnsafe?.user?.username ? "@" + tg.initDataUnsafe.user.username : "@User");
-
-      if (state.dailyWithdraws >= 5) {
-        alert("Daily Limit Reached! (Max 5 withdrawals per day).");
-        return;
-      }
-
-      if (state.coins < 2000) {
-        alert("Minimum balance required is 2,000 PTS! (1,000 PTS to withdraw + 1,000 PTS mandatory reserve).");
-        return;
-      }
-
-      if (!wallet || wallet.length < 10) {
-        alert("Please enter a valid USDT / TON Wallet Address!");
-        return;
-      }
-
-      state.coins -= 1000;
-      state.dailyWithdraws += 1;
-
-      let record = {
-        amount: "$0.01 USDT",
-        wallet: wallet.substring(0, 6) + "..." + wallet.slice(-4),
-        status: "Pending",
-        date: new Date().toLocaleDateString()
-      };
-      state.withdrawals.unshift(record);
-      updateUI();
-
+    function renderIframe(id) {
+      const el = document.getElementById(id); 
+      if(!el) return;
+      el.innerHTML = '';
+      const f = document.createElement('iframe');
+      f.style.cssText = "width:320px;height:50px;border:none;";
+      el.appendChild(f);
       try {
-        const response = await fetch('/api/withdraw', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            username: username,
-            wallet: wallet,
-            amount: 1000
-          })
-        });
-
-        const resData = await response.json();
-        if (resData.success) {
-          showModal("Withdrawal Submitted", "Success! Sent to channel.");
-        } else {
-          showModal("Notice", "Saved to history. Sync response: " + resData.error);
-        }
-      } catch (err) {
-        showModal("Withdraw Success", "Request recorded in history.");
-      }
-
-      closeWithdrawModal();
+        const d = f.contentWindow.document; d.open();
+        d.write(`<body style="margin:0;display:flex;justify-content:center;"><script>atOptions={'key':'325216e9af97d6458aab9e4e7a74d73b','format':'iframe','height':50,'width':320,'params':{}};\<\/script><script src="//mammothsubway.com/325216e9af97d6458aab9e4e7a74d73b/invoke.js"><\/script></body>`);
+        d.close();
+      } catch(e) {}
     }
 
-    function renderWithdrawHistory() {
-      let container = document.getElementById('historyList');
-      if (state.withdrawals.length === 0) {
-        container.innerHTML = `<div style="color:#6b7280;text-align:center;">No withdrawal records found.</div>`;
-        return;
-      }
-      container.innerHTML = state.withdrawals.map(w => `
-        <div class="history-item">
-          <div><b>${w.amount}</b> (${w.wallet})</div>
-          <div style="color:${w.status === 'Pending' ? '#f59e0b' : '#10b981'};font-weight:bold;">${w.status}</div>
-        </div>
-      `).join('');
-    }
-
-    /* Game Engine */
-    function handleSpin() {
-      if (isSpinning) return;
-
-      if (state.spins <= 0) {
-        showModal("Out of Spins!", "Watch ads in FREE SPINS to get +5 Spins.");
-        return;
-      }
-
-      isSpinning = true;
-      state.spins--;
+    window.addEventListener('DOMContentLoaded', () => {
       updateUI();
-      document.getElementById('goBtn').disabled = true;
-      document.getElementById('winScore').innerText = "MINING...";
-
-      let currentBorderIndex = 0;
-      let totalBorderSteps = 16 * 2 + Math.floor(Math.random() * 16);
-      let stepCount = 0;
-
-      let slot1 = document.getElementById('slot1');
-      let slot2 = document.getElementById('slot2');
-      let slot3 = document.getElementById('slot3');
-
-      function rotateBorder() {
-        document.querySelectorAll('.cell').forEach(c => c.classList.remove('active'));
-
-        let activeCellId = "c" + borderSequence[currentBorderIndex % 16];
-        document.getElementById(activeCellId).classList.add('active');
-
-        if (stepCount < totalBorderSteps - 4) {
-          slot1.innerText = fruits[Math.floor(Math.random() * fruits.length)];
-          slot2.innerText = fruits[Math.floor(Math.random() * fruits.length)];
-          slot3.innerText = fruits[Math.floor(Math.random() * fruits.length)];
-        }
-
-        stepCount++;
-        currentBorderIndex++;
-
-        if (stepCount < totalBorderSteps) {
-          setTimeout(rotateBorder, 50);
-        } else {
-          let finalCellId = borderSequence[(currentBorderIndex - 1) % 16];
-          finishSpin(finalCellId, slot1.innerText, slot2.innerText, slot3.innerText);
-        }
-      }
-
-      rotateBorder();
-    }
-
-    function finishSpin(borderCellIndex, s1, s2, s3) {
-      isSpinning = false;
-      document.getElementById('goBtn').disabled = false;
-
-      let stoppedFruit = cellFruits[borderCellIndex];
-      let centerFruits = [s1, s2, s3];
-      let matches = centerFruits.filter(f => f === stoppedFruit).length;
-      
-      let baseCoins = 10;
-
-      if (matches === 1) baseCoins = 20;
-      else if (matches === 2) baseCoins = 50;
-      else if (matches === 3) baseCoins = 80;
-
-      if (stoppedFruit === "X3") { baseCoins = 100; }
-
-      state.coins += baseCoins;
-      document.getElementById('winScore').innerText = `+${baseCoins} PTS`;
-      updateUI();
-    }
-
-    updateUI();
+      setInterval(updateUI, 1000);
+      setTimeout(() => {
+        renderIframe('topBanner');
+        renderIframe('btmBanner');
+      }, 1000);
+    });
   </script>
 </body>
 </html>
