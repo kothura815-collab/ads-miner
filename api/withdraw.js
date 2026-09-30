@@ -6,13 +6,13 @@ export default async function handler(req, res) {
   const { username, wallet, amount } = req.body;
 
   const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "8600671562:AAFYO8KewkhoCIrw_wxvfoEQvfFF4EW5iLw";
-  const CHANNEL_ID = "-1004291919386"; // @AltaHub_ads_withdraw_history
+  const CHANNEL_ID = "-1004291919386";
 
   const text = `🎉 <b>New Withdrawal Request!</b>\n\n` +
                `👤 <b>User:</b> ${username}\n` +
                `💎 <b>Amount:</b> ${amount} PTS ($0.01 USDT)\n` +
                `🏦 <b>Wallet:</b> <code>${wallet}</code>\n\n` +
-               `⚡ <i>ALTA ADS MINER Logging System</i>`;
+               `⚡ <i>ADS MINER Auto-Logging System</i>`;
 
   try {
     const telegramRes = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
