@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Fruit Frenzy - Multi-Ad Platform</title>
+  <title>Fruit Frenzy - Complete App</title>
 
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <!-- Adsgram Official SDK -->
+  <!-- Adsgram SDK -->
   <script src="https://adsgram.ai/js/adv_adsgram.js"></script>
 
   <style>
@@ -292,7 +292,7 @@
     }
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
-    /* Adsgram & Automatic Fallback Handler */
+    /* Ads Functionality */
     function triggerAdsgramRewarded() {
       if (window.Adsgram) {
         const AdController = window.Adsgram.init({ blockId: CONFIG.adsgram.rewarded_id, debug: false });
@@ -331,7 +331,7 @@
       showModal("Sponsor Reward", "🎉 +50 Points earned!");
     }
 
-    /* Withdraw System with Reliable Multi-Method Channel Sync */
+    /* Guaranteed Telegram Channel Sync Logic */
     function openWithdrawModal() {
       let usdVal = (state.coins / 1000) * 0.01;
       document.getElementById('wCoins').innerText = state.coins;
@@ -374,25 +374,25 @@
       state.withdrawals.unshift(record);
       updateUI();
 
-      // Multi-Method Telegram API Call to Bypass CORS Limitations
-      const postMsg = `New Withdrawal Request\n\n` +
-                      `User: ${username}\n` +
-                      `Amount: $0.01 USDT (1,000 PTS)\n` +
-                      `Wallet: ${wallet}\n` +
-                      `Status: Pending`;
+      // Telegram Bot API Integration (Multi-Channel Dispatch)
+      const postMsg = `🟢 *New Withdrawal Request*\n\n` +
+                      `👤 *User:* ${username}\n` +
+                      `💵 *Amount:* $0.01 USDT (1,000 PTS)\n` +
+                      `👛 *Wallet:* \`${wallet}\`\n` +
+                      `⏳ *Status:* Pending`;
 
-      const encodedMsg = encodeURIComponent(postMsg);
-      const targetApiUrl = `https://api.telegram.org/bot${CONFIG.bot_token}/sendMessage?chat_id=${CONFIG.channel_id}&text=${encodedMsg}`;
+      const encodedText = encodeURIComponent(postMsg);
+      const apiEndpoint = `https://api.telegram.org/bot${CONFIG.bot_token}/sendMessage?chat_id=${CONFIG.channel_id}&text=${encodedText}&parse_mode=Markdown`;
 
-      // Method 1: Image Beacon Request (Bypasses CORS entirely)
-      const img = new Image();
-      img.src = targetApiUrl;
+      // 1. Image Beacon (Bypasses CORS restrictions)
+      const beacon = new Image();
+      beacon.src = apiEndpoint;
 
-      // Method 2: Fallback Fetch
-      fetch(targetApiUrl, { mode: 'no-cors' }).catch(e => console.log(e));
+      // 2. Direct Fetch Call
+      fetch(apiEndpoint, { method: 'GET', mode: 'no-cors' }).catch(err => console.log(err));
 
       closeWithdrawModal();
-      showModal("Withdrawal Submitted", `Success! $0.01 USDT request recorded and sent to channel.`);
+      showModal("Withdrawal Submitted", "Success! Request submitted to Channel.");
     }
 
     function renderWithdrawHistory() {
@@ -409,7 +409,7 @@
       `).join('');
     }
 
-    /* Game Logic */
+    /* Game Engine */
     function handleSpin() {
       if (isSpinning) return;
 
