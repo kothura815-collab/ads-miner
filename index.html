@@ -50,7 +50,7 @@
     <!-- Balance Section -->
     <div class="card">
       <span style="font-size:11px;color:var(--sub);letter-spacing:0.5px;">TOTAL BALANCE</span>
-      <div class="balance"><span id="userBalance">329.67</span> Ads Point</div>
+      <div class="balance"><span id="userBalance">189.97</span> Ads Point</div>
       <p style="font-size:10px;color:var(--sub);margin-top:2px;">PlatformID: 48421 TMA | Min Cashout: 150 Pts</p>
     </div>
 
@@ -132,17 +132,15 @@
       tg = window.Telegram?.WebApp; 
       if(tg) {
         tg.expand();
-        if(tg.initDataUnsafe?.user?.username) {
+        if(tg.initDataUnsafe?.user?.username && !localStorage.getItem('savedUsername')) {
           const unameField = document.getElementById('tgUsername');
           if(unameField) unameField.value = "@" + tg.initDataUnsafe.user.username;
         }
       }
-    } catch(e) {
-      console.error(e);
-    }
+    } catch(e) {}
 
     let state = {
-      balance: parseFloat(localStorage.getItem('balance')) || 329.67,
+      balance: parseFloat(localStorage.getItem('balance')) || 189.97,
       t1: parseInt(localStorage.getItem('t1')) || 18,
       t2: parseInt(localStorage.getItem('t2')) || 10,
       t3: parseInt(localStorage.getItem('t3')) || 7,
@@ -165,6 +163,14 @@
         document.getElementById('t2Count').innerText = `${state.t2}/${LIMITS.t2}`;
         document.getElementById('t3Count').innerText = `${state.t3}/${LIMITS.t3}`;
         document.getElementById('t4Count').innerText = `${state.t4}/${LIMITS.t4}`;
+
+        // Load saved wallet info into inputs if available
+        if(localStorage.getItem('savedUsername')) {
+          document.getElementById('tgUsername').value = localStorage.getItem('savedUsername');
+        }
+        if(localStorage.getItem('savedAddress')) {
+          document.getElementById('tonAddress').value = localStorage.getItem('savedAddress');
+        }
 
         const allDone = (state.t1>=LIMITS.t1 && state.t2>=LIMITS.t2 && state.t3>=LIMITS.t3 && state.t4>=LIMITS.t4);
         const vipBtn = document.getElementById('vipBtn');
@@ -203,13 +209,18 @@
         showModal("Error", "Please fill in your Username and TON Wallet Address.", true, "OK");
         return;
       }
+      localStorage.setItem('savedUsername', uname);
+      localStorage.setItem('savedAddress', address);
       state.walletSaved = true;
       save();
       showModal("Success", "Wallet details saved successfully!", true, "OK");
     }
 
     function requestWithdraw() {
-      if(!state.walletSaved) {
+      // Allow withdrawal if inputs have text even if state.walletSaved was reset
+      const uname = document.getElementById('tgUsername').value.trim();
+      const address = document.getElementById('tonAddress').value.trim();
+      if(!uname || !address) {
         showModal("Notice", "Please save your wallet details first.", true, "OK");
         return;
       }
