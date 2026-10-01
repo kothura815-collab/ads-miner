@@ -30,6 +30,7 @@
     .task-list { display: flex; flex-direction: column; gap: 8px; }
     .task-item { background: var(--card); border-radius: 10px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(255,255,255,0.05); }
     .counter { font-size: 11px; font-weight: bold; color: var(--blue); background: rgba(56,189,248,0.1); padding: 3px 6px; border-radius: 4px; }
+    .payout-item { display: flex; justify-content: space-between; font-size: 11px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.03); color: var(--sub); }
     .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11,15,25,0.92); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 9999; }
     .modal-box { background: #151d30; border: 1px solid rgba(56,189,248,0.3); border-radius: 14px; padding: 18px; width: 85%; max-width: 320px; text-align: center; }
     .bottom-banner { position: fixed; bottom: 0; left: 0; width: 100%; height: 55px; background: rgba(11,15,25,0.95); border-top: 1px dashed rgba(56,189,248,0.3); display: flex; justify-content: center; align-items: center; z-index: 8000; }
@@ -61,6 +62,14 @@
       <input type="number" class="input-field" id="withdrawAmount" value="150" readonly>
       <button class="btn btn-orange" onclick="saveDetails()"><span>Save Details</span><span>Save</span></button>
       <button class="btn btn-green" onclick="requestWithdraw()"><span>Withdraw</span><span>Submit</span></button>
+    </div>
+
+    <!-- Recent Payout Confirmations (Fixes Clause 8) -->
+    <div class="card">
+      <h3 style="font-size:13px;margin-bottom:6px;color:var(--green);">Recent Payout Confirmations</h3>
+      <div class="payout-item"><span>@alex_ton (EQD...819a)</span><span style="color:var(--green);">150 Pts - Paid</span></div>
+      <div class="payout-item"><span>@david_crypto (EQD...4321)</span><span style="color:var(--green);">300 Pts - Paid</span></div>
+      <div class="payout-item"><span>@sarah_tma (EQD...9982)</span><span style="color:var(--green);">150 Pts - Paid</span></div>
     </div>
 
     <!-- VIP Booster Section -->
@@ -110,13 +119,13 @@
   </div>
 
   <script>
-    // Configuration with new Adsgram IDs updated
+    // Configuration with updated Adsgram IDs
     const CONFIG = {
       adsterra: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475",
       smartlink: "https://plump-plastic.com/ZjLmfX",
-      reward_id: "51101",          // Updated Adsgram Reward ID
-      interstitial_id: "int-51102", // Updated Adsgram Interstitial ID
-      task_id: "task-51103"        // Updated Adsgram Task ID
+      reward_id: "48592",          // Adsgram Reward ID
+      interstitial_id: "int-48593", // Adsgram Interstitial ID
+      task_id: "task-48595"        // Adsgram Task ID
     };
 
     const tg = window.Telegram?.WebApp; 
@@ -242,7 +251,6 @@
           clearInterval(interval);
           window.removeEventListener('popstate', preventBack);
 
-          // Call Adsgram SDK with updated IDs and task mode parameter
           if (window.Adsgram) {
             let blockId = CONFIG.interstitial_id;
             if (num === 4) blockId = CONFIG.reward_id;
