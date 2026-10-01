@@ -1,51 +1,72 @@
-export default async function handler(req, res) {
-  // CORS headers ထည့်ပေးခြင်းဖြင့် Vercel မှာ ေခါ်ရတာ အဆင်ပြေစေပါတယ်
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-  );
+const express = require('express');
+const cors = require('cors');
+const axios = require('axios');
 
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
+const app = express();
+app.use(cors());
+app.use(express.json());
 
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method Not Allowed' });
-  }
+// CONFIGURATION
+const BOT_TOKEN = process.env.BOT_TOKEN || "YOUR_TELEGRAM_BOT_TOKEN_HERE";
+const HISTORY_CHANNEL_ID = process.env.HISTORY_CHANNEL_ID || "@Allwithdrawhistory"; // Channel Username or ID
 
-  const { username, wallet, amount } = req.body;
-
-  const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "8889834203:AAGGO2SD_WXXd_J_mU5e7Iww73zCEqmwMb4";
-  const CHANNEL_ID = "@Allwithdrawhistory";
-
-  const text = `🎉 *New Withdrawal Request!*\n\n` +
-               `👤 *User:* ${username}\n` +
-               `💎 *Amount:* ${amount} PTS\n` +
-               `🏦 *Wallet:* \`${wallet}\`\n\n` +
-               `⚡ *Ads Miner Auto-Logging System*`;
-
+// WITHDRAWAL REQUEST ENDPOINT
+app.post('/api/withdraw', async (req, res) => {
   try {
-    const telegramRes = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: CHANNEL_ID,
-        text: text,
-        parse_mode: 'Markdown'
-      })
+    const { username, wallet, points, amountUsd } = req.body;
+
+    // VALIDATION
+    if (!username || !wallet || !points) {
+      return res.status(400).json({ success: false, message: "Missing required fields." });
+    }
+
+    const tonRegex = /^(EQ|UQ)[a-zA-Z0-9_-]{46}$/;
+    if (!tonRegex.test(wallet)) {
+      return res.status(400).json({ success: false, message: "Invalid TON wallet address format." });
+    }
+
+    if (parseFloat(points) < 150) {
+      return res.status(400).json({ success: false, message: "Minimum cashout threshold is 150 points." });
+    }
+
+    // TELEGRAM CHANNEL MESSAGE FORMAT
+    const message = `
+🚀 *NEW WITHDRAWAL REQUEST* 🚀
+
+👤 *User:* ${username}
+💎 *Points Redeemed:* ${points} Ads Point
+💵 *Estimated Value:* ~$${amountUsd || (points * 0.002).toFixed(2)} USD
+🏦 *TON Wallet:* \`${wallet}\`
+⏰ *Time:* ${new Date().toUTCString()}
+
+✅ *Status:* Pending Review
+    `;
+
+    // SEND LOG TO TELEGRAM HISTORY CHANNEL
+    const telegramApiUrl = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+    
+    await axios.post(telegramApiUrl, {
+      chat_id: HISTORY_CHANNEL_ID,
+      text: message,
+      parse_mode: 'Markdown'
     });
 
-    const data = await telegramRes.json();
-    if (data.ok) {
-      return res.status(200).json({ success: true, message: 'Log sent to channel' });
-    } else {
-      return res.status(500).json({ success: false, error: data.description });
-    }
-  } catch (err) {
-    return res.status(500).json({ success: false, error: err.message });
+    return res.status(200).json({
+      success: true,
+      message: "Withdrawal request submitted successfully and logged to history channel."
+    });
+
+  } catch (error) {
+    console.error("Withdraw Error:", error.response?.data || error.message);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to log withdrawal to Telegram channel."
+    });
   }
-}
+});
+
+// SERVER PORT LISTEN
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Withdrawal Service Engine active on port ${PORT}`);
+});
