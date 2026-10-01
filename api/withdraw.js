@@ -1,4 +1,18 @@
 export default async function handler(req, res) {
+  // CORS headers ထည့်ပေးခြင်းဖြင့် Vercel မှာ ေခါ်ရတာ အဆင်ပြေစေပါတယ်
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  );
+
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
@@ -8,10 +22,10 @@ export default async function handler(req, res) {
   const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "8889834203:AAGGO2SD_WXXd_J_mU5e7Iww73zCEqmwMb4";
   const CHANNEL_ID = "@Allwithdrawhistory";
 
-  const text = `🎉 **New Withdrawal Request!**\n\n` +
-               `👤 **User:** ${username}\n` +
-               `💎 **Amount:** ${amount} PTS\n` +
-               `🏦 **Wallet:** \`${wallet}\` \n\n` +
+  const text = `🎉 *New Withdrawal Request!*\n\n` +
+               `👤 *User:* ${username}\n` +
+               `💎 *Amount:* ${amount} PTS\n` +
+               `🏦 *Wallet:* \`${wallet}\`\n\n` +
                `⚡ *Ads Miner Auto-Logging System*`;
 
   try {
