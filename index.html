@@ -51,7 +51,7 @@
     <div class="card">
       <span style="font-size:11px;color:var(--sub);letter-spacing:0.5px;">TOTAL BALANCE</span>
       <div class="balance"><span id="userBalance">329.67</span> Ads Point</div>
-      <p style="font-size:10px;color:var(--sub);margin-top:2px;">Reserve: 300 Pts | Min Cashout: 150 Pts</p>
+      <p style="font-size:10px;color:var(--sub);margin-top:2px;">PlatformID: 48421 TMA | Min Cashout: 150 Pts</p>
     </div>
 
     <!-- Withdraw (TON Wallet) Section -->
@@ -114,18 +114,19 @@
     <div class="modal-box">
       <div style="font-size:15px;font-weight:bold;color:var(--blue);margin-bottom:6px;" id="mTitle">Notification</div>
       <div style="font-size:12px;color:var(--text);margin-bottom:14px;" id="mMsg">Please wait...</div>
-      <button class="btn btn-blue" id="mBtn" style="justify-content:center;" onclick="closeModal()">OK</button>
+      <!-- Processing နေစဉ် OK/Continue ခလုတ် ဖုံးထားမည် -->
+      <button class="btn btn-blue" id="mBtn" style="justify-content:center;display:none;" onclick="closeModal()">Continue</button>
     </div>
   </div>
 
   <script>
-    // Configuration with updated Adsgram IDs
+    // Updated with new Adsgram IDs: 51173, int-51174, task-51175
     const CONFIG = {
       adsterra: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475",
       smartlink: "https://plump-plastic.com/ZjLmfX",
-      reward_id: "48592",          // Adsgram Reward ID
-      interstitial_id: "int-48593", // Adsgram Interstitial ID
-      task_id: "task-48595"        // Adsgram Task ID
+      reward_id: "51173",          // Adsgram Reward ID
+      interstitial_id: "int-51174", // Adsgram Interstitial ID
+      task_id: "task-51175"        // Adsgram Task ID
     };
 
     const tg = window.Telegram?.WebApp; 
@@ -143,8 +144,6 @@
       t3: parseInt(localStorage.getItem('t3')) || 7,
       t4: parseInt(localStorage.getItem('t4')) || 5,
       cdEnd: parseInt(localStorage.getItem('cdEnd')) || 0,
-      resetTime: parseInt(localStorage.getItem('resetTime')) || 0,
-      startTime: 0,
       walletSaved: localStorage.getItem('walletSaved') === 'true'
     };
 
@@ -181,9 +180,12 @@
       }
     }
 
-    function showModal(title, msg) {
+    function showModal(title, msg, showBtn = false, btnText = "Continue") {
       document.getElementById('mTitle').innerText = title;
       document.getElementById('mMsg').innerText = msg;
+      const btn = document.getElementById('mBtn');
+      btn.innerText = btnText;
+      btn.style.display = showBtn ? 'flex' : 'none';
       document.getElementById('modal').style.display = 'flex';
     }
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
@@ -192,31 +194,31 @@
       const uname = document.getElementById('tgUsername').value.trim();
       const address = document.getElementById('tonAddress').value.trim();
       if(!uname || !address) {
-        showModal("Error", "Please fill in your Username and TON Wallet Address.");
+        showModal("Error", "Please fill in your Username and TON Wallet Address.", true, "OK");
         return;
       }
       state.walletSaved = true;
       save();
-      showModal("Success", "Wallet details saved successfully!");
+      showModal("Success", "Wallet details saved successfully!", true, "OK");
     }
 
     function requestWithdraw() {
       if(!state.walletSaved) {
-        showModal("Notice", "Please save your wallet details first.");
+        showModal("Notice", "Please save your wallet details first.", true, "OK");
         return;
       }
       if(state.balance < 150) {
-        showModal("Notice", "Minimum cashout is 150 Pts.");
+        showModal("Notice", "Minimum cashout is 150 Pts.", true, "OK");
         return;
       }
-      showModal("Withdrawal Pending", "Your withdrawal request has been submitted successfully and is being processed.");
+      showModal("Withdrawal Pending", "Your withdrawal request has been submitted successfully and is being processed.", true, "OK");
     }
 
     function claimVip() {
       state.balance += 100;
       save();
       updateUI();
-      showModal("VIP Claimed", "Successfully claimed 24h VIP Booster (+100 Pts)!");
+      showModal("VIP Claimed", "Successfully claimed 24h VIP Booster (+100 Pts)!", true, "OK");
       document.getElementById('vipBtn').className = "btn btn-off";
       document.getElementById('vipBtn').innerText = "VIP Active";
       document.getElementById('vipBtn').removeAttribute("onclick");
@@ -240,7 +242,8 @@
         window.open(CONFIG.smartlink, '_blank');
       }
 
-      showModal("Processing Ad", "Please watch the ad for 15 seconds...");
+      // Processing နေစဉ် OK/Continue ခလုတ် ဖုံးထားပြီး စက္ကန့်ရေမည်
+      showModal("Processing Ad", "Please watch the ad for 15 seconds...", false);
 
       let timer = 15;
       const interval = setInterval(() => {
@@ -267,7 +270,7 @@
     function rewardUser(num) {
       if ((Date.now() - state.startTime)/1000 < 14) {
         isTaskActive = false; 
-        showModal("Security Notice", "Action completed too fast. Please watch fully."); 
+        showModal("Security Notice", "Action completed too fast. Please watch fully.", true, "OK"); 
         return;
       }
       state[`t${num}`]++;
@@ -277,7 +280,8 @@
       save(); 
       updateUI();
       isTaskActive = false;
-      showModal("Success", `+${earned} Ads Point earned successfully!`);
+      // ပြီးဆုံးမှသာ Continue ခလုတ်ပေါ်စေမည်
+      showModal("Success", `+${earned} Ads Point earned successfully!`, true, "Continue");
     }
 
     function renderIframe(id) {
