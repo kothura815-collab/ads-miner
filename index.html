@@ -62,7 +62,7 @@
 
     <div class="card" style="text-align:center;border:1px solid rgba(245,158,11,0.4);">
       <h3 style="font-size:14px;color:var(--warn);margin-bottom:4px;">VIP Booster</h3>
-      <p style="font-size:10px;color:var(--sub);margin-bottom:8px;">Complete tasks to claim 24h VIP Booster (+100 Pts)</p>
+      <p style="font-size:10px;color:var(--sub);margin-bottom:8px;">Complete all ads to claim 24h VIP Booster (+100 Pts)</p>
       <button id="vipBtn" class="btn btn-off" onclick="claimVip()" disabled><span id="vipBtnText">Complete All Ads First</span></button>
     </div>
 
@@ -73,19 +73,19 @@
 
     <div class="task-list">
       <div class="task-item">
-        <div><h4 style="font-size:12px;">Adsterra Direct</h4><p style="font-size:9px;color:var(--sub);">High eCPM 1</p></div>
+        <div><h4 style="font-size:12px;">Adsterra Direct Flow</h4><p style="font-size:9px;color:var(--sub);">High eCPM Stream 1</p></div>
         <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t1Count">0/20</span><button class="btn btn-blue" id="btnTask1" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(1)">Start</button></div>
       </div>
       <div class="task-item">
-        <div><h4 style="font-size:12px;">HilltopAds Engine</h4><p style="font-size:9px;color:var(--sub);">Popunder 2</p></div>
+        <div><h4 style="font-size:12px;">HilltopAds Engine</h4><p style="font-size:9px;color:var(--sub);">Popunder Stream 2</p></div>
         <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t2Count">0/20</span><button class="btn btn-blue" id="btnTask2" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(2)">Start</button></div>
       </div>
       <div class="task-item">
-        <div><h4 style="font-size:12px;">RichAds Engine</h4><p style="font-size:9px;color:var(--sub);">Push Flow 3</p></div>
+        <div><h4 style="font-size:12px;">RichAds Engine</h4><p style="font-size:9px;color:var(--sub);">Push Flow Stream 3</p></div>
         <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t3Count">0/15</span><button class="btn btn-blue" id="btnTask3" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(3)">Start</button></div>
       </div>
       <div class="task-item">
-        <div><h4 style="font-size:12px;">Telegram Premium Stream</h4><p style="font-size:9px;color:var(--sub);">Native Video</p></div>
+        <div><h4 style="font-size:12px;">Telegram Premium Stream</h4><p style="font-size:9px;color:var(--sub);">Native Video Stream 4</p></div>
         <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t4Count">0/15</span><button class="btn btn-blue" id="btnTask4" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(4)">Start</button></div>
       </div>
     </div>
@@ -102,11 +102,13 @@
   </div>
 
   <script>
+    // UPDATED WITH NEW ADSGRAM BLOCK IDs
     const CONFIG = {
       adsterra: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475",
       smartlink: "https://plump-plastic.com/ZjLmfX",
-      reward_id: "49940",
-      interstitial_id: "int-49941",
+      reward_id: "51268",
+      interstitial_id: "int-51269",
+      task_id: "task-51270",
       channel: "https://t.me/Allwithdrawhistory"
     };
 
@@ -134,7 +136,12 @@
     function checkReset() {
       const now = Date.now();
       const allDone = (state.t1>=LIMITS.t1 && state.t2>=LIMITS.t2 && state.t3>=LIMITS.t3 && state.t4>=LIMITS.t4);
-      if (allDone && state.resetTime === 0) { state.resetTime = now + (4*3600*1000); save(); }
+      
+      // Lock for 4 hours when all task slots are filled
+      if (allDone && state.resetTime === 0) { 
+        state.resetTime = now + (4*3600*1000); 
+        save(); 
+      }
       if (state.resetTime > 0 && now >= state.resetTime) {
         state.t1=0; state.t2=0; state.t3=0; state.t4=0; state.resetTime=0; save();
       }
@@ -151,7 +158,7 @@
       const notice = document.getElementById('cooldownNotice');
       if (state.resetTime > now) {
         const left = Math.ceil((state.resetTime - now)/1000);
-        notice.innerText = `Reset in ${Math.floor(left/3600)}h ${Math.floor((left%3600)/60)}m`;
+        notice.innerText = `4h Lock (${Math.floor(left/3600)}h ${Math.floor((left%3600)/60)}m)`;
         notice.style.color = "var(--warn)"; toggleBtns(true);
       } else if (now < state.cdEnd) {
         notice.innerText = `Next in ${Math.ceil((state.cdEnd - now)/1000)}s`;
@@ -165,7 +172,7 @@
       if (state.vipCd > now) {
         vipBtn.className = "btn btn-off"; vipBtn.disabled = true;
         const left = Math.ceil((state.vipCd - now)/1000);
-        vipBtnText.innerText = `VIP Locked (${Math.floor(left/3600)}h ${Math.floor((left%3600)/60)}m)`;
+        vipBtnText.innerText = `24h VIP Lock (${Math.floor(left/3600)}h ${Math.floor((left%3600)/60)}m)`;
       } else if (state.t1>=LIMITS.t1 && state.t2>=LIMITS.t2 && state.t3>=LIMITS.t3 && state.t4>=LIMITS.t4) {
         vipBtn.className = "btn btn-warn"; vipBtn.disabled = false;
         vipBtnText.innerText = "Claim 24h VIP Booster (+100 Pts)";
@@ -191,7 +198,6 @@
     }
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
-    // MULTI-TAB & 15S BACK-LOCK ENGINE
     function startTask(num) {
       const now = Date.now();
       if (state.resetTime > now || now < state.cdEnd || isTaskActive) return;
@@ -203,7 +209,6 @@
       const preventBack = () => { if(isTaskActive) history.pushState(null, null, location.href); };
       window.addEventListener('popstate', preventBack);
 
-      // Multi-Tab Opening for Maximum Revenue
       if (tg && tg.openLink) {
         tg.openLink(CONFIG.adsterra);
       } else {
@@ -245,7 +250,7 @@
 
     function claimVip() {
       state.balance += 100;
-      state.vipCd = Date.now() + (24*3600*1000);
+      state.vipCd = Date.now() + (24*3600*1000); // 24-HOUR VIP LOCK
       save(); updateUI();
       showModal("VIP Claimed!", "100 Points added. VIP Booster locked for 24 hours.");
     }
@@ -269,7 +274,6 @@
       showModal("Submitted", `Cashout logged to: ${CONFIG.channel}`);
     }
 
-    // 20-SECOND AUTO-REFRESH BANNERS
     function renderIframe(id) {
       const el = document.getElementById(id); el.innerHTML = '';
       const f = document.createElement('iframe');
@@ -286,7 +290,7 @@
       setInterval(() => {
         renderIframe('topBanner');
         renderIframe('btmBanner');
-      }, 20000); // Auto-Refresh Every 20 Seconds
+      }, 20000);
     }
 
     window.addEventListener('DOMContentLoaded', () => {
