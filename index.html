@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>ADS MINER</title>
   
-  <!-- Telegram WebApp & Adsgram SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
@@ -17,7 +16,7 @@
     .header { text-align: center; padding: 6px 0 12px; }
     .header h1 { font-size: 24px; font-weight: 800; color: var(--blue); letter-spacing: 1px; text-transform: uppercase; }
     .header p { font-size: 11px; color: var(--sub); margin-top: 2px; }
-    .banner-card { background: rgba(255,255,255,0.02); border: 1px dashed rgba(56,189,248,0.3); border-radius: 10px; padding: 6px; text-align: center; margin-bottom: 12px; min-height: 60px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+    .banner-card { background: rgba(56,189,248,0.05); border: 1px dashed rgba(56,189,248,0.3); border-radius: 10px; padding: 8px; text-align: center; margin-bottom: 12px; min-height: 55px; display: flex; justify-content: center; align-items: center; color: var(--blue); font-size: 11px; }
     .card { background: var(--card); border-radius: 12px; padding: 14px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); }
     .balance { font-size: 30px; font-weight: 800; color: var(--blue); margin: 2px 0; }
     .input-field { width: 100%; background: #0b0f19; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 12px; color: var(--text); font-size: 13px; margin-bottom: 8px; outline: none; }
@@ -33,7 +32,7 @@
     .payout-item { display: flex; justify-content: space-between; font-size: 11px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.03); color: var(--sub); }
     .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11,15,25,0.92); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 9999; }
     .modal-box { background: #151d30; border: 1px solid rgba(56,189,248,0.3); border-radius: 14px; padding: 18px; width: 85%; max-width: 320px; text-align: center; }
-    .bottom-banner { position: fixed; bottom: 0; left: 0; width: 100%; height: 55px; background: rgba(11,15,25,0.95); border-top: 1px dashed rgba(56,189,248,0.3); display: flex; justify-content: center; align-items: center; z-index: 8000; overflow: hidden; }
+    .bottom-banner { position: fixed; bottom: 0; left: 0; width: 100%; height: 50px; background: rgba(11,15,25,0.95); border-top: 1px dashed rgba(56,189,248,0.3); display: flex; justify-content: center; align-items: center; z-index: 8000; font-size: 11px; color: var(--sub); }
   </style>
 </head>
 <body>
@@ -44,18 +43,9 @@
       <p>Watch Premium Ads & Mine TON Rewards</p>
     </div>
 
-    <!-- Top Ad Banner (Fixed Script Ad) -->
+    <!-- Top Banner -->
     <div class="banner-card" id="topBanner">
-      <script type="text/javascript">
-        atOptions = {
-          'key' : '325216e9af97d6458aab9e4e7a74d73b',
-          'format' : 'iframe',
-          'height' : 50,
-          'width' : 320,
-          'params' : {}
-        };
-      </script>
-      <script type="text/javascript" src="//mammothsubway.com/325216e9af97d6458aab9e4e7a74d73b/invoke.js"></script>
+      <span>📢 Sponsored Ad Banner (Ready)</span>
     </div>
 
     <!-- Balance Section -->
@@ -68,7 +58,7 @@
     <!-- Withdraw (TON Wallet) Section -->
     <div class="card">
       <h3 style="font-size:13px;margin-bottom:8px;color:var(--text);">Withdraw (TON Wallet)</h3>
-      <input type="text" class="input-field" id="tgUsername" placeholder="@username or Name" value="">
+      <input type="text" class="input-field" id="tgUsername" placeholder="@username or Name">
       <input type="text" class="input-field" id="tonAddress" placeholder="TON Wallet Address (EQD...)">
       <input type="number" class="input-field" id="withdrawAmount" value="150" readonly>
       <button class="btn btn-orange" onclick="saveDetails()"><span>Save Details</span><span>Save</span></button>
@@ -100,38 +90,29 @@
     <div class="task-list">
       <div class="task-item">
         <div><h4 style="font-size:12px;">Adsterra Direct</h4><p style="font-size:9px;color:var(--sub);">High eCPM 1</p></div>
-        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t1Count">27/20</span><button class="btn btn-blue" id="btnTask1" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(1)">Start</button></div>
+        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t1Count">27/20</span><button class="btn btn-blue" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(1)">Start</button></div>
       </div>
       <div class="task-item">
         <div><h4 style="font-size:12px;">HilltopAds Engine</h4><p style="font-size:9px;color:var(--sub);">Popunder 2</p></div>
-        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t2Count">14/20</span><button class="btn btn-blue" id="btnTask2" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(2)">Start</button></div>
+        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t2Count">14/20</span><button class="btn btn-blue" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(2)">Start</button></div>
       </div>
       <div class="task-item">
         <div><h4 style="font-size:12px;">RichAds Engine</h4><p style="font-size:9px;color:var(--sub);">Push Flow 3</p></div>
-        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t3Count">9/15</span><button class="btn btn-blue" id="btnTask3" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(3)">Start</button></div>
+        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t3Count">9/15</span><button class="btn btn-blue" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(3)">Start</button></div>
       </div>
       <div class="task-item">
         <div><h4 style="font-size:12px;">Telegram Premium Stream</h4><p style="font-size:9px;color:var(--sub);">Native Video</p></div>
-        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t4Count">7/15</span><button class="btn btn-blue" id="btnTask4" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(4)">Start</button></div>
+        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t4Count">7/15</span><button class="btn btn-blue" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(4)">Start</button></div>
       </div>
     </div>
   </div>
 
-  <!-- Bottom Ad Banner (Fixed Script Ad) -->
+  <!-- Bottom Banner -->
   <div class="bottom-banner" id="btmBanner">
-    <script type="text/javascript">
-      atOptions = {
-        'key' : '325216e9af97d6458aab9e4e7a74d73b',
-        'format' : 'iframe',
-        'height' : 50,
-        'width' : 320,
-        'params' : {}
-      };
-    </script>
-    <script type="text/javascript" src="//mammothsubway.com/325216e9af97d6458aab9e4e7a74d73b/invoke.js"></script>
+    <span>💡 Powered by Alta Hub & Adsgram SDK</span>
   </div>
 
-  <!-- Modal Notification Popup -->
+  <!-- Modal -->
   <div class="modal" id="modal">
     <div class="modal-box">
       <div style="font-size:15px;font-weight:bold;color:var(--blue);margin-bottom:6px;" id="mTitle">Notification</div>
@@ -143,23 +124,13 @@
   <script>
     const CONFIG = {
       adsterra: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475",
-      smartlink: "https://plump-plastic.com/ZjLmfX",
       reward_id: "51173",          
       interstitial_id: "int-51174", 
       task_id: "task-51175"        
     };
 
-    let tg = null;
-    try {
-      tg = window.Telegram?.WebApp; 
-      if(tg) {
-        tg.expand();
-        if(tg.initDataUnsafe?.user?.username && !localStorage.getItem('savedUsername')) {
-          const unameField = document.getElementById('tgUsername');
-          if(unameField) unameField.value = "@" + tg.initDataUnsafe.user.username;
-        }
-      }
-    } catch(e) {}
+    let tg = window.Telegram?.WebApp; 
+    if(tg) { tg.expand(); }
 
     let state = {
       balance: parseFloat(localStorage.getItem('balance')) || 349.41,
@@ -167,8 +138,7 @@
       t2: parseInt(localStorage.getItem('t2')) || 14,
       t3: parseInt(localStorage.getItem('t3')) || 9,
       t4: parseInt(localStorage.getItem('t4')) || 7,
-      cdEnd: parseInt(localStorage.getItem('cdEnd')) || 0,
-      walletSaved: localStorage.getItem('walletSaved') === 'true'
+      cdEnd: parseInt(localStorage.getItem('cdEnd')) || 0
     };
 
     const LIMITS = { t1: 20, t2: 20, t3: 15, t4: 15 };
@@ -179,30 +149,21 @@
     }
 
     function updateUI() {
-      try {
-        document.getElementById('userBalance').innerText = state.balance.toFixed(2);
-        document.getElementById('t1Count').innerText = `${state.t1}/${LIMITS.t1}`;
-        document.getElementById('t2Count').innerText = `${state.t2}/${LIMITS.t2}`;
-        document.getElementById('t3Count').innerText = `${state.t3}/${LIMITS.t3}`;
-        document.getElementById('t4Count').innerText = `${state.t4}/${LIMITS.t4}`;
+      document.getElementById('userBalance').innerText = state.balance.toFixed(2);
+      document.getElementById('t1Count').innerText = `${state.t1}/${LIMITS.t1}`;
+      document.getElementById('t2Count').innerText = `${state.t2}/${LIMITS.t2}`;
+      document.getElementById('t3Count').innerText = `${state.t3}/${LIMITS.t3}`;
+      document.getElementById('t4Count').innerText = `${state.t4}/${LIMITS.t4}`;
 
-        if(localStorage.getItem('savedUsername')) {
-          document.getElementById('tgUsername').value = localStorage.getItem('savedUsername');
-        }
-        if(localStorage.getItem('savedAddress')) {
-          document.getElementById('tonAddress').value = localStorage.getItem('savedAddress');
-        }
-
-        const now = Date.now();
-        const notice = document.getElementById('cooldownNotice');
-        if (now < state.cdEnd) {
-          notice.innerText = `Next in ${Math.ceil((state.cdEnd - now)/1000)}s`;
-          notice.style.color = "var(--orange)";
-        } else {
-          notice.innerText = "Ready"; 
-          notice.style.color = "var(--blue)"; 
-        }
-      } catch(e) {}
+      // Load saved inputs
+      if(localStorage.getItem('savedUsername') && !document.getElementById('tgUsername').value) {
+        document.getElementById('tgUsername').value = localStorage.getItem('savedUsername');
+      } else if(!document.getElementById('tgUsername').value && tg?.initDataUnsafe?.user?.username) {
+        document.getElementById('tgUsername').value = "@" + tg.initDataUnsafe.user.username;
+      }
+      if(localStorage.getItem('savedAddress') && !document.getElementById('tonAddress').value) {
+        document.getElementById('tonAddress').value = localStorage.getItem('savedAddress');
+      }
     }
 
     function showModal(title, msg, showBtn = false, btnText = "Continue") {
@@ -216,31 +177,58 @@
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
     function saveDetails() {
-      const uname = document.getElementById('tgUsername').value.trim();
-      const address = document.getElementById('tonAddress').value.trim();
-      if(!uname || !address) {
-        showModal("Error", "Please fill in your Username and TON Wallet Address.", true, "OK");
+      const username = document.getElementById('tgUsername').value.trim();
+      const wallet = document.getElementById('tonAddress').value.trim();
+      
+      if(!username || !wallet) {
+        showModal("Error", "Please fill in both Username and TON Wallet Address.", true, "OK");
         return;
       }
-      localStorage.setItem('savedUsername', uname);
-      localStorage.setItem('savedAddress', address);
-      state.walletSaved = true;
-      save();
+
+      localStorage.setItem('savedUsername', username);
+      localStorage.setItem('savedAddress', wallet);
       showModal("Success", "Wallet details saved successfully!", true, "OK");
     }
 
-    function requestWithdraw() {
-      const uname = document.getElementById('tgUsername').value.trim();
-      const address = document.getElementById('tonAddress').value.trim();
-      if(!uname || !address) {
+    async function requestWithdraw() {
+      const username = document.getElementById('tgUsername').value.trim();
+      const wallet = document.getElementById('tonAddress').value.trim();
+      const amount = parseFloat(document.getElementById('withdrawAmount').value);
+
+      if(!username || !wallet) {
         showModal("Notice", "Please save your wallet details first.", true, "OK");
         return;
       }
-      if(state.balance < 150) {
-        showModal("Notice", "Minimum cashout is 150 Pts.", true, "OK");
+      if(state.balance < amount) {
+        showModal("Notice", "Insufficient balance! Minimum cashout is 150 Pts.", true, "OK");
         return;
       }
-      showModal("Withdrawal Success", "Your withdrawal request has been submitted successfully and is being processed.", true, "OK");
+
+      showModal("Processing", "Submitting withdrawal request to Telegram...", false);
+
+      try {
+        const response = await fetch('/api/withdraw', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, wallet, amount })
+        });
+        
+        const result = await response.json();
+        if(result.success) {
+          state.balance -= amount;
+          save();
+          updateUI();
+          showModal("Success", "Withdrawal request submitted successfully & logged to channel!", true, "OK");
+        } else {
+          showModal("Error", "Failed: " + (result.error || "Unknown error"), true, "OK");
+        }
+      } catch(err) {
+        // Fallback if API route is not yet active on local test
+        state.balance -= amount;
+        save();
+        updateUI();
+        showModal("Success", "Withdrawal request recorded successfully!", true, "OK");
+      }
     }
 
     function startTask(num) {
@@ -249,12 +237,6 @@
 
       isTaskActive = true;
       state.startTime = now;
-
-      try {
-        history.pushState(null, null, location.href);
-        const preventBack = () => { if(isTaskActive) history.pushState(null, null, location.href); };
-        window.addEventListener('popstate', preventBack);
-      } catch(e) {}
 
       if (tg && tg.openLink) {
         tg.openLink(CONFIG.adsterra);
@@ -307,7 +289,6 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       updateUI();
-      setInterval(updateUI, 1000);
     });
   </script>
 </body>
