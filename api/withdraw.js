@@ -6,9 +6,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// CONFIGURATION
+// CONFIGURATION (Fill your Telegram Bot Token & Channel Username if not using ENV)
 const BOT_TOKEN = process.env.BOT_TOKEN || "YOUR_TELEGRAM_BOT_TOKEN_HERE";
-const HISTORY_CHANNEL_ID = process.env.HISTORY_CHANNEL_ID || "@Allwithdrawhistory"; // Channel Username or ID
+const HISTORY_CHANNEL_ID = process.env.HISTORY_CHANNEL_ID || "@Allwithdrawhistory"; 
 
 // WITHDRAWAL REQUEST ENDPOINT
 app.post('/api/withdraw', async (req, res) => {
@@ -60,7 +60,7 @@ app.post('/api/withdraw', async (req, res) => {
     console.error("Withdraw Error:", error.response?.data || error.message);
     return res.status(500).json({
       success: false,
-      message: "Failed to log withdrawal to Telegram channel."
+      message: "Failed to log withdrawal to Telegram channel. Make sure Bot is Admin in Channel."
     });
   }
 });
