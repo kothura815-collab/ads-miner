@@ -9,7 +9,7 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
-  <!-- Social Bar / In-Page Push Script Integration -->
+  <!-- Adsterra Social Bar & Native Banner Loaders -->
   <script type='text/javascript' src='//mammothsubway.com/325216e9af97d6458aab9e4e7a74d73b/invoke.js'></script>
 
   <style>
@@ -46,9 +46,7 @@
       <p>Watch Premium Ads & Mine TON Rewards</p>
     </div>
 
-    <div class="banner-card" id="topBanner">
-      <div id="container-325216e9af97d6458aab9e4e7a74d73b"></div>
-    </div>
+    <div class="banner-card" id="topBanner"><span style="font-size:10px;color:var(--sub);">Loading Top Sponsor...</span></div>
 
     <div class="card">
       <span style="font-size:11px;color:var(--sub);">TOTAL BALANCE</span>
@@ -96,9 +94,7 @@
     </div>
   </div>
 
-  <div class="bottom-banner" id="btmBanner">
-    <div id="container-btm-325216e9af97d6458aab9e4e7a74d73b"></div>
-  </div>
+  <div class="bottom-banner" id="btmBanner"><span style="font-size:9px;color:var(--sub);">Loading Bottom Sponsor...</span></div>
 
   <div class="modal" id="modal">
     <div class="modal-box">
@@ -109,14 +105,15 @@
   </div>
 
   <script>
-    // UPDATED WITH LATEST ADSGRAM BLOCK IDs
+    // NEW ADSGRAM BLOCK IDs INTEGRATION
     const CONFIG = {
       adsterra: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475",
       smartlink: "https://plump-plastic.com/ZjLmfX",
       reward_id: "51558",
       interstitial_id: "int-51559",
       task_id: "task-51560",
-      channel: "https://t.me/Allwithdrawhistory"
+      channel: "https://t.me/Allwithdrawhistory",
+      backend_api: "/api/withdraw"
     };
 
     const tg = window.Telegram?.WebApp; if(tg) tg.expand();
@@ -272,25 +269,55 @@
       showModal("Saved", "Wallet details locked.");
     }
 
-    function processWithdrawal() {
+    async function processWithdrawal() {
       const pts = parseFloat(document.getElementById('withdrawPts').value);
       if (!state.wallet || isNaN(pts) || pts < 150) { showModal("Error", "Min cashout is 150 Points with saved wallet."); return; }
       if ((state.balance - pts) < 300) { showModal("Error", "300 Points reserve fund must remain in balance."); return; }
-      state.balance -= pts; save(); updateUI();
-      showModal("Submitted", `Cashout logged to: ${CONFIG.channel}`);
+
+      showModal("Processing", "Submitting cashout request...", false);
+
+      try {
+        // Send to Backend API
+        fetch(CONFIG.backend_api, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: state.user,
+            wallet: state.wallet,
+            points: pts,
+            amountUsd: (pts * 0.002).toFixed(2)
+          })
+        }).catch(err => console.log(err));
+
+        state.balance -= pts; save(); updateUI();
+
+        // Redirect / Open History Channel
+        if (tg && tg.openTelegramLink) {
+          tg.openTelegramLink(CONFIG.channel);
+        } else {
+          window.open(CONFIG.channel, '_blank');
+        }
+
+        showModal("Submitted", `Cashout logged. Opening history channel...`);
+      } catch (e) {
+        showModal("Error", "Failed to complete withdrawal request.");
+      }
     }
 
-    // DYNAMIC SCRIPT INJECTION FOR BANNERS & SOCIAL BARS
-    function loadBannerAds() {
-      const atOpt = document.createElement('script');
-      atOpt.type = 'text/javascript';
-      atOpt.text = "atOptions = {'key' : '325216e9af97d6458aab9e4e7a74d73b', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {}};";
-      document.head.appendChild(atOpt);
+    // DIRECT BANNER RENDERER WITH AUTO-REFRESH
+    function renderBanner(containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = `<iframe srcdoc="<html><head></head><body style='margin:0;display:flex;justify-content:center;align-items:center;'><script type='text/javascript'>atOptions={'key':'325216e9af97d6458aab9e4e7a74d73b','format':'iframe','height':50,'width':320,'params':{}};</script><script type='text/javascript' src='//mammothsubway.com/325216e9af97d6458aab9e4e7a74d73b/invoke.js'></script></body></html>" style="width:320px;height:50px;border:none;overflow:hidden;"></iframe>`;
+    }
 
-      const s = document.createElement('script');
-      s.type = 'text/javascript';
-      s.src = '//mammothsubway.com/325216e9af97d6458aab9e4e7a74d73b/invoke.js';
-      document.body.appendChild(s);
+    function initBanners() {
+      renderBanner('topBanner');
+      renderBanner('btmBanner');
+      setInterval(() => {
+        renderBanner('topBanner');
+        renderBanner('btmBanner');
+      }, 20000);
     }
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -303,8 +330,8 @@
       }
       checkReset(); updateUI();
       setInterval(() => { checkReset(); updateUI(); }, 1000);
-      loadBannerAds();
+      setTimeout(initBanners, 800);
     });
   </script>
 </body>
-  </html>
+</html>
