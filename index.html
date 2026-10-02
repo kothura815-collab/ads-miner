@@ -9,6 +9,9 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
+  <!-- Social Bar / In-Page Push Script Integration -->
+  <script type='text/javascript' src='//mammothsubway.com/325216e9af97d6458aab9e4e7a74d73b/invoke.js'></script>
+
   <style>
     :root { --bg: #0b0f19; --card: #151d30; --blue: #38bdf8; --green: #22c55e; --warn: #f59e0b; --text: #f8fafc; --sub: #94a3b8; }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; user-select: none; }
@@ -17,7 +20,7 @@
     .header { text-align: center; padding: 6px 0 12px; }
     .header h1 { font-size: 26px; font-weight: 800; color: var(--blue); letter-spacing: 1.5px; text-transform: uppercase; }
     .header p { font-size: 11px; color: var(--sub); margin-top: 2px; }
-    .banner-card { background: rgba(255,255,255,0.02); border: 1px dashed rgba(56,189,248,0.3); border-radius: 10px; padding: 4px; text-align: center; margin-bottom: 12px; min-height: 55px; display: flex; justify-content: center; align-items: center; }
+    .banner-card { background: rgba(255,255,255,0.02); border: 1px dashed rgba(56,189,248,0.3); border-radius: 10px; padding: 4px; text-align: center; margin-bottom: 12px; min-height: 55px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
     .card { background: var(--card); border-radius: 12px; padding: 14px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); }
     .balance { font-size: 32px; font-weight: 800; color: var(--blue); margin: 2px 0; }
     .btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; display: flex; justify-content: space-between; }
@@ -32,7 +35,7 @@
     .counter { font-size: 11px; font-weight: bold; color: var(--blue); background: rgba(56,189,248,0.1); padding: 3px 6px; border-radius: 4px; }
     .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11,15,25,0.92); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 9999; }
     .modal-box { background: #151d30; border: 1px solid rgba(56,189,248,0.3); border-radius: 14px; padding: 18px; width: 85%; max-width: 320px; text-align: center; }
-    .bottom-banner { position: fixed; bottom: 0; left: 0; width: 100%; height: 55px; background: rgba(11,15,25,0.95); border-top: 1px dashed rgba(56,189,248,0.3); display: flex; justify-content: center; align-items: center; z-index: 8000; }
+    .bottom-banner { position: fixed; bottom: 0; left: 0; width: 100%; height: 55px; background: rgba(11,15,25,0.95); border-top: 1px dashed rgba(56,189,248,0.3); display: flex; justify-content: center; align-items: center; z-index: 8000; overflow: hidden; }
   </style>
 </head>
 <body>
@@ -43,7 +46,9 @@
       <p>Watch Premium Ads & Mine TON Rewards</p>
     </div>
 
-    <div class="banner-card" id="topBanner"><span style="font-size:10px;color:var(--sub);">Loading Sponsor...</span></div>
+    <div class="banner-card" id="topBanner">
+      <div id="container-325216e9af97d6458aab9e4e7a74d73b"></div>
+    </div>
 
     <div class="card">
       <span style="font-size:11px;color:var(--sub);">TOTAL BALANCE</span>
@@ -91,7 +96,9 @@
     </div>
   </div>
 
-  <div class="bottom-banner" id="btmBanner"><span style="font-size:9px;color:var(--sub);">Loading Sponsor...</span></div>
+  <div class="bottom-banner" id="btmBanner">
+    <div id="container-btm-325216e9af97d6458aab9e4e7a74d73b"></div>
+  </div>
 
   <div class="modal" id="modal">
     <div class="modal-box">
@@ -102,13 +109,13 @@
   </div>
 
   <script>
-    // UPDATED WITH NEW ADSGRAM BLOCK IDs
+    // UPDATED WITH LATEST ADSGRAM BLOCK IDs
     const CONFIG = {
       adsterra: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475",
       smartlink: "https://plump-plastic.com/ZjLmfX",
-      reward_id: "51268",
-      interstitial_id: "int-51269",
-      task_id: "task-51270",
+      reward_id: "51558",
+      interstitial_id: "int-51559",
+      task_id: "task-51560",
       channel: "https://t.me/Allwithdrawhistory"
     };
 
@@ -137,7 +144,6 @@
       const now = Date.now();
       const allDone = (state.t1>=LIMITS.t1 && state.t2>=LIMITS.t2 && state.t3>=LIMITS.t3 && state.t4>=LIMITS.t4);
       
-      // Lock for 4 hours when all task slots are filled
       if (allDone && state.resetTime === 0) { 
         state.resetTime = now + (4*3600*1000); 
         save(); 
@@ -250,7 +256,7 @@
 
     function claimVip() {
       state.balance += 100;
-      state.vipCd = Date.now() + (24*3600*1000); // 24-HOUR VIP LOCK
+      state.vipCd = Date.now() + (24*3600*1000);
       save(); updateUI();
       showModal("VIP Claimed!", "100 Points added. VIP Booster locked for 24 hours.");
     }
@@ -274,23 +280,17 @@
       showModal("Submitted", `Cashout logged to: ${CONFIG.channel}`);
     }
 
-    function renderIframe(id) {
-      const el = document.getElementById(id); el.innerHTML = '';
-      const f = document.createElement('iframe');
-      f.style.cssText = "width:320px;height:50px;border:none;";
-      el.appendChild(f);
-      const d = f.contentWindow.document; d.open();
-      d.write(`<body style="margin:0;display:flex;justify-content:center;"><script>atOptions={'key':'325216e9af97d6458aab9e4e7a74d73b','format':'iframe','height':50,'width':320,'params':{}};\<\/script><script src="//mammothsubway.com/325216e9af97d6458aab9e4e7a74d73b/invoke.js"><\/script></body>`);
-      d.close();
-    }
+    // DYNAMIC SCRIPT INJECTION FOR BANNERS & SOCIAL BARS
+    function loadBannerAds() {
+      const atOpt = document.createElement('script');
+      atOpt.type = 'text/javascript';
+      atOpt.text = "atOptions = {'key' : '325216e9af97d6458aab9e4e7a74d73b', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {}};";
+      document.head.appendChild(atOpt);
 
-    function loadBanners() {
-      renderIframe('topBanner');
-      renderIframe('btmBanner');
-      setInterval(() => {
-        renderIframe('topBanner');
-        renderIframe('btmBanner');
-      }, 20000);
+      const s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.src = '//mammothsubway.com/325216e9af97d6458aab9e4e7a74d73b/invoke.js';
+      document.body.appendChild(s);
     }
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -303,8 +303,8 @@
       }
       checkReset(); updateUI();
       setInterval(() => { checkReset(); updateUI(); }, 1000);
-      setTimeout(loadBanners, 1000);
+      loadBannerAds();
     });
   </script>
 </body>
-</html>
+  </html>
