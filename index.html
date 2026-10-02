@@ -9,13 +9,13 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
-  <!-- Adsterra Social Bar & Native Banner Loaders -->
-  <script type='text/javascript' src='//mammothsubway.com/325216e9af97d6458aab9e4e7a74d73b/invoke.js'></script>
+  <!-- Social Bar / In-Page Push Banner (Adsterra) -->
+  <script type='text/javascript' src='//mammothsubway.com/c6/38/29/c638294e7737fcf4b46c0d832960682f.js'></script>
 
   <style>
     :root { --bg: #0b0f19; --card: #151d30; --blue: #38bdf8; --green: #22c55e; --warn: #f59e0b; --text: #f8fafc; --sub: #94a3b8; }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; user-select: none; }
-    body { background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding-bottom: 70px; }
+    body { background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding-bottom: 75px; }
     .container { width: 100%; max-width: 480px; padding: 14px; }
     .header { text-align: center; padding: 6px 0 12px; }
     .header h1 { font-size: 26px; font-weight: 800; color: var(--blue); letter-spacing: 1.5px; text-transform: uppercase; }
@@ -46,7 +46,7 @@
       <p>Watch Premium Ads & Mine TON Rewards</p>
     </div>
 
-    <div class="banner-card" id="topBanner"><span style="font-size:10px;color:var(--sub);">Loading Top Sponsor...</span></div>
+    <div class="banner-card" id="topBanner"><span style="font-size:10px;color:var(--sub);">Loading Sponsor...</span></div>
 
     <div class="card">
       <span style="font-size:11px;color:var(--sub);">TOTAL BALANCE</span>
@@ -60,7 +60,7 @@
       <input type="text" id="tonWallet" class="input" placeholder="TON Wallet Address (EQD...)" />
       <input type="number" id="withdrawPts" class="input" placeholder="150" min="150" />
       <button id="saveWalletBtn" class="btn btn-warn" style="margin-bottom:6px;" onclick="saveWallet()"><span>Save Details</span><span>Save</span></button>
-      <button class="btn btn-green" onclick="processWithdrawal()"><span>Withdraw</span><span>Submit</span></button>
+      <button class="btn btn-green" id="withdrawBtn" onclick="processWithdrawal()"><span>Withdraw</span><span>Submit</span></button>
     </div>
 
     <div class="card" style="text-align:center;border:1px solid rgba(245,158,11,0.4);">
@@ -94,7 +94,7 @@
     </div>
   </div>
 
-  <div class="bottom-banner" id="btmBanner"><span style="font-size:9px;color:var(--sub);">Loading Bottom Sponsor...</span></div>
+  <div class="bottom-banner" id="btmBanner"><span style="font-size:9px;color:var(--sub);">Loading Sponsor...</span></div>
 
   <div class="modal" id="modal">
     <div class="modal-box">
@@ -105,15 +105,14 @@
   </div>
 
   <script>
-    // NEW ADSGRAM BLOCK IDs INTEGRATION
+    // UPDATED CONFIG WITH ADSGRAM 51558 / int-51559 / task-51560
     const CONFIG = {
       adsterra: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475",
       smartlink: "https://plump-plastic.com/ZjLmfX",
       reward_id: "51558",
       interstitial_id: "int-51559",
       task_id: "task-51560",
-      channel: "https://t.me/Allwithdrawhistory",
-      backend_api: "/api/withdraw"
+      backend_api: "/api/withdraw" // Express Backend Endpoint
     };
 
     const tg = window.Telegram?.WebApp; if(tg) tg.expand();
@@ -269,16 +268,18 @@
       showModal("Saved", "Wallet details locked.");
     }
 
+    // UPDATED REAL WITHDRAWAL BACKEND INTEGRATION
     async function processWithdrawal() {
       const pts = parseFloat(document.getElementById('withdrawPts').value);
       if (!state.wallet || isNaN(pts) || pts < 150) { showModal("Error", "Min cashout is 150 Points with saved wallet."); return; }
       if ((state.balance - pts) < 300) { showModal("Error", "300 Points reserve fund must remain in balance."); return; }
 
-      showModal("Processing", "Submitting cashout request...", false);
+      const withdrawBtn = document.getElementById('withdrawBtn');
+      withdrawBtn.disabled = true;
+      showModal("Processing", "Submitting withdrawal to channel...", false);
 
       try {
-        // Send to Backend API
-        fetch(CONFIG.backend_api, {
+        const response = await fetch(CONFIG.backend_api, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -287,36 +288,56 @@
             points: pts,
             amountUsd: (pts * 0.002).toFixed(2)
           })
-        }).catch(err => console.log(err));
+        });
 
-        state.balance -= pts; save(); updateUI();
-
-        // Redirect / Open History Channel
-        if (tg && tg.openTelegramLink) {
-          tg.openTelegramLink(CONFIG.channel);
+        const resData = await response.json();
+        if (resData.success) {
+          state.balance -= pts; save(); updateUI();
+          showModal("Submitted", "Withdrawal requested & sent to history channel!");
         } else {
-          window.open(CONFIG.channel, '_blank');
+          showModal("Error", resData.message || "Failed to submit request.");
         }
-
-        showModal("Submitted", `Cashout logged. Opening history channel...`);
-      } catch (e) {
-        showModal("Error", "Failed to complete withdrawal request.");
+      } catch (err) {
+        showModal("Error", "Network error connecting to Backend API.");
+      } finally {
+        withdrawBtn.disabled = false;
       }
     }
 
-    // DIRECT BANNER RENDERER WITH AUTO-REFRESH
-    function renderBanner(containerId) {
-      const container = document.getElementById(containerId);
-      if (!container) return;
-      container.innerHTML = `<iframe srcdoc="<html><head></head><body style='margin:0;display:flex;justify-content:center;align-items:center;'><script type='text/javascript'>atOptions={'key':'325216e9af97d6458aab9e4e7a74d73b','format':'iframe','height':50,'width':320,'params':{}};</script><script type='text/javascript' src='//mammothsubway.com/325216e9af97d6458aab9e4e7a74d73b/invoke.js'></script></body></html>" style="width:320px;height:50px;border:none;overflow:hidden;"></iframe>`;
+    // 20-SECOND AUTO-REFRESH BANNERS
+    function renderIframe(id) {
+      const el = document.getElementById(id); el.innerHTML = '';
+      const iframe = document.createElement('iframe');
+      iframe.style.width = '320px';
+      iframe.style.height = '50px';
+      iframe.style.border = 'none';
+      el.appendChild(iframe);
+
+      const doc = iframe.contentWindow.document;
+      doc.open();
+      doc.write(`
+        <body style="margin:0;padding:0;display:flex;justify-content:center;align-items:center;">
+          <script type="text/javascript">
+            atOptions = {
+              'key' : '325216e9af97d6458aab9e4e7a74d73b',
+              'format' : 'iframe',
+              'height' : 50,
+              'width' : 320,
+              'params' : {}
+            };
+          <\/script>
+          <script type="text/javascript" src="//mammothsubway.com/325216e9af97d6458aab9e4e7a74d73b/invoke.js"><\/script>
+        </body>
+      `);
+      doc.close();
     }
 
-    function initBanners() {
-      renderBanner('topBanner');
-      renderBanner('btmBanner');
+    function loadBanners() {
+      renderIframe('topBanner');
+      renderIframe('btmBanner');
       setInterval(() => {
-        renderBanner('topBanner');
-        renderBanner('btmBanner');
+        renderIframe('topBanner');
+        renderIframe('btmBanner');
       }, 20000);
     }
 
@@ -330,7 +351,7 @@
       }
       checkReset(); updateUI();
       setInterval(() => { checkReset(); updateUI(); }, 1000);
-      setTimeout(initBanners, 800);
+      setTimeout(loadBanners, 1000);
     });
   </script>
 </body>
