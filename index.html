@@ -130,12 +130,23 @@
 
     const tg = window.Telegram?.WebApp; if(tg) tg.expand();
 
-    // ENCRYPTED LOCAL STORAGE CONTROLLER
+    // SECURE ENCRYPTED STORAGE CONTROLLER (WITH NAN SAFEGUARD)
     const SEC = {
       e: (v) => btoa(encodeURIComponent(v)),
-      d: (v) => { try { return decodeURIComponent(atob(v)); } catch { return null; } },
-      getBal: () => parseFloat(SEC.d(localStorage.getItem('_sec_b')) || 0),
-      setBal: (v) => localStorage.setItem('_sec_b', SEC.e(v.toString()))
+      d: (v) => { 
+        try { 
+          let raw = localStorage.getItem('_sec_b');
+          if(!raw) return 0;
+          let decoded = parseFloat(decodeURIComponent(atob(raw)));
+          return isNaN(decoded) ? 0 : decoded;
+        } catch { return 0; } 
+      },
+      getBal: () => SEC.d(),
+      setBal: (v) => {
+        let val = parseFloat(v);
+        if(isNaN(val)) val = 0;
+        localStorage.setItem('_sec_b', SEC.e(val.toString()));
+      }
     };
 
     let state = {
@@ -157,6 +168,7 @@
     let isTaskActive = false;
 
     function save() {
+      if(isNaN(state.balance)) state.balance = 0;
       SEC.setBal(state.balance);
       for(let k in state) { if (k !== 'balance') localStorage.setItem(k, state[k]); }
     }
@@ -171,7 +183,10 @@
     }
 
     function updateUI() {
-      document.getElementById('userBalance').innerText = state.balance.toFixed(2);
+      let safeBal = parseFloat(state.balance);
+      if(isNaN(safeBal)) { safeBal = 0; state.balance = 0; }
+      
+      document.getElementById('userBalance').innerText = safeBal.toFixed(2);
       document.getElementById('t1Count').innerText = `${state.t1}/${LIMITS.t1}`;
       document.getElementById('t2Count').innerText = `${state.t2}/${LIMITS.t2}`;
       document.getElementById('t3Count').innerText = `${state.t3}/${LIMITS.t3}`;
@@ -253,7 +268,6 @@
           clearInterval(interval);
           window.removeEventListener('popstate', preventBack);
 
-          // ADSGRAM VALIDATED BLOCK ID FORMAT
           if (window.Adsgram) {
             const blockId = (num === 4) ? CONFIG.reward_id : CONFIG.interstitial_id;
             window.Adsgram.init({ blockId }).show().then(()=>reward(num)).catch(()=>reward(num));
@@ -269,7 +283,7 @@
       }
       state[`t${num}`]++;
       const pts = parseFloat((Math.random()*(1.2-0.3)+0.3).toFixed(2));
-      state.balance += pts;
+      state.balance = (parseFloat(state.balance) || 0) + pts;
       state.cdEnd = Date.now() + 15000;
       checkReset(); save(); updateUI();
       isTaskActive = false;
@@ -277,7 +291,7 @@
     }
 
     function claimVip() {
-      state.balance += 100;
+      state.balance = (parseFloat(state.balance) || 0) + 100;
       state.vipCd = Date.now() + (24*3600*1000);
       save(); updateUI();
       showModal("VIP Claimed!", "100 Points added. VIP Booster locked for 24 hours.");
@@ -294,7 +308,6 @@
       showModal("Saved", "Wallet details locked.");
     }
 
-    // SIGNED SECURE WITHDRAWAL REQUEST
     async function processWithdrawal() {
       const pts = parseFloat(document.getElementById('withdrawPts').value);
       if (!state.wallet || isNaN(pts) || pts < 150) { showModal("Error", "Min cashout is 150 Points with saved wallet."); return; }
