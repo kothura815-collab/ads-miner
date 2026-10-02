@@ -1,24 +1,42 @@
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
+const crypto = require('crypto');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// CONFIGURATION WITH YOUR TELEGRAM BOT TOKEN
+// CONFIGURATION
 const BOT_TOKEN = process.env.BOT_TOKEN || "8889834203:AAGGO2SD_WXXd_J_mU5e7Iww73zCEqmwMb4";
 const HISTORY_CHANNEL_ID = process.env.HISTORY_CHANNEL_ID || "@Allwithdrawhistory";
+const SECRET_KEY = process.env.SECRET_KEY || "alta_ads_miner_secure_hash_2026";
 
-// WITHDRAWAL REQUEST ENDPOINT
+// SECURE WITHDRAWAL ENDPOINT WITH SIGNATURE VERIFICATION
 app.post('/api/withdraw', async (req, res) => {
   try {
-    const { username, wallet, points, amountUsd } = req.body;
+    const { username, wallet, points, amountUsd, timestamp, signature } = req.body;
 
-    if (!username || !wallet || !points) {
-      return res.status(400).json({ success: false, message: "Missing required fields." });
+    // 1. FIELD VALIDATION
+    if (!username || !wallet || !points || !timestamp || !signature) {
+      return res.status(400).json({ success: false, message: "Security violation: Missing parameter payload." });
     }
 
+    // 2. TIMESTAMP EXPIRATION CHECK (MAX 2 MINUTES)
+    if (Math.abs(Date.now() - timestamp) > 120000) {
+      return res.status(403).json({ success: false, message: "Security violation: Request expired." });
+    }
+
+    // 3. HMAC SIGNATURE VERIFICATION (PREVENTS API BOT ATTACKS)
+    const expectedSignature = crypto.createHmac('sha256', SECRET_KEY)
+      .update(`${username}_${points}_${timestamp}`)
+      .digest('hex');
+
+    if (signature !== expectedSignature) {
+      return res.status(401).json({ success: false, message: "Security violation: Invalid HMAC signature." });
+    }
+
+    // 4. TON WALLET REGEX CHECK
     const tonRegex = /^(EQ|UQ)[a-zA-Z0-9_-]{46}$/;
     if (!tonRegex.test(wallet)) {
       return res.status(400).json({ success: false, message: "Invalid TON wallet address format." });
@@ -28,6 +46,7 @@ app.post('/api/withdraw', async (req, res) => {
       return res.status(400).json({ success: false, message: "Minimum cashout threshold is 150 points." });
     }
 
+    // TELEGRAM CHANNEL MESSAGE FORMAT
     const message = `
 🚀 *NEW WITHDRAWAL REQUEST* 🚀
 
@@ -38,8 +57,10 @@ app.post('/api/withdraw', async (req, res) => {
 ⏰ *Time:* ${new Date().toUTCString()}
 
 ✅ *Status:* Pending Review
+🔒 *Security Status:* HMAC Verified
     `;
 
+    // SEND LOG TO TELEGRAM CHANNEL
     const telegramApiUrl = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
     
     await axios.post(telegramApiUrl, {
@@ -50,7 +71,7 @@ app.post('/api/withdraw', async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Withdrawal request submitted successfully and logged to history channel."
+      message: "Withdrawal request verified and submitted successfully."
     });
 
   } catch (error) {
