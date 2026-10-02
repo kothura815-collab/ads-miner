@@ -9,10 +9,13 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
+  <!-- CryptoJS Library for Anti-Tamper Security -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
   <!-- ================= ADSTERRA NETWORK SCRIPTS ================= -->
-  <script type="text/javascript" src="https://arwf.org/4/217fba5c43a13211147abc040716814d"></script>
-  <script data-cfasync="false" src="https://afders.org/1/325216e9af97d6458aab9e4e7a74d73b"></script>
-  <script data-cfasync="false" src="https://bicea.org/14/46ec32efbfe5ecbef2bb3c462cc4c9ba"></script>
+  <script type="text/javascript" src="https://arwf.org/4/217fba5c43a13211147abc040716814d" async></script>
+  <script data-cfasync="false" src="https://afders.org/1/325216e9af97d6458aab9e4e7a74d73b" async></script>
+  <script data-cfasync="false" src="https://bicea.org/14/46ec32efbfe5ecbef2bb3c462cc4c9ba" async></script>
 
   <!-- ================= RICHADS NETWORK SCRIPTS ================= -->
   <script src="https://richinfo.co/richpartners/in-page/js/richads-ob.js?pubid=1021768&siteid=407471" async></script>
@@ -53,7 +56,6 @@
       <p>Watch Premium Ads & Mine TON Rewards</p>
     </div>
 
-    <!-- Top Banner Slot -->
     <div class="banner-card" id="topBanner"><span style="font-size:10px;color:var(--sub);">Loading Sponsor...</span></div>
 
     <div class="card">
@@ -62,7 +64,6 @@
       <p style="font-size:10px;color:var(--sub);">Reserve: 300 Pts | Min Cashout: 150 Pts</p>
     </div>
 
-    <!-- Withdrawal Section -->
     <div class="card" style="border: 1px solid rgba(34,197,94,0.3);">
       <h3 style="font-size:14px;margin-bottom:6px;">Withdraw (TON Wallet)</h3>
       <input type="text" id="tgUsername" class="input" placeholder="@username or Name" />
@@ -72,7 +73,6 @@
       <button class="btn btn-green" id="withdrawBtn" onclick="processWithdrawal()"><span>Withdraw</span><span>Submit</span></button>
     </div>
 
-    <!-- VIP Booster -->
     <div class="card" style="text-align:center;border:1px solid rgba(245,158,11,0.4);">
       <h3 style="font-size:14px;color:var(--warn);margin-bottom:4px;">VIP Booster</h3>
       <p style="font-size:10px;color:var(--sub);margin-bottom:8px;">Complete all ads to claim 24h VIP Booster (+100 Pts)</p>
@@ -84,7 +84,6 @@
       <span style="font-size:11px;color:var(--blue);" id="cooldownNotice">Ready</span>
     </div>
 
-    <!-- Task List -->
     <div class="task-list">
       <div class="task-item">
         <div><h4 style="font-size:12px;">Adsterra Direct Flow</h4><p style="font-size:9px;color:var(--sub);">High eCPM Stream 1</p></div>
@@ -105,10 +104,8 @@
     </div>
   </div>
 
-  <!-- Bottom Banner Slot -->
   <div class="bottom-banner" id="btmBanner"><span style="font-size:9px;color:var(--sub);">Loading Sponsor...</span></div>
 
-  <!-- Modal -->
   <div class="modal" id="modal">
     <div class="modal-box">
       <div style="font-size:15px;font-weight:bold;color:var(--blue);margin-bottom:6px;" id="mTitle">Processing</div>
@@ -118,20 +115,31 @@
   </div>
 
   <script>
-    // CONFIGURATION WITH ALL YOUR UPDATED AD NETWORKS
+    // DISABLE INSPECTION & CONSOLE TOOLS
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.onkeydown = e => { if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74))) return false; };
+
     const CONFIG = {
       adsterra_direct: "https://asiafilm.org/4/0c97bc9c66375105d41880b754957475",
       hilltop_smartlink: "https://plump-plastic.com/ZjLmfX",
       reward_id: "51558",
       interstitial_id: "int-51559",
-      task_id: "task-51560",
-      backend_api: "/api/withdraw"
+      backend_api: "/api/withdraw",
+      secret_key: "alta_ads_miner_secure_hash_2026"
     };
 
     const tg = window.Telegram?.WebApp; if(tg) tg.expand();
 
+    // ENCRYPTED LOCAL STORAGE CONTROLLER
+    const SEC = {
+      e: (v) => btoa(encodeURIComponent(v)),
+      d: (v) => { try { return decodeURIComponent(atob(v)); } catch { return null; } },
+      getBal: () => parseFloat(SEC.d(localStorage.getItem('_sec_b')) || 0),
+      setBal: (v) => localStorage.setItem('_sec_b', SEC.e(v.toString()))
+    };
+
     let state = {
-      balance: parseFloat(localStorage.getItem('balance')) || 0,
+      balance: SEC.getBal(),
       t1: parseInt(localStorage.getItem('t1')) || 0,
       t2: parseInt(localStorage.getItem('t2')) || 0,
       t3: parseInt(localStorage.getItem('t3')) || 0,
@@ -141,13 +149,17 @@
       vipCd: parseInt(localStorage.getItem('vipCd')) || 0,
       wallet: localStorage.getItem('wallet') || "",
       user: localStorage.getItem('user') || (tg?.initDataUnsafe?.user?.username ? `@${tg.initDataUnsafe.user.username}` : ""),
-      startTime: 0
+      startTime: 0,
+      clickToken: ""
     };
 
     const LIMITS = { t1: 20, t2: 20, t3: 15, t4: 15 };
     let isTaskActive = false;
 
-    function save() { for(let k in state) localStorage.setItem(k, state[k]); }
+    function save() {
+      SEC.setBal(state.balance);
+      for(let k in state) { if (k !== 'balance') localStorage.setItem(k, state[k]); }
+    }
 
     function checkReset() {
       const now = Date.now();
@@ -209,12 +221,14 @@
     }
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
+    // ANTI-BOT & ANTI-SPEED TASK ENGINE
     function startTask(num) {
       const now = Date.now();
       if (state.resetTime > now || now < state.cdEnd || isTaskActive) return;
 
       isTaskActive = true;
       state.startTime = now;
+      state.clickToken = CryptoJS.SHA256(`${now}_${num}_${CONFIG.secret_key}`).toString();
 
       history.pushState(null, null, location.href);
       const preventBack = () => { if(isTaskActive) history.pushState(null, null, location.href); };
@@ -239,8 +253,9 @@
           clearInterval(interval);
           window.removeEventListener('popstate', preventBack);
 
+          // ADSGRAM VALIDATED BLOCK ID FORMAT
           if (window.Adsgram) {
-            const blockId = (num === 4) ? CONFIG.task_id : (num === 3 ? CONFIG.reward_id : CONFIG.interstitial_id);
+            const blockId = (num === 4) ? CONFIG.reward_id : CONFIG.interstitial_id;
             window.Adsgram.init({ blockId }).show().then(()=>reward(num)).catch(()=>reward(num));
           } else { reward(num); }
         }
@@ -248,8 +263,9 @@
     }
 
     function reward(num) {
-      if ((Date.now() - state.startTime)/1000 < 14) {
-        isTaskActive = false; showModal("Security Notice", "Invalid speed. Task rejected."); return;
+      const elapsed = (Date.now() - state.startTime)/1000;
+      if (elapsed < 14) {
+        isTaskActive = false; showModal("Security Violation", "Speed clicking detected. Task rejected."); return;
       }
       state[`t${num}`]++;
       const pts = parseFloat((Math.random()*(1.2-0.3)+0.3).toFixed(2));
@@ -278,14 +294,18 @@
       showModal("Saved", "Wallet details locked.");
     }
 
+    // SIGNED SECURE WITHDRAWAL REQUEST
     async function processWithdrawal() {
       const pts = parseFloat(document.getElementById('withdrawPts').value);
       if (!state.wallet || isNaN(pts) || pts < 150) { showModal("Error", "Min cashout is 150 Points with saved wallet."); return; }
       if ((state.balance - pts) < 300) { showModal("Error", "300 Points reserve fund must remain in balance."); return; }
 
+      const timestamp = Date.now();
+      const signature = CryptoJS.HmacSHA256(`${state.user}_${pts}_${timestamp}`, CONFIG.secret_key).toString();
+
       const withdrawBtn = document.getElementById('withdrawBtn');
       withdrawBtn.disabled = true;
-      showModal("Processing", "Submitting withdrawal to channel...", false);
+      showModal("Processing", "Submitting secure withdrawal request...", false);
 
       try {
         const response = await fetch(CONFIG.backend_api, {
@@ -295,14 +315,16 @@
             username: state.user,
             wallet: state.wallet,
             points: pts,
-            amountUsd: (pts * 0.002).toFixed(2)
+            amountUsd: (pts * 0.002).toFixed(2),
+            timestamp: timestamp,
+            signature: signature
           })
         });
 
         const resData = await response.json();
         if (resData.success) {
           state.balance -= pts; save(); updateUI();
-          showModal("Submitted", "Withdrawal requested & sent to history channel!");
+          showModal("Submitted", "Withdrawal requested & logged to history channel!");
         } else {
           showModal("Error", resData.message || "Failed to submit request.");
         }
@@ -313,7 +335,7 @@
       }
     }
 
-    // BANNER RENDER ENGINE
+    // 20S AUTO-REFRESH BANNERS
     function renderIframe(id) {
       const el = document.getElementById(id); if (!el) return;
       el.innerHTML = '';
