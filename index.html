@@ -128,7 +128,11 @@
       secret_key: "alta_ads_miner_secure_hash_2026"
     };
 
-    const tg = window.Telegram?.WebApp; if(tg) tg.expand();
+    const tg = window.Telegram?.WebApp; 
+    if(tg) {
+      tg.expand();
+      if (tg.enableClosingConfirmation) tg.enableClosingConfirmation();
+    }
 
     // SECURE ENCRYPTED STORAGE CONTROLLER (WITH NAN SAFEGUARD)
     const SEC = {
@@ -236,6 +240,15 @@
     }
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
+    // EXTERNAL BROWSER LINK OPENER FIX
+    function openExternalLink(url) {
+      if (tg && tg.openLink) {
+        tg.openLink(url, { try_instant_view: false });
+      } else {
+        window.open(url, '_blank');
+      }
+    }
+
     // ANTI-BOT & ANTI-SPEED TASK ENGINE
     function startTask(num) {
       const now = Date.now();
@@ -245,17 +258,10 @@
       state.startTime = now;
       state.clickToken = CryptoJS.SHA256(`${now}_${num}_${CONFIG.secret_key}`).toString();
 
-      history.pushState(null, null, location.href);
-      const preventBack = () => { if(isTaskActive) history.pushState(null, null, location.href); };
-      window.addEventListener('popstate', preventBack);
-
       let targetUrl = (num === 2) ? CONFIG.hilltop_smartlink : CONFIG.adsterra_direct;
 
-      if (tg && tg.openLink) {
-        tg.openLink(targetUrl);
-      } else {
-        window.open(targetUrl, '_blank');
-      }
+      // OPEN AD IN EXTERNAL BROWSER SAFELY
+      openExternalLink(targetUrl);
 
       showModal("Processing Ad", "Please wait 15 seconds while ad completes...", false);
 
@@ -266,7 +272,6 @@
           document.getElementById('mMsg').innerText = `Please wait ${timer} seconds while ad completes...`;
         } else {
           clearInterval(interval);
-          window.removeEventListener('popstate', preventBack);
 
           if (window.Adsgram) {
             const blockId = (num === 4) ? CONFIG.reward_id : CONFIG.interstitial_id;
