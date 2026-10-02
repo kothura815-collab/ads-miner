@@ -5,12 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>ADS MINER</title>
   
-  <!-- Fast Core SDKs -->
+  <!-- Telegram WebApp & Adsgram Core SDKs -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
-  <!-- Social Bar / In-Page Push Banner (Adsterra) -->
-  <script type='text/javascript' src='//mammothsubway.com/c6/38/29/c638294e7737fcf4b46c0d832960682f.js'></script>
+  <!-- ================= ADSTERRA NETWORK SCRIPTS ================= -->
+  <script type="text/javascript" src="https://arwf.org/4/217fba5c43a13211147abc040716814d"></script>
+  <script data-cfasync="false" src="https://afders.org/1/325216e9af97d6458aab9e4e7a74d73b"></script>
+  <script data-cfasync="false" src="https://bicea.org/14/46ec32efbfe5ecbef2bb3c462cc4c9ba"></script>
+
+  <!-- ================= RICHADS NETWORK SCRIPTS ================= -->
+  <script src="https://richinfo.co/richpartners/in-page/js/richads-ob.js?pubid=1021768&siteid=407471" async></script>
+  <script type="module" src="https://richinfo.co/richpartners/push/js/rp-cl-ob.js?pubid=1021768&siteid=407470&niche=33" async data-cfasync="false"></script>
+  <script src="https://richinfo.co/richpartners/pops/js/richads-pu-ob.js" data-pubid="1021768" data-siteid="407469" async data-cfasync="false"></script>
 
   <style>
     :root { --bg: #0b0f19; --card: #151d30; --blue: #38bdf8; --green: #22c55e; --warn: #f59e0b; --text: #f8fafc; --sub: #94a3b8; }
@@ -46,6 +53,7 @@
       <p>Watch Premium Ads & Mine TON Rewards</p>
     </div>
 
+    <!-- Top Banner Slot -->
     <div class="banner-card" id="topBanner"><span style="font-size:10px;color:var(--sub);">Loading Sponsor...</span></div>
 
     <div class="card">
@@ -54,6 +62,7 @@
       <p style="font-size:10px;color:var(--sub);">Reserve: 300 Pts | Min Cashout: 150 Pts</p>
     </div>
 
+    <!-- Withdrawal Section -->
     <div class="card" style="border: 1px solid rgba(34,197,94,0.3);">
       <h3 style="font-size:14px;margin-bottom:6px;">Withdraw (TON Wallet)</h3>
       <input type="text" id="tgUsername" class="input" placeholder="@username or Name" />
@@ -63,6 +72,7 @@
       <button class="btn btn-green" id="withdrawBtn" onclick="processWithdrawal()"><span>Withdraw</span><span>Submit</span></button>
     </div>
 
+    <!-- VIP Booster -->
     <div class="card" style="text-align:center;border:1px solid rgba(245,158,11,0.4);">
       <h3 style="font-size:14px;color:var(--warn);margin-bottom:4px;">VIP Booster</h3>
       <p style="font-size:10px;color:var(--sub);margin-bottom:8px;">Complete all ads to claim 24h VIP Booster (+100 Pts)</p>
@@ -74,6 +84,7 @@
       <span style="font-size:11px;color:var(--blue);" id="cooldownNotice">Ready</span>
     </div>
 
+    <!-- Task List -->
     <div class="task-list">
       <div class="task-item">
         <div><h4 style="font-size:12px;">Adsterra Direct Flow</h4><p style="font-size:9px;color:var(--sub);">High eCPM Stream 1</p></div>
@@ -88,14 +99,16 @@
         <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t3Count">0/15</span><button class="btn btn-blue" id="btnTask3" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(3)">Start</button></div>
       </div>
       <div class="task-item">
-        <div><h4 style="font-size:12px;">Telegram Premium Stream</h4><p style="font-size:9px;color:var(--sub);">Native Video Stream 4</p></div>
+        <div><h4 style="font-size:12px;">Adsgram Telegram Native</h4><p style="font-size:9px;color:var(--sub);">Video Stream 4</p></div>
         <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t4Count">0/15</span><button class="btn btn-blue" id="btnTask4" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(4)">Start</button></div>
       </div>
     </div>
   </div>
 
+  <!-- Bottom Banner Slot -->
   <div class="bottom-banner" id="btmBanner"><span style="font-size:9px;color:var(--sub);">Loading Sponsor...</span></div>
 
+  <!-- Modal -->
   <div class="modal" id="modal">
     <div class="modal-box">
       <div style="font-size:15px;font-weight:bold;color:var(--blue);margin-bottom:6px;" id="mTitle">Processing</div>
@@ -105,14 +118,14 @@
   </div>
 
   <script>
-    // UPDATED CONFIG WITH ADSGRAM 51558 / int-51559 / task-51560
+    // CONFIGURATION WITH ALL YOUR UPDATED AD NETWORKS
     const CONFIG = {
-      adsterra: "https://mammothsubway.com/rqibvnk9jb?key=0c97bc9c66375105d41880b754957475",
-      smartlink: "https://plump-plastic.com/ZjLmfX",
+      adsterra_direct: "https://asiafilm.org/4/0c97bc9c66375105d41880b754957475",
+      hilltop_smartlink: "https://plump-plastic.com/ZjLmfX",
       reward_id: "51558",
       interstitial_id: "int-51559",
       task_id: "task-51560",
-      backend_api: "/api/withdraw" // Express Backend Endpoint
+      backend_api: "/api/withdraw"
     };
 
     const tg = window.Telegram?.WebApp; if(tg) tg.expand();
@@ -139,11 +152,7 @@
     function checkReset() {
       const now = Date.now();
       const allDone = (state.t1>=LIMITS.t1 && state.t2>=LIMITS.t2 && state.t3>=LIMITS.t3 && state.t4>=LIMITS.t4);
-      
-      if (allDone && state.resetTime === 0) { 
-        state.resetTime = now + (4*3600*1000); 
-        save(); 
-      }
+      if (allDone && state.resetTime === 0) { state.resetTime = now + (4*3600*1000); save(); }
       if (state.resetTime > 0 && now >= state.resetTime) {
         state.t1=0; state.t2=0; state.t3=0; state.t4=0; state.resetTime=0; save();
       }
@@ -211,11 +220,12 @@
       const preventBack = () => { if(isTaskActive) history.pushState(null, null, location.href); };
       window.addEventListener('popstate', preventBack);
 
+      let targetUrl = (num === 2) ? CONFIG.hilltop_smartlink : CONFIG.adsterra_direct;
+
       if (tg && tg.openLink) {
-        tg.openLink(CONFIG.adsterra);
+        tg.openLink(targetUrl);
       } else {
-        window.open(CONFIG.adsterra, '_blank');
-        window.open(CONFIG.smartlink, '_blank');
+        window.open(targetUrl, '_blank');
       }
 
       showModal("Processing Ad", "Please wait 15 seconds while ad completes...", false);
@@ -230,7 +240,7 @@
           window.removeEventListener('popstate', preventBack);
 
           if (window.Adsgram) {
-            const blockId = (num === 4) ? CONFIG.reward_id : CONFIG.interstitial_id;
+            const blockId = (num === 4) ? CONFIG.task_id : (num === 3 ? CONFIG.reward_id : CONFIG.interstitial_id);
             window.Adsgram.init({ blockId }).show().then(()=>reward(num)).catch(()=>reward(num));
           } else { reward(num); }
         }
@@ -268,7 +278,6 @@
       showModal("Saved", "Wallet details locked.");
     }
 
-    // UPDATED REAL WITHDRAWAL BACKEND INTEGRATION
     async function processWithdrawal() {
       const pts = parseFloat(document.getElementById('withdrawPts').value);
       if (!state.wallet || isNaN(pts) || pts < 150) { showModal("Error", "Min cashout is 150 Points with saved wallet."); return; }
@@ -304,13 +313,12 @@
       }
     }
 
-    // 20-SECOND AUTO-REFRESH BANNERS
+    // BANNER RENDER ENGINE
     function renderIframe(id) {
-      const el = document.getElementById(id); el.innerHTML = '';
+      const el = document.getElementById(id); if (!el) return;
+      el.innerHTML = '';
       const iframe = document.createElement('iframe');
-      iframe.style.width = '320px';
-      iframe.style.height = '50px';
-      iframe.style.border = 'none';
+      iframe.style.width = '320px'; iframe.style.height = '50px'; iframe.style.border = '0';
       el.appendChild(iframe);
 
       const doc = iframe.contentWindow.document;
@@ -318,15 +326,9 @@
       doc.write(`
         <body style="margin:0;padding:0;display:flex;justify-content:center;align-items:center;">
           <script type="text/javascript">
-            atOptions = {
-              'key' : '325216e9af97d6458aab9e4e7a74d73b',
-              'format' : 'iframe',
-              'height' : 50,
-              'width' : 320,
-              'params' : {}
-            };
+            atOptions = { 'key' : '325216e9af97d6458aab9e4e7a74d73b', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
           <\/script>
-          <script type="text/javascript" src="//mammothsubway.com/325216e9af97d6458aab9e4e7a74d73b/invoke.js"><\/script>
+          <script type="text/javascript" src="https://afders.org/1/325216e9af97d6458aab9e4e7a74d73b"><\/script>
         </body>
       `);
       doc.close();
@@ -335,10 +337,7 @@
     function loadBanners() {
       renderIframe('topBanner');
       renderIframe('btmBanner');
-      setInterval(() => {
-        renderIframe('topBanner');
-        renderIframe('btmBanner');
-      }, 20000);
+      setInterval(() => { renderIframe('topBanner'); renderIframe('btmBanner'); }, 20000);
     }
 
     window.addEventListener('DOMContentLoaded', () => {
