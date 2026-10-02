@@ -6,16 +6,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// CONFIGURATION
+// CONFIGURATION WITH YOUR TELEGRAM BOT TOKEN
 const BOT_TOKEN = process.env.BOT_TOKEN || "8889834203:AAGGO2SD_WXXd_J_mU5e7Iww73zCEqmwMb4";
-const HISTORY_CHANNEL_ID = process.env.HISTORY_CHANNEL_ID || "@Allwithdrawhistory"; // Channel Username or ID
+const HISTORY_CHANNEL_ID = process.env.HISTORY_CHANNEL_ID || "@Allwithdrawhistory";
 
 // WITHDRAWAL REQUEST ENDPOINT
 app.post('/api/withdraw', async (req, res) => {
   try {
     const { username, wallet, points, amountUsd } = req.body;
 
-    // VALIDATION
     if (!username || !wallet || !points) {
       return res.status(400).json({ success: false, message: "Missing required fields." });
     }
@@ -29,7 +28,6 @@ app.post('/api/withdraw', async (req, res) => {
       return res.status(400).json({ success: false, message: "Minimum cashout threshold is 150 points." });
     }
 
-    // TELEGRAM CHANNEL MESSAGE FORMAT
     const message = `
 🚀 *NEW WITHDRAWAL REQUEST* 🚀
 
@@ -42,7 +40,6 @@ app.post('/api/withdraw', async (req, res) => {
 ✅ *Status:* Pending Review
     `;
 
-    // SEND LOG TO TELEGRAM HISTORY CHANNEL
     const telegramApiUrl = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
     
     await axios.post(telegramApiUrl, {
@@ -65,7 +62,6 @@ app.post('/api/withdraw', async (req, res) => {
   }
 });
 
-// SERVER PORT LISTEN
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Withdrawal Service Engine active on port ${PORT}`);
