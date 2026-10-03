@@ -3,24 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ADS MINER</title>
+  <title>Alta Ads Miner</title>
   
   <!-- Telegram WebApp & Adsgram Core SDKs -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
-  <!-- CryptoJS Library for Anti-Tamper Security -->
+  <!-- CryptoJS Library for Security -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
-  <!-- ================= ADSTERRA NETWORK SCRIPTS ================= -->
-  <script type="text/javascript" src="https://arwf.org/4/217fba5c43a13211147abc040716814d" async></script>
-  <script data-cfasync="false" src="https://afders.org/1/325216e9af97d6458aab9e4e7a74d73b" async></script>
-  <script data-cfasync="false" src="https://bicea.org/14/46ec32efbfe5ecbef2bb3c462cc4c9ba" async></script>
-
-  <!-- ================= RICHADS NETWORK SCRIPTS ================= -->
+  <!-- External Ad Network Scripts -->
   <script src="https://richinfo.co/richpartners/in-page/js/richads-ob.js?pubid=1021768&siteid=407471" async></script>
   <script type="module" src="https://richinfo.co/richpartners/push/js/rp-cl-ob.js?pubid=1021768&siteid=407470&niche=33" async data-cfasync="false"></script>
-  <script src="https://richinfo.co/richpartners/pops/js/richads-pu-ob.js" data-pubid="1021768" data-siteid="407469" async data-cfasync="false"></script>
 
   <style>
     :root { --bg: #0b0f19; --card: #151d30; --blue: #38bdf8; --green: #22c55e; --warn: #f59e0b; --text: #f8fafc; --sub: #94a3b8; }
@@ -30,7 +24,7 @@
     .header { text-align: center; padding: 6px 0 12px; }
     .header h1 { font-size: 26px; font-weight: 800; color: var(--blue); letter-spacing: 1.5px; text-transform: uppercase; }
     .header p { font-size: 11px; color: var(--sub); margin-top: 2px; }
-    .banner-card { background: rgba(255,255,255,0.02); border: 1px dashed rgba(56,189,248,0.3); border-radius: 10px; padding: 4px; text-align: center; margin-bottom: 12px; min-height: 55px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+    .banner-card { background: rgba(255,255,255,0.02); border: 1px dashed rgba(56,189,248,0.3); border-radius: 10px; padding: 4px; text-align: center; margin-bottom: 12px; min-height: 60px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
     .card { background: var(--card); border-radius: 12px; padding: 14px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); }
     .balance { font-size: 32px; font-weight: 800; color: var(--blue); margin: 2px 0; }
     .btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; display: flex; justify-content: space-between; }
@@ -38,73 +32,62 @@
     .btn-green { background: var(--green); color: #fff; }
     .btn-warn { background: var(--warn); color: #000; }
     .btn-off { background: #1e293b; color: #64748b; cursor: not-allowed; pointer-events: none; }
-    .input { width: 100%; padding: 9px; border-radius: 6px; border: 1px solid #1e293b; background: #0b0f19; color: #fff; font-size: 12px; margin: 4px 0 8px; }
-    .input:disabled { background: #151d30; color: #64748b; }
     .task-list { display: flex; flex-direction: column; gap: 8px; }
     .task-item { background: var(--card); border-radius: 10px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; }
     .counter { font-size: 11px; font-weight: bold; color: var(--blue); background: rgba(56,189,248,0.1); padding: 3px 6px; border-radius: 4px; }
     .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11,15,25,0.92); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 9999; }
     .modal-box { background: #151d30; border: 1px solid rgba(56,189,248,0.3); border-radius: 14px; padding: 18px; width: 85%; max-width: 320px; text-align: center; }
-    .bottom-banner { position: fixed; bottom: 0; left: 0; width: 100%; height: 55px; background: rgba(11,15,25,0.95); border-top: 1px dashed rgba(56,189,248,0.3); display: flex; justify-content: center; align-items: center; z-index: 8000; overflow: hidden; }
+    .bottom-banner { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: rgba(11,15,25,0.95); border-top: 1px dashed rgba(56,189,248,0.3); display: flex; justify-content: center; align-items: center; z-index: 8000; overflow: hidden; }
   </style>
 </head>
 <body>
 
   <div class="container">
     <div class="header">
-      <h1>ADS MINER</h1>
-      <p>Watch Premium Ads & Mine TON Rewards</p>
+      <h1>Alta Ads Miner</h1>
+      <p>Watch High eCPM Ads & Mine Points</p>
     </div>
 
-    <div class="banner-card" id="topBanner"><span style="font-size:10px;color:var(--sub);">Loading Sponsor...</span></div>
+    <!-- Top Banner Slot -->
+    <div class="banner-card" id="topBanner">
+      <span style="font-size:10px;color:var(--sub);">Loading Sponsor Ad...</span>
+    </div>
 
-    <div class="card">
+    <div class="card" style="text-align: center;">
       <span style="font-size:11px;color:var(--sub);">TOTAL BALANCE</span>
-      <div class="balance"><span id="userBalance">0.00</span> Ads Point</div>
-      <p style="font-size:10px;color:var(--sub);">Reserve: 300 Pts | Min Cashout: 150 Pts</p>
-    </div>
-
-    <div class="card" style="border: 1px solid rgba(34,197,94,0.3);">
-      <h3 style="font-size:14px;margin-bottom:6px;">Withdraw (TON Wallet)</h3>
-      <input type="text" id="tgUsername" class="input" placeholder="@username or Name" />
-      <input type="text" id="tonWallet" class="input" placeholder="TON Wallet Address (EQD...)" />
-      <input type="number" id="withdrawPts" class="input" placeholder="150" min="150" />
-      <button id="saveWalletBtn" class="btn btn-warn" style="margin-bottom:6px;" onclick="saveWallet()"><span>Save Details</span><span>Save</span></button>
-      <button class="btn btn-green" id="withdrawBtn" onclick="processWithdrawal()"><span>Withdraw</span><span>Submit</span></button>
-    </div>
-
-    <div class="card" style="text-align:center;border:1px solid rgba(245,158,11,0.4);">
-      <h3 style="font-size:14px;color:var(--warn);margin-bottom:4px;">VIP Booster</h3>
-      <p style="font-size:10px;color:var(--sub);margin-bottom:8px;">Complete all ads to claim 24h VIP Booster (+100 Pts)</p>
-      <button id="vipBtn" class="btn btn-off" onclick="claimVip()" disabled><span id="vipBtnText">Complete All Ads First</span></button>
+      <div class="balance"><span id="userBalance">0.00</span> ALTA</div>
+      <p style="font-size:10px;color:var(--sub);">System: Operational</p>
     </div>
 
     <div style="display:flex;justify-content:space-between;align-items:center;margin:10px 0 6px;">
-      <h3 style="font-size:13px;">Daily Ads Flow</h3>
+      <h3 style="font-size:13px;">Daily High Revenue Flow</h3>
       <span style="font-size:11px;color:var(--blue);" id="cooldownNotice">Ready</span>
     </div>
 
     <div class="task-list">
       <div class="task-item">
-        <div><h4 style="font-size:12px;">Adsterra Direct Flow</h4><p style="font-size:9px;color:var(--sub);">High eCPM Stream 1</p></div>
+        <div><h4 style="font-size:12px;">High eCPM Stream 1</h4><p style="font-size:9px;color:var(--sub);">Adsterra + Fallbacks</p></div>
         <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t1Count">0/20</span><button class="btn btn-blue" id="btnTask1" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(1)">Start</button></div>
       </div>
       <div class="task-item">
-        <div><h4 style="font-size:12px;">HilltopAds Engine</h4><p style="font-size:9px;color:var(--sub);">Popunder Stream 2</p></div>
+        <div><h4 style="font-size:12px;">Smartlink Stream 2</h4><p style="font-size:9px;color:var(--sub);">HilltopAds + Fallbacks</p></div>
         <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t2Count">0/20</span><button class="btn btn-blue" id="btnTask2" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(2)">Start</button></div>
       </div>
       <div class="task-item">
-        <div><h4 style="font-size:12px;">RichAds Engine</h4><p style="font-size:9px;color:var(--sub);">Push Flow Stream 3</p></div>
+        <div><h4 style="font-size:12px;">Push Flow Stream 3</h4><p style="font-size:9px;color:var(--sub);">RichAds Premium Flow</p></div>
         <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t3Count">0/15</span><button class="btn btn-blue" id="btnTask3" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(3)">Start</button></div>
       </div>
       <div class="task-item">
-        <div><h4 style="font-size:12px;">Adsgram Telegram Native</h4><p style="font-size:9px;color:var(--sub);">Video Stream 4</p></div>
+        <div><h4 style="font-size:12px;">Adsgram Telegram Native</h4><p style="font-size:9px;color:var(--sub);">Video Reward Stream</p></div>
         <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t4Count">0/15</span><button class="btn btn-blue" id="btnTask4" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(4)">Start</button></div>
       </div>
     </div>
   </div>
 
-  <div class="bottom-banner" id="btmBanner"><span style="font-size:9px;color:var(--sub);">Loading Sponsor...</span></div>
+  <!-- Bottom Banner Slot -->
+  <div class="bottom-banner" id="btmBanner">
+    <span style="font-size:9px;color:var(--sub);">Loading Sponsor Ad...</span>
+  </div>
 
   <div class="modal" id="modal">
     <div class="modal-box">
@@ -115,41 +98,44 @@
   </div>
 
   <script>
-    // DISABLE INSPECTION & CONSOLE TOOLS
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.onkeydown = e => { if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74))) return false; };
-
+    // CONFIGURATION WITH HIGH REVENUE FALLBACK ADS LINKS
     const CONFIG = {
-      adsterra_direct: "https://asiafilm.org/4/0c97bc9c66375105d41880b754957475",
-      hilltop_smartlink: "https://plump-plastic.com/ZjLmfX",
+      // Primary Ad Networks & Backup Links when main ads run out
+      stream1_links: [
+        "https://asiafilm.org/4/0c97bc9c66375105d41880b754957475", // Primary Adsterra
+        "https://plump-plastic.com/ZjLmfX"                          // Backup Smartlink
+      ],
+      stream2_links: [
+        "https://plump-plastic.com/ZjLmfX",                         // Primary HilltopAds
+        "https://asiafilm.org/4/0c97bc9c66375105d41880b754957475"  // Backup Adsterra
+      ],
       reward_id: "51558",
       interstitial_id: "int-51559",
-      backend_api: "/api/withdraw",
       secret_key: "alta_ads_miner_secure_hash_2026"
     };
 
-    const tg = window.Telegram?.WebApp; 
+    const tg = window.Telegram?.WebApp;
     if(tg) {
       tg.expand();
       if (tg.enableClosingConfirmation) tg.enableClosingConfirmation();
     }
 
-    // SECURE ENCRYPTED STORAGE CONTROLLER (WITH NAN SAFEGUARD)
+    // SAFE STORAGE SYSTEM (PREVENTS RESET TO 0.00)
     const SEC = {
-      e: (v) => btoa(encodeURIComponent(v)),
-      d: (v) => { 
-        try { 
-          let raw = localStorage.getItem('_sec_b');
-          if(!raw) return 0;
-          let decoded = parseFloat(decodeURIComponent(atob(raw)));
-          return isNaN(decoded) ? 0 : decoded;
-        } catch { return 0; } 
+      getBal: () => {
+        try {
+          let raw = localStorage.getItem('alta_balance');
+          if (!raw) return 0.0;
+          let parsed = parseFloat(raw);
+          return isNaN(parsed) ? 0.0 : parsed;
+        } catch (e) {
+          return 0.0;
+        }
       },
-      getBal: () => SEC.d(),
-      setBal: (v) => {
-        let val = parseFloat(v);
-        if(isNaN(val)) val = 0;
-        localStorage.setItem('_sec_b', SEC.e(val.toString()));
+      setBal: (val) => {
+        let num = parseFloat(val);
+        if (isNaN(num)) num = 0.0;
+        localStorage.setItem('alta_balance', num.toFixed(2));
       }
     };
 
@@ -160,37 +146,25 @@
       t3: parseInt(localStorage.getItem('t3')) || 0,
       t4: parseInt(localStorage.getItem('t4')) || 0,
       cdEnd: parseInt(localStorage.getItem('cdEnd')) || 0,
-      resetTime: parseInt(localStorage.getItem('resetTime')) || 0,
-      vipCd: parseInt(localStorage.getItem('vipCd')) || 0,
-      wallet: localStorage.getItem('wallet') || "",
-      user: localStorage.getItem('user') || (tg?.initDataUnsafe?.user?.username ? `@${tg.initDataUnsafe.user.username}` : ""),
-      startTime: 0,
-      clickToken: ""
+      startTime: 0
     };
 
     const LIMITS = { t1: 20, t2: 20, t3: 15, t4: 15 };
     let isTaskActive = false;
 
-    function save() {
-      if(isNaN(state.balance)) state.balance = 0;
+    function saveState() {
       SEC.setBal(state.balance);
-      for(let k in state) { if (k !== 'balance') localStorage.setItem(k, state[k]); }
-    }
-
-    function checkReset() {
-      const now = Date.now();
-      const allDone = (state.t1>=LIMITS.t1 && state.t2>=LIMITS.t2 && state.t3>=LIMITS.t3 && state.t4>=LIMITS.t4);
-      if (allDone && state.resetTime === 0) { state.resetTime = now + (4*3600*1000); save(); }
-      if (state.resetTime > 0 && now >= state.resetTime) {
-        state.t1=0; state.t2=0; state.t3=0; state.t4=0; state.resetTime=0; save();
-      }
+      localStorage.setItem('t1', state.t1);
+      localStorage.setItem('t2', state.t2);
+      localStorage.setItem('t3', state.t3);
+      localStorage.setItem('t4', state.t4);
+      localStorage.setItem('cdEnd', state.cdEnd);
     }
 
     function updateUI() {
-      let safeBal = parseFloat(state.balance);
-      if(isNaN(safeBal)) { safeBal = 0; state.balance = 0; }
+      let currentBal = SEC.getBal();
+      document.getElementById('userBalance').innerText = currentBal.toFixed(2);
       
-      document.getElementById('userBalance').innerText = safeBal.toFixed(2);
       document.getElementById('t1Count').innerText = `${state.t1}/${LIMITS.t1}`;
       document.getElementById('t2Count').innerText = `${state.t2}/${LIMITS.t2}`;
       document.getElementById('t3Count').innerText = `${state.t3}/${LIMITS.t3}`;
@@ -198,37 +172,25 @@
 
       const now = Date.now();
       const notice = document.getElementById('cooldownNotice');
-      if (state.resetTime > now) {
-        const left = Math.ceil((state.resetTime - now)/1000);
-        notice.innerText = `4h Lock (${Math.floor(left/3600)}h ${Math.floor((left%3600)/60)}m)`;
-        notice.style.color = "var(--warn)"; toggleBtns(true);
-      } else if (now < state.cdEnd) {
-        notice.innerText = `Next in ${Math.ceil((state.cdEnd - now)/1000)}s`;
+      if (now < state.cdEnd) {
+        notice.innerText = `Wait ${Math.ceil((state.cdEnd - now)/1000)}s`;
         notice.style.color = "var(--warn)";
+        toggleBtns(true);
       } else {
-        notice.innerText = "Ready"; notice.style.color = "var(--blue)"; toggleBtns(false);
-      }
-
-      const vipBtn = document.getElementById('vipBtn');
-      const vipBtnText = document.getElementById('vipBtnText');
-      if (state.vipCd > now) {
-        vipBtn.className = "btn btn-off"; vipBtn.disabled = true;
-        const left = Math.ceil((state.vipCd - now)/1000);
-        vipBtnText.innerText = `24h VIP Lock (${Math.floor(left/3600)}h ${Math.floor((left%3600)/60)}m)`;
-      } else if (state.t1>=LIMITS.t1 && state.t2>=LIMITS.t2 && state.t3>=LIMITS.t3 && state.t4>=LIMITS.t4) {
-        vipBtn.className = "btn btn-warn"; vipBtn.disabled = false;
-        vipBtnText.innerText = "Claim 24h VIP Booster (+100 Pts)";
-      } else {
-        vipBtn.className = "btn btn-off"; vipBtn.disabled = true;
-        vipBtnText.innerText = "Complete All Ads First";
+        notice.innerText = "Ready";
+        notice.style.color = "var(--blue)";
+        toggleBtns(false);
       }
     }
 
     function toggleBtns(disabled) {
-      for(let i=1;i<=4;i++) {
+      for(let i=1; i<=4; i++) {
         const btn = document.getElementById(`btnTask${i}`);
-        if(disabled || state[`t${i}`]>=LIMITS[`t${i}`]) { btn.classList.add('btn-off'); }
-        else { btn.classList.remove('btn-off'); }
+        if(disabled || state[`t${i}`] >= LIMITS[`t${i}`]) {
+          btn.classList.add('btn-off');
+        } else {
+          btn.classList.remove('btn-off');
+        }
       }
     }
 
@@ -238,9 +200,11 @@
       document.getElementById('mBtn').style.display = showBtn ? 'block' : 'none';
       document.getElementById('modal').style.display = 'flex';
     }
-    function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
-    // EXTERNAL BROWSER LINK OPENER FIX
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+
     function openExternalLink(url) {
       if (tg && tg.openLink) {
         tg.openLink(url, { try_instant_view: false });
@@ -249,124 +213,82 @@
       }
     }
 
-    // ANTI-BOT & ANTI-SPEED TASK ENGINE
     function startTask(num) {
       const now = Date.now();
-      if (state.resetTime > now || now < state.cdEnd || isTaskActive) return;
+      if (now < state.cdEnd || isTaskActive) return;
 
       isTaskActive = true;
       state.startTime = now;
-      state.clickToken = CryptoJS.SHA256(`${now}_${num}_${CONFIG.secret_key}`).toString();
 
-      let targetUrl = (num === 2) ? CONFIG.hilltop_smartlink : CONFIG.adsterra_direct;
+      // Select Ad Link with Fallback Mechanism
+      let targetUrl = "";
+      if (num === 1) {
+        targetUrl = CONFIG.stream1_links[state.t1 % CONFIG.stream1_links.length];
+      } else if (num === 2) {
+        targetUrl = CONFIG.stream2_links[state.t2 % CONFIG.stream2_links.length];
+      } else {
+        targetUrl = CONFIG.stream1_links[0];
+      }
 
-      // OPEN AD IN EXTERNAL BROWSER SAFELY
       openExternalLink(targetUrl);
-
-      showModal("Processing Ad", "Please wait 15 seconds while ad completes...", false);
+      showModal("Processing Ad Flow", "Please wait 15 seconds...", false);
 
       let timer = 15;
       const interval = setInterval(() => {
         timer--;
         if (timer > 0) {
-          document.getElementById('mMsg').innerText = `Please wait ${timer} seconds while ad completes...`;
+          document.getElementById('mMsg').innerText = `Please wait ${timer} seconds...`;
         } else {
           clearInterval(interval);
-
           if (window.Adsgram) {
             const blockId = (num === 4) ? CONFIG.reward_id : CONFIG.interstitial_id;
-            window.Adsgram.init({ blockId }).show().then(()=>reward(num)).catch(()=>reward(num));
-          } else { reward(num); }
+            window.Adsgram.init({ blockId }).show().then(()=>rewardUser(num)).catch(()=>rewardUser(num));
+          } else {
+            rewardUser(num);
+          }
         }
       }, 1000);
     }
 
-    function reward(num) {
-      const elapsed = (Date.now() - state.startTime)/1000;
-      if (elapsed < 14) {
-        isTaskActive = false; showModal("Security Violation", "Speed clicking detected. Task rejected."); return;
-      }
+    function rewardUser(num) {
       state[`t${num}`]++;
-      const pts = parseFloat((Math.random()*(1.2-0.3)+0.3).toFixed(2));
-      state.balance = (parseFloat(state.balance) || 0) + pts;
+      let pts = 0.5; // Fixed 0.5 ALTA or random reward
+      if (num === 4) pts = 1.0;
+
+      state.balance = SEC.getBal() + pts;
       state.cdEnd = Date.now() + 15000;
-      checkReset(); save(); updateUI();
+
+      saveState();
+      updateUI();
       isTaskActive = false;
-      showModal("Success", `+${pts} Ads Point added!`);
+      showModal("Success", `+${pts} ALTA Points added to your balance!`);
     }
 
-    function claimVip() {
-      state.balance = (parseFloat(state.balance) || 0) + 100;
-      state.vipCd = Date.now() + (24*3600*1000);
-      save(); updateUI();
-      showModal("VIP Claimed!", "100 Points added. VIP Booster locked for 24 hours.");
-    }
+    // RELIABLE BANNER INJECTION FOR HIGH REVENUE IMPRESSIONS
+    function renderBanner(containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
 
-    function saveWallet() {
-      const u = document.getElementById('tgUsername').value.trim();
-      const w = document.getElementById('tonWallet').value.trim();
-      if (!u || !/^(EQ|UQ)[a-zA-Z0-9_-]{46}$/.test(w)) { showModal("Error", "Enter valid Username and TON Wallet (EQ/UQ)."); return; }
-      state.user = u; state.wallet = w; save();
-      document.getElementById('tgUsername').disabled = true;
-      document.getElementById('tonWallet').disabled = true;
-      document.getElementById('saveWalletBtn').style.display = 'none';
-      showModal("Saved", "Wallet details locked.");
-    }
-
-    async function processWithdrawal() {
-      const pts = parseFloat(document.getElementById('withdrawPts').value);
-      if (!state.wallet || isNaN(pts) || pts < 150) { showModal("Error", "Min cashout is 150 Points with saved wallet."); return; }
-      if ((state.balance - pts) < 300) { showModal("Error", "300 Points reserve fund must remain in balance."); return; }
-
-      const timestamp = Date.now();
-      const signature = CryptoJS.HmacSHA256(`${state.user}_${pts}_${timestamp}`, CONFIG.secret_key).toString();
-
-      const withdrawBtn = document.getElementById('withdrawBtn');
-      withdrawBtn.disabled = true;
-      showModal("Processing", "Submitting secure withdrawal request...", false);
-
-      try {
-        const response = await fetch(CONFIG.backend_api, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            username: state.user,
-            wallet: state.wallet,
-            points: pts,
-            amountUsd: (pts * 0.002).toFixed(2),
-            timestamp: timestamp,
-            signature: signature
-          })
-        });
-
-        const resData = await response.json();
-        if (resData.success) {
-          state.balance -= pts; save(); updateUI();
-          showModal("Submitted", "Withdrawal requested & logged to history channel!");
-        } else {
-          showModal("Error", resData.message || "Failed to submit request.");
-        }
-      } catch (err) {
-        showModal("Error", "Network error connecting to Backend API.");
-      } finally {
-        withdrawBtn.disabled = false;
-      }
-    }
-
-    // 20S AUTO-REFRESH BANNERS
-    function renderIframe(id) {
-      const el = document.getElementById(id); if (!el) return;
-      el.innerHTML = '';
+      container.innerHTML = '';
       const iframe = document.createElement('iframe');
-      iframe.style.width = '320px'; iframe.style.height = '50px'; iframe.style.border = '0';
-      el.appendChild(iframe);
+      iframe.style.width = '320px';
+      iframe.style.height = '50px';
+      iframe.style.border = '0';
+      iframe.style.overflow = 'hidden';
+      container.appendChild(iframe);
 
       const doc = iframe.contentWindow.document;
       doc.open();
       doc.write(`
-        <body style="margin:0;padding:0;display:flex;justify-content:center;align-items:center;">
+        <body style="margin:0;padding:0;display:flex;justify-content:center;align-items:center;background:transparent;">
           <script type="text/javascript">
-            atOptions = { 'key' : '325216e9af97d6458aab9e4e7a74d73b', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+            atOptions = {
+              'key' : '325216e9af97d6458aab9e4e7a74d73b',
+              'format' : 'iframe',
+              'height' : 50,
+              'width' : 320,
+              'params' : {}
+            };
           <\/script>
           <script type="text/javascript" src="https://afders.org/1/325216e9af97d6458aab9e4e7a74d73b"><\/script>
         </body>
@@ -374,23 +296,20 @@
       doc.close();
     }
 
-    function loadBanners() {
-      renderIframe('topBanner');
-      renderIframe('btmBanner');
-      setInterval(() => { renderIframe('topBanner'); renderIframe('btmBanner'); }, 20000);
+    function initBanners() {
+      renderBanner('topBanner');
+      renderBanner('btmBanner');
+      // Auto-Refresh Banners every 20 seconds to generate maximum Impressions
+      setInterval(() => {
+        renderBanner('topBanner');
+        renderBanner('btmBanner');
+      }, 20000);
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-      if (state.wallet) {
-        document.getElementById('tgUsername').value = state.user;
-        document.getElementById('tonWallet').value = state.wallet;
-        document.getElementById('tgUsername').disabled = true;
-        document.getElementById('tonWallet').disabled = true;
-        document.getElementById('saveWalletBtn').style.display = 'none';
-      }
-      checkReset(); updateUI();
-      setInterval(() => { checkReset(); updateUI(); }, 1000);
-      setTimeout(loadBanners, 1000);
+      updateUI();
+      initBanners();
+      setInterval(updateUI, 1000);
     });
   </script>
 </body>
