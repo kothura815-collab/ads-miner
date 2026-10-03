@@ -9,165 +9,35 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
-  <!-- RichAds Network Scripts -->
+  <!-- CryptoJS Library for Security -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+  <!-- External Ad Network Scripts -->
   <script src="https://richinfo.co/richpartners/in-page/js/richads-ob.js?pubid=1021768&siteid=407471" async></script>
   <script type="module" src="https://richinfo.co/richpartners/push/js/rp-cl-ob.js?pubid=1021768&siteid=407470&niche=33" async data-cfasync="false"></script>
 
-  <!-- Adsterra Popunder / High eCPM Script Injection -->
-  <script data-cfasync="false" src="https://bicea.org/14/46ec32efbfe5ecbef2bb3c462cc4c9ba" async></script>
-
   <style>
-    :root { 
-      --bg: #0b0f19; 
-      --card: #151d30; 
-      --blue: #38bdf8; 
-      --green: #22c55e; 
-      --warn: #f59e0b; 
-      --text: #f8fafc; 
-      --sub: #94a3b8; 
-    }
-    * { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-      user-select: none; 
-      -webkit-user-select: none; 
-    }
-    body { 
-      background: var(--bg); 
-      color: var(--text); 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      min-height: 100vh; 
-      padding-bottom: 75px; 
-    }
-    .container { 
-      width: 100%; 
-      max-width: 480px; 
-      padding: 14px; 
-    }
-    .header { 
-      text-align: center; 
-      padding: 6px 0 12px; 
-    }
-    .header h1 { 
-      font-size: 26px; 
-      font-weight: 800; 
-      color: var(--blue); 
-      letter-spacing: 1.5px; 
-      text-transform: uppercase; 
-    }
-    .header p { 
-      font-size: 11px; 
-      color: var(--sub); 
-      margin-top: 2px; 
-    }
-    .banner-card { 
-      background: rgba(255,255,255,0.02); 
-      border: 1px dashed rgba(56,189,248,0.3); 
-      border-radius: 10px; 
-      padding: 4px; 
-      text-align: center; 
-      margin-bottom: 12px; 
-      min-height: 60px; 
-      display: flex; 
-      justify-content: center; 
-      align-items: center; 
-      overflow: hidden; 
-    }
-    .card { 
-      background: var(--card); 
-      border-radius: 12px; 
-      padding: 14px; 
-      margin-bottom: 12px; 
-      border: 1px solid rgba(255,255,255,0.05); 
-    }
-    .balance { 
-      font-size: 32px; 
-      font-weight: 800; 
-      color: var(--blue); 
-      margin: 2px 0; 
-    }
-    .btn { 
-      width: 100%; 
-      padding: 10px; 
-      border: none; 
-      border-radius: 8px; 
-      font-weight: bold; 
-      font-size: 13px; 
-      cursor: pointer; 
-      display: flex; 
-      justify-content: space-between; 
-    }
-    .btn-blue { 
-      background: var(--blue); 
-      color: #0b0f19; 
-    }
-    .btn-off { 
-      background: #1e293b; 
-      color: #64748b; 
-      cursor: not-allowed; 
-      pointer-events: none; 
-    }
-    .task-list { 
-      display: flex; 
-      flex-direction: column; 
-      gap: 8px; 
-    }
-    .task-item { 
-      background: var(--card); 
-      border-radius: 10px; 
-      padding: 10px 12px; 
-      display: flex; 
-      align-items: center; 
-      justify-content: space-between; 
-    }
-    .counter { 
-      font-size: 11px; 
-      font-weight: bold; 
-      color: var(--blue); 
-      background: rgba(56,189,248,0.1); 
-      padding: 3px 6px; 
-      border-radius: 4px; 
-    }
-    .modal { 
-      position: fixed; 
-      top: 0; 
-      left: 0; 
-      width: 100%; 
-      height: 100%; 
-      background: rgba(11,15,25,0.92); 
-      backdrop-filter: blur(4px); 
-      display: none; 
-      justify-content: center; 
-      align-items: center; 
-      z-index: 9999; 
-    }
-    .modal-box { 
-      background: #151d30; 
-      border: 1px solid rgba(56,189,248,0.3); 
-      border-radius: 14px; 
-      padding: 18px; 
-      width: 85%; 
-      max-width: 320px; 
-      text-align: center; 
-    }
-    .bottom-banner { 
-      position: fixed; 
-      bottom: 0; 
-      left: 0; 
-      width: 100%; 
-      height: 60px; 
-      background: rgba(11,15,25,0.95); 
-      border-top: 1px dashed rgba(56,189,248,0.3); 
-      display: flex; 
-      justify-content: center; 
-      align-items: center; 
-      z-index: 8000; 
-      overflow: hidden; 
-    }
+    :root { --bg: #0b0f19; --card: #151d30; --blue: #38bdf8; --green: #22c55e; --warn: #f59e0b; --text: #f8fafc; --sub: #94a3b8; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; user-select: none; }
+    body { background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding-bottom: 75px; }
+    .container { width: 100%; max-width: 480px; padding: 14px; }
+    .header { text-align: center; padding: 6px 0 12px; }
+    .header h1 { font-size: 26px; font-weight: 800; color: var(--blue); letter-spacing: 1.5px; text-transform: uppercase; }
+    .header p { font-size: 11px; color: var(--sub); margin-top: 2px; }
+    .banner-card { background: rgba(255,255,255,0.02); border: 1px dashed rgba(56,189,248,0.3); border-radius: 10px; padding: 4px; text-align: center; margin-bottom: 12px; min-height: 60px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+    .card { background: var(--card); border-radius: 12px; padding: 14px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); }
+    .balance { font-size: 32px; font-weight: 800; color: var(--blue); margin: 2px 0; }
+    .btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; display: flex; justify-content: space-between; }
+    .btn-blue { background: var(--blue); color: #0b0f19; }
+    .btn-green { background: var(--green); color: #fff; }
+    .btn-warn { background: var(--warn); color: #000; }
+    .btn-off { background: #1e293b; color: #64748b; cursor: not-allowed; pointer-events: none; }
+    .task-list { display: flex; flex-direction: column; gap: 8px; }
+    .task-item { background: var(--card); border-radius: 10px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; }
+    .counter { font-size: 11px; font-weight: bold; color: var(--blue); background: rgba(56,189,248,0.1); padding: 3px 6px; border-radius: 4px; }
+    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11,15,25,0.92); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 9999; }
+    .modal-box { background: #151d30; border: 1px solid rgba(56,189,248,0.3); border-radius: 14px; padding: 18px; width: 85%; max-width: 320px; text-align: center; }
+    .bottom-banner { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: rgba(11,15,25,0.95); border-top: 1px dashed rgba(56,189,248,0.3); display: flex; justify-content: center; align-items: center; z-index: 8000; overflow: hidden; }
   </style>
 </head>
 <body>
@@ -186,7 +56,7 @@
     <div class="card" style="text-align: center;">
       <span style="font-size:11px;color:var(--sub);">TOTAL BALANCE</span>
       <div class="balance"><span id="userBalance">0.00</span> ALTA</div>
-      <p style="font-size:10px;color:var(--sub);">System Status: Secure Operational</p>
+      <p style="font-size:10px;color:var(--sub);">System: Operational</p>
     </div>
 
     <div style="display:flex;justify-content:space-between;align-items:center;margin:10px 0 6px;">
@@ -196,20 +66,20 @@
 
     <div class="task-list">
       <div class="task-item">
-        <div><h4 style="font-size:12px;">High eCPM Stream 1</h4><p style="font-size:9px;color:var(--sub);">Adsterra Direct Links Rotation</p></div>
-        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t1Count">0/20</span><button class="btn btn-blue" id="btnTask1" style="padding:5px 8px;width:auto;font-size:11px;">Start</button></div>
+        <div><h4 style="font-size:12px;">High eCPM Stream 1</h4><p style="font-size:9px;color:var(--sub);">Adsterra + Fallbacks</p></div>
+        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t1Count">0/20</span><button class="btn btn-blue" id="btnTask1" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(1)">Start</button></div>
       </div>
       <div class="task-item">
-        <div><h4 style="font-size:12px;">Smartlink Stream 2</h4><p style="font-size:9px;color:var(--sub);">HilltopAds Smartlink</p></div>
-        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t2Count">0/20</span><button class="btn btn-blue" id="btnTask2" style="padding:5px 8px;width:auto;font-size:11px;">Start</button></div>
+        <div><h4 style="font-size:12px;">Smartlink Stream 2</h4><p style="font-size:9px;color:var(--sub);">HilltopAds + Fallbacks</p></div>
+        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t2Count">0/20</span><button class="btn btn-blue" id="btnTask2" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(2)">Start</button></div>
       </div>
       <div class="task-item">
         <div><h4 style="font-size:12px;">Push Flow Stream 3</h4><p style="font-size:9px;color:var(--sub);">RichAds Premium Flow</p></div>
-        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t3Count">0/15</span><button class="btn btn-blue" id="btnTask3" style="padding:5px 8px;width:auto;font-size:11px;">Start</button></div>
+        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t3Count">0/15</span><button class="btn btn-blue" id="btnTask3" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(3)">Start</button></div>
       </div>
       <div class="task-item">
-        <div><h4 style="font-size:12px;">Adsgram Task Engine</h4><p style="font-size:9px;color:var(--sub);">Block 51560 / 51558</p></div>
-        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t4Count">0/15</span><button class="btn btn-blue" id="btnTask4" style="padding:5px 8px;width:auto;font-size:11px;">Start</button></div>
+        <div><h4 style="font-size:12px;">Adsgram Telegram Native</h4><p style="font-size:9px;color:var(--sub);">Video Reward Stream</p></div>
+        <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t4Count">0/15</span><button class="btn btn-blue" id="btnTask4" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(4)">Start</button></div>
       </div>
     </div>
   </div>
@@ -223,274 +93,224 @@
     <div class="modal-box">
       <div style="font-size:15px;font-weight:bold;color:var(--blue);margin-bottom:6px;" id="mTitle">Processing</div>
       <div style="font-size:12px;color:var(--text);margin-bottom:14px;" id="mMsg">Please wait...</div>
-      <button class="btn btn-blue" id="mBtn" style="display:none;">OK</button>
+      <button class="btn btn-blue" id="mBtn" style="display:none;" onclick="closeModal()">OK</button>
     </div>
   </div>
 
-  <!-- Secure Application Logic & Obfuscated Environment -->
   <script>
-    (function () {
-      'use strict';
+    // CONFIGURATION WITH HIGH REVENUE FALLBACK ADS LINKS
+    const CONFIG = {
+      // Primary Ad Networks & Backup Links when main ads run out
+      stream1_links: [
+        "https://asiafilm.org/4/0c97bc9c66375105d41880b754957475", // Primary Adsterra
+        "https://plump-plastic.com/ZjLmfX"                          // Backup Smartlink
+      ],
+      stream2_links: [
+        "https://plump-plastic.com/ZjLmfX",                         // Primary HilltopAds
+        "https://asiafilm.org/4/0c97bc9c66375105d41880b754957475"  // Backup Adsterra
+      ],
+      reward_id: "51558",
+      interstitial_id: "int-51559",
+      secret_key: "alta_ads_miner_secure_hash_2026"
+    };
 
-      // Anti-Debugging / Inspection Safeguard
-      setInterval(function () {
-        const startTime = performance.now();
-        debugger;
-        const endTime = performance.now();
-        if (endTime - startTime > 100) {
-          document.body.innerHTML = '<div style="color:red;text-align:center;padding-top:50px;">Developer Tools Detected. Access Denied.</div>';
+    const tg = window.Telegram?.WebApp;
+    if(tg) {
+      tg.expand();
+      if (tg.enableClosingConfirmation) tg.enableClosingConfirmation();
+    }
+
+    // SAFE STORAGE SYSTEM (PREVENTS RESET TO 0.00)
+    const SEC = {
+      getBal: () => {
+        try {
+          let raw = localStorage.getItem('alta_balance');
+          if (!raw) return 0.0;
+          let parsed = parseFloat(raw);
+          return isNaN(parsed) ? 0.0 : parsed;
+        } catch (e) {
+          return 0.0;
         }
-      }, 2000);
-
-      const CONFIG = Object.freeze({
-        adsterra_links: [
-          "https://asiafilm.org/4/0c97bc9c66375105d41880b754957475",
-          "https://arwf.org/4/217fba5c43a13211147abc040716814d"
-        ],
-        hilltop_link: "https://plump-plastic.com/ZjLmfX",
-        task_block_id: "51560",
-        reward_id: "51558",
-        interstitial_id: "int-51559",
-        banner_script: "https://afders.org/1/325216e9af97d6458aab9e4e7a74d73b",
-        salt_key: "AltaSecureKey_9988_X"
-      });
-
-      const tg = window.Telegram?.WebApp;
-      if (tg) {
-        tg.expand();
-        if (tg.enableClosingConfirmation) tg.enableClosingConfirmation();
+      },
+      setBal: (val) => {
+        let num = parseFloat(val);
+        if (isNaN(num)) num = 0.0;
+        localStorage.setItem('alta_balance', num.toFixed(2));
       }
+    };
 
-      // Encrypted Local Storage Management
-      const CRYPTO = {
-        hash: function (str) {
-          let hash = 0;
-          for (let i = 0; i < str.length; i++) {
-            hash = (hash << 5) - hash + str.charCodeAt(i);
-            hash |= 0;
-          }
-          return hash.toString(16);
-        },
-        save: function (data) {
-          try {
-            const raw = JSON.stringify(data);
-            const signature = CRYPTO.hash(raw + CONFIG.salt_key);
-            const payload = btoa(encodeURIComponent(raw));
-            localStorage.setItem('_alta_sys_p', payload);
-            localStorage.setItem('_alta_sys_s', signature);
-          } catch (e) {}
-        },
-        load: function () {
-          try {
-            const payload = localStorage.getItem('_alta_sys_p');
-            const signature = localStorage.getItem('_alta_sys_s');
-            if (!payload || !signature) return null;
+    let state = {
+      balance: SEC.getBal(),
+      t1: parseInt(localStorage.getItem('t1')) || 0,
+      t2: parseInt(localStorage.getItem('t2')) || 0,
+      t3: parseInt(localStorage.getItem('t3')) || 0,
+      t4: parseInt(localStorage.getItem('t4')) || 0,
+      cdEnd: parseInt(localStorage.getItem('cdEnd')) || 0,
+      startTime: 0
+    };
 
-            const raw = decodeURIComponent(atob(payload));
-            const expectedSig = CRYPTO.hash(raw + CONFIG.salt_key);
-            if (signature !== expectedSig) {
-              console.warn("Tampering detected. Resetting local state.");
-              localStorage.clear();
-              return null;
-            }
-            return JSON.parse(raw);
-          } catch (e) {
-            return null;
-          }
-        }
-      };
+    const LIMITS = { t1: 20, t2: 20, t3: 15, t4: 15 };
+    let isTaskActive = false;
 
-      const LIMITS = { t1: 20, t2: 20, t3: 15, t4: 15 };
-      let defaultState = { balance: 0.0, t1: 0, t2: 0, t3: 0, t4: 0, cdEnd: 0 };
-      let state = CRYPTO.load() || defaultState;
+    function saveState() {
+      SEC.setBal(state.balance);
+      localStorage.setItem('t1', state.t1);
+      localStorage.setItem('t2', state.t2);
+      localStorage.setItem('t3', state.t3);
+      localStorage.setItem('t4', state.t4);
+      localStorage.setItem('cdEnd', state.cdEnd);
+    }
 
-      let isTaskActive = false;
-      let taskExecutionTime = 0;
+    function updateUI() {
+      let currentBal = SEC.getBal();
+      document.getElementById('userBalance').innerText = currentBal.toFixed(2);
+      
+      document.getElementById('t1Count').innerText = `${state.t1}/${LIMITS.t1}`;
+      document.getElementById('t2Count').innerText = `${state.t2}/${LIMITS.t2}`;
+      document.getElementById('t3Count').innerText = `${state.t3}/${LIMITS.t3}`;
+      document.getElementById('t4Count').innerText = `${state.t4}/${LIMITS.t4}`;
 
-      function persist() {
-        CRYPTO.save(state);
+      const now = Date.now();
+      const notice = document.getElementById('cooldownNotice');
+      if (now < state.cdEnd) {
+        notice.innerText = `Wait ${Math.ceil((state.cdEnd - now)/1000)}s`;
+        notice.style.color = "var(--warn)";
+        toggleBtns(true);
+      } else {
+        notice.innerText = "Ready";
+        notice.style.color = "var(--blue)";
+        toggleBtns(false);
       }
+    }
 
-      function updateUI() {
-        document.getElementById('userBalance').innerText = state.balance.toFixed(2);
-        document.getElementById('t1Count').innerText = `${state.t1}/${LIMITS.t1}`;
-        document.getElementById('t2Count').innerText = `${state.t2}/${LIMITS.t2}`;
-        document.getElementById('t3Count').innerText = `${state.t3}/${LIMITS.t3}`;
-        document.getElementById('t4Count').innerText = `${state.t4}/${LIMITS.t4}`;
-
-        const now = Date.now();
-        const notice = document.getElementById('cooldownNotice');
-        if (now < state.cdEnd) {
-          notice.innerText = `Wait ${Math.ceil((state.cdEnd - now) / 1000)}s`;
-          notice.style.color = "var(--warn)";
-          toggleBtns(true);
+    function toggleBtns(disabled) {
+      for(let i=1; i<=4; i++) {
+        const btn = document.getElementById(`btnTask${i}`);
+        if(disabled || state[`t${i}`] >= LIMITS[`t${i}`]) {
+          btn.classList.add('btn-off');
         } else {
-          notice.innerText = "Ready";
-          notice.style.color = "var(--blue)";
-          toggleBtns(false);
+          btn.classList.remove('btn-off');
         }
       }
+    }
 
-      function toggleBtns(disabled) {
-        for (let i = 1; i <= 4; i++) {
-          const btn = document.getElementById(`btnTask${i}`);
-          if (btn) {
-            if (disabled || state[`t${i}`] >= LIMITS[`t${i}`]) {
-              btn.classList.add('btn-off');
-            } else {
-              btn.classList.remove('btn-off');
-            }
-          }
-        }
+    function showModal(title, msg, showBtn=true) {
+      document.getElementById('mTitle').innerText = title;
+      document.getElementById('mMsg').innerText = msg;
+      document.getElementById('mBtn').style.display = showBtn ? 'block' : 'none';
+      document.getElementById('modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+
+    function openExternalLink(url) {
+      if (tg && tg.openLink) {
+        tg.openLink(url, { try_instant_view: false });
+      } else {
+        window.open(url, '_blank');
+      }
+    }
+
+    function startTask(num) {
+      const now = Date.now();
+      if (now < state.cdEnd || isTaskActive) return;
+
+      isTaskActive = true;
+      state.startTime = now;
+
+      // Select Ad Link with Fallback Mechanism
+      let targetUrl = "";
+      if (num === 1) {
+        targetUrl = CONFIG.stream1_links[state.t1 % CONFIG.stream1_links.length];
+      } else if (num === 2) {
+        targetUrl = CONFIG.stream2_links[state.t2 % CONFIG.stream2_links.length];
+      } else {
+        targetUrl = CONFIG.stream1_links[0];
       }
 
-      function showModal(title, msg, showBtn) {
-        document.getElementById('mTitle').innerText = title;
-        document.getElementById('mMsg').innerText = msg;
-        document.getElementById('mBtn').style.display = showBtn ? 'block' : 'none';
-        document.getElementById('modal').style.display = 'flex';
-      }
+      openExternalLink(targetUrl);
+      showModal("Processing Ad Flow", "Please wait 15 seconds...", false);
 
-      function closeModal() {
-        document.getElementById('modal').style.display = 'none';
-      }
-
-      document.getElementById('mBtn').addEventListener('click', closeModal);
-
-      function openExternalLink(url) {
-        if (tg && tg.openLink) {
-          tg.openLink(url, { try_instant_view: false });
+      let timer = 15;
+      const interval = setInterval(() => {
+        timer--;
+        if (timer > 0) {
+          document.getElementById('mMsg').innerText = `Please wait ${timer} seconds...`;
         } else {
-          window.open(url, '_blank');
-        }
-      }
-
-      function startTask(num) {
-        const now = Date.now();
-        if (now < state.cdEnd || isTaskActive || state[`t${num}`] >= LIMITS[`t${num}`]) return;
-
-        isTaskActive = true;
-        taskExecutionTime = now;
-
-        if (num === 4) {
+          clearInterval(interval);
           if (window.Adsgram) {
-            window.Adsgram.init({ blockId: CONFIG.task_block_id }).show()
-              .then(() => rewardUser(4))
-              .catch(() => {
-                window.Adsgram.init({ blockId: CONFIG.reward_id }).show()
-                  .then(() => rewardUser(4))
-                  .catch(() => rewardUser(4));
-              });
+            const blockId = (num === 4) ? CONFIG.reward_id : CONFIG.interstitial_id;
+            window.Adsgram.init({ blockId }).show().then(()=>rewardUser(num)).catch(()=>rewardUser(num));
           } else {
-            rewardUser(4);
+            rewardUser(num);
           }
-          return;
         }
+      }, 1000);
+    }
 
-        let targetUrl = "";
-        if (num === 1) {
-          targetUrl = CONFIG.adsterra_links[state.t1 % CONFIG.adsterra_links.length];
-        } else if (num === 2) {
-          targetUrl = CONFIG.hilltop_link;
-        } else if (num === 3) {
-          targetUrl = CONFIG.adsterra_links[state.t3 % CONFIG.adsterra_links.length];
-        }
+    function rewardUser(num) {
+      state[`t${num}`]++;
+      let pts = 0.5; // Fixed 0.5 ALTA or random reward
+      if (num === 4) pts = 1.0;
 
-        openExternalLink(targetUrl);
-        showModal("Processing Ad Flow", "Please wait 15 seconds...", false);
+      state.balance = SEC.getBal() + pts;
+      state.cdEnd = Date.now() + 15000;
 
-        let timer = 15;
-        const interval = setInterval(() => {
-          timer--;
-          if (timer > 0) {
-            document.getElementById('mMsg').innerText = `Please wait ${timer} seconds...`;
-          } else {
-            clearInterval(interval);
-            
-            // Validate minimum elapsed time against fast-click bots
-            if (Date.now() - taskExecutionTime < 14000) {
-              isTaskActive = false;
-              showModal("Validation Error", "Task failed due to invalid response time.", true);
-              return;
-            }
+      saveState();
+      updateUI();
+      isTaskActive = false;
+      showModal("Success", `+${pts} ALTA Points added to your balance!`);
+    }
 
-            if (window.Adsgram) {
-              window.Adsgram.init({ blockId: CONFIG.interstitial_id }).show()
-                .then(() => rewardUser(num))
-                .catch(() => rewardUser(num));
-            } else {
-              rewardUser(num);
-            }
-          }
-        }, 1000);
-      }
+    // RELIABLE BANNER INJECTION FOR HIGH REVENUE IMPRESSIONS
+    function renderBanner(containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
 
-      function rewardUser(num) {
-        state[`t${num}`]++;
-        let pts = (num === 4) ? 1.0 : 0.5;
+      container.innerHTML = '';
+      const iframe = document.createElement('iframe');
+      iframe.style.width = '320px';
+      iframe.style.height = '50px';
+      iframe.style.border = '0';
+      iframe.style.overflow = 'hidden';
+      container.appendChild(iframe);
 
-        state.balance += pts;
-        state.cdEnd = Date.now() + 15000;
+      const doc = iframe.contentWindow.document;
+      doc.open();
+      doc.write(`
+        <body style="margin:0;padding:0;display:flex;justify-content:center;align-items:center;background:transparent;">
+          <script type="text/javascript">
+            atOptions = {
+              'key' : '325216e9af97d6458aab9e4e7a74d73b',
+              'format' : 'iframe',
+              'height' : 50,
+              'width' : 320,
+              'params' : {}
+            };
+          <\/script>
+          <script type="text/javascript" src="https://afders.org/1/325216e9af97d6458aab9e4e7a74d73b"><\/script>
+        </body>
+      `);
+      doc.close();
+    }
 
-        persist();
-        updateUI();
-        isTaskActive = false;
-        showModal("Success", `+${pts.toFixed(2)} ALTA Points added to your balance!`, true);
-      }
-
-      function renderBanner(containerId) {
-        const container = document.getElementById(containerId);
-        if (!container) return;
-
-        container.innerHTML = '';
-        const iframe = document.createElement('iframe');
-        iframe.style.width = '320px';
-        iframe.style.height = '50px';
-        iframe.style.border = '0';
-        iframe.style.overflow = 'hidden';
-        container.appendChild(iframe);
-
-        const doc = iframe.contentWindow.document;
-        doc.open();
-        doc.write(`
-          <body style="margin:0;padding:0;display:flex;justify-content:center;align-items:center;background:transparent;">
-            <script type="text/javascript">
-              atOptions = {
-                'key' : '325216e9af97d6458aab9e4e7a74d73b',
-                'format' : 'iframe',
-                'height' : 50,
-                'width' : 320,
-                'params' : {}
-              };
-            <\/script>
-            <script type="text/javascript" src="${CONFIG.banner_script}"><\/script>
-          </body>
-        `);
-        doc.close();
-      }
-
-      function initBanners() {
+    function initBanners() {
+      renderBanner('topBanner');
+      renderBanner('btmBanner');
+      // Auto-Refresh Banners every 20 seconds to generate maximum Impressions
+      setInterval(() => {
         renderBanner('topBanner');
         renderBanner('btmBanner');
-        setInterval(() => {
-          renderBanner('topBanner');
-          renderBanner('btmBanner');
-        }, 20000);
-      }
+      }, 20000);
+    }
 
-      // Attach Click Listeners
-      document.getElementById('btnTask1').addEventListener('click', () => startTask(1));
-      document.getElementById('btnTask2').addEventListener('click', () => startTask(2));
-      document.getElementById('btnTask3').addEventListener('click', () => startTask(3));
-      document.getElementById('btnTask4').addEventListener('click', () => startTask(4));
-
-      window.addEventListener('DOMContentLoaded', () => {
-        updateUI();
-        initBanners();
-        setInterval(updateUI, 1000);
-      });
-
-    })();
+    window.addEventListener('DOMContentLoaded', () => {
+      updateUI();
+      initBanners();
+      setInterval(updateUI, 1000);
+    });
   </script>
 </body>
 </html>
