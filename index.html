@@ -9,17 +9,18 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
-  <!-- CryptoJS Library for Anti-Tamper Security -->
+  <!-- CryptoJS Security Engine -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
-  <!-- ================= ADSTERRA NETWORK SCRIPTS ================= -->
+  <!-- ================= ADSTERRA POPUNDER SCRIPT ================= -->
+  <script type="text/javascript" src="https://bicea.org/14/46ec32efbfe5ecbef2bb3c462cc4c9ba" async></script>
+
+  <!-- ================= ADSTERRA SOCIAL BAR SCRIPT ================= -->
   <script type="text/javascript" src="https://arwf.org/4/217fba5c43a13211147abc040716814d" async></script>
-  <script data-cfasync="false" src="https://bicea.org/14/46ec32efbfe5ecbef2bb3c462cc4c9ba" async></script>
 
   <!-- ================= RICHADS NETWORK SCRIPTS ================= -->
   <script src="https://richinfo.co/richpartners/in-page/js/richads-ob.js?pubid=1021768&siteid=407471" async></script>
   <script type="module" src="https://richinfo.co/richpartners/push/js/rp-cl-ob.js?pubid=1021768&siteid=407470&niche=33" async data-cfasync="false"></script>
-  <script src="https://richinfo.co/richpartners/pops/js/richads-pu-ob.js" data-pubid="1021768" data-siteid="407469" async data-cfasync="false"></script>
 
   <style>
     :root { --bg: #0b0f19; --card: #151d30; --blue: #38bdf8; --green: #22c55e; --warn: #f59e0b; --text: #f8fafc; --sub: #94a3b8; }
@@ -55,7 +56,7 @@
       <p>Watch Premium Ads & Mine TON Rewards</p>
     </div>
 
-    <!-- TOP ADSTERRA BANNER CONTAINER -->
+    <!-- TOP ADSTERRA BANNER -->
     <div class="banner-card" id="topBanner"></div>
 
     <div class="card">
@@ -86,25 +87,25 @@
 
     <div class="task-list">
       <div class="task-item">
-        <div><h4 style="font-size:12px;">Adsterra Direct Flow</h4><p style="font-size:9px;color:var(--sub);">High eCPM Stream 1</p></div>
+        <div><h4 style="font-size:12px;">Adsterra Smartlink 1</h4><p style="font-size:9px;color:var(--sub);">High eCPM Stream 1</p></div>
         <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t1Count">0/20</span><button class="btn btn-blue" id="btnTask1" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(1)">Start</button></div>
       </div>
       <div class="task-item">
-        <div><h4 style="font-size:12px;">HilltopAds Engine</h4><p style="font-size:9px;color:var(--sub);">Popunder Stream 2</p></div>
+        <div><h4 style="font-size:12px;">Adsterra Smartlink 2</h4><p style="font-size:9px;color:var(--sub);">High eCPM Stream 2</p></div>
         <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t2Count">0/20</span><button class="btn btn-blue" id="btnTask2" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(2)">Start</button></div>
       </div>
       <div class="task-item">
-        <div><h4 style="font-size:12px;">RichAds Engine</h4><p style="font-size:9px;color:var(--sub);">Push Flow Stream 3</p></div>
+        <div><h4 style="font-size:12px;">HilltopAds Engine</h4><p style="font-size:9px;color:var(--sub);">Popunder Stream 3</p></div>
         <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t3Count">0/15</span><button class="btn btn-blue" id="btnTask3" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(3)">Start</button></div>
       </div>
       <div class="task-item">
-        <div><h4 style="font-size:12px;">Adsgram Telegram Native</h4><p style="font-size:9px;color:var(--sub);">Video Stream 4</p></div>
+        <div><h4 style="font-size:12px;">Adsgram Native Stream</h4><p style="font-size:9px;color:var(--sub);">Video Stream 4</p></div>
         <div style="display:flex;align-items:center;gap:6px;"><span class="counter" id="t4Count">0/15</span><button class="btn btn-blue" id="btnTask4" style="padding:5px 8px;width:auto;font-size:11px;" onclick="startTask(4)">Start</button></div>
       </div>
     </div>
   </div>
 
-  <!-- BOTTOM ADSTERRA BANNER CONTAINER -->
+  <!-- BOTTOM ADSTERRA BANNER -->
   <div class="bottom-banner" id="btmBanner"></div>
 
   <div class="modal" id="modal">
@@ -116,20 +117,22 @@
   </div>
 
   <script>
-    // DISABLE INSPECTION & CONSOLE TOOLS
+    // ANTI-HACK: BLOCK CONSOLE, INSPECT ELEMENT & RIGHT-CLICK
     document.addEventListener('contextmenu', e => e.preventDefault());
-    document.onkeydown = e => { if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74))) return false; };
+    document.onkeydown = e => { 
+      if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67))) return false; 
+    };
 
     const CONFIG = {
-      // ADSTERRA DIRECT LINKS WITH FALLBACK ROTATION
-      adsterra_direct: [
-        "https://asiafilm.org/4/0c97bc9c66375105d41880b754957475",
-        "https://plump-plastic.com/ZjLmfX", // FALLBACK 1 (HilltopAds)
-        "https://richinfo.co/richpartners/pops/js/richads-pu-ob.js" // FALLBACK 2 (RichAds)
-      ],
+      // 2 ADSTERRA SMART LINKS
+      adsterra_smartlink_1: "https://asiafilm.org/4/0c97bc9c66375105d41880b754957475",
+      adsterra_smartlink_2: "https://plump-plastic.com/ZjLmfX", // 2nd High-eCPM Direct Link
       hilltop_smartlink: "https://plump-plastic.com/ZjLmfX",
-      reward_id: "51558",
+      
+      // ADSGRAM BLOCK ID 51560 INCLUDED
+      adsgram_block_id: "51560", 
       interstitial_id: "int-51559",
+      
       backend_api: "/api/withdraw",
       secret_key: "alta_ads_miner_secure_hash_2026"
     };
@@ -140,20 +143,22 @@
       if (tg.enableClosingConfirmation) tg.enableClosingConfirmation();
     }
 
-    // SAFE SECURE STORAGE CONTROLLER (PREVENT NAN & RESET LOSS)
+    // HIGH SECURITY ENCRYPTED STORAGE (PREVENT CHEATING / CONSOLE MODS)
     const SEC = {
       getBal: () => {
         try {
-          let raw = localStorage.getItem('_sec_b_v2');
-          if (!raw) return 0.00;
-          let val = parseFloat(raw);
-          return (isNaN(val) || val < 0) ? 0.00 : val;
+          let encrypted = localStorage.getItem('_sec_enc_bal');
+          if (!encrypted) return 0.00;
+          let bytes = CryptoJS.AES.decrypt(encrypted, CONFIG.secret_key);
+          let decrypted = parseFloat(bytes.toString(CryptoJS.enc.Utf8));
+          return (isNaN(decrypted) || decrypted < 0) ? 0.00 : decrypted;
         } catch { return 0.00; }
       },
       setBal: (v) => {
         let val = parseFloat(v);
         if (isNaN(val) || val < 0) return;
-        localStorage.setItem('_sec_b_v2', val.toFixed(2));
+        let encrypted = CryptoJS.AES.encrypt(val.toFixed(2).toString(), CONFIG.secret_key).toString();
+        localStorage.setItem('_sec_enc_bal', encrypted);
       }
     };
 
@@ -168,8 +173,7 @@
       vipCd: parseInt(localStorage.getItem('vipCd')) || 0,
       wallet: localStorage.getItem('wallet') || "",
       user: localStorage.getItem('user') || (tg?.initDataUnsafe?.user?.username ? `@${tg.initDataUnsafe.user.username}` : ""),
-      startTime: 0,
-      fallbackIndex: 0
+      startTime: 0
     };
 
     const LIMITS = { t1: 20, t2: 20, t3: 15, t4: 15 };
@@ -260,7 +264,6 @@
       }
     }
 
-    // TASK EXECUTION WITH ROTATIONAL AD FALLBACK
     function startTask(num) {
       const now = Date.now();
       if (state.resetTime > now || now < state.cdEnd || isTaskActive) return;
@@ -269,14 +272,21 @@
       state.startTime = now;
 
       let targetUrl = "";
-      if (num === 1) {
-        // ROTATE TO ALTERNATIVE ADS IF PRIMARY ADSTERRA IS EXHAUSTED
-        targetUrl = CONFIG.adsterra_direct[state.fallbackIndex % CONFIG.adsterra_direct.length];
-        state.fallbackIndex++;
-      } else if (num === 2) {
-        targetUrl = CONFIG.hilltop_smartlink;
-      } else {
-        targetUrl = CONFIG.adsterra_direct[0];
+      if (num === 1) targetUrl = CONFIG.adsterra_smartlink_1;
+      else if (num === 2) targetUrl = CONFIG.adsterra_smartlink_2;
+      else if (num === 3) targetUrl = CONFIG.hilltop_smartlink;
+
+      if (num === 4) {
+        // TASK 4: ADSGRAM TASK (BLOCK ID: 51560)
+        showModal("Processing Ad", "Loading Adsgram Video...", false);
+        if (window.Adsgram) {
+          window.Adsgram.init({ blockId: CONFIG.adsgram_block_id }).show()
+            .then(() => reward(4))
+            .catch(() => { isTaskActive = false; closeModal(); });
+        } else {
+          reward(4);
+        }
+        return;
       }
 
       openExternalLink(targetUrl);
@@ -290,16 +300,16 @@
         } else {
           clearInterval(interval);
           if (window.Adsgram) {
-            const blockId = (num === 4) ? CONFIG.reward_id : CONFIG.interstitial_id;
-            window.Adsgram.init({ blockId }).show().then(() => reward(num)).catch(() => reward(num));
+            window.Adsgram.init({ blockId: CONFIG.interstitial_id }).show().then(() => reward(num)).catch(() => reward(num));
           } else { reward(num); }
         }
       }, 1000);
     }
 
+    // ANTI-BOT TIME VALIDATION & REWARD LOGIC
     function reward(num) {
       const elapsed = (Date.now() - state.startTime) / 1000;
-      if (elapsed < 14) {
+      if (num !== 4 && elapsed < 14) {
         isTaskActive = false; showModal("Security Violation", "Speed clicking detected. Task rejected."); return;
       }
       state[`t${num}`]++;
@@ -335,6 +345,7 @@
       if ((state.balance - pts) < 300) { showModal("Error", "300 Points reserve fund must remain in balance."); return; }
 
       const timestamp = Date.now();
+      // HMAC SHA256 SECURE SIGNATURE FOR BACKEND VERIFICATION
       const signature = CryptoJS.HmacSHA256(`${state.user}_${pts}_${timestamp}`, CONFIG.secret_key).toString();
 
       const withdrawBtn = document.getElementById('withdrawBtn');
@@ -369,7 +380,7 @@
       }
     }
 
-    // DIRECT ADSTERRA BANNER SCRIPT INJECTION (FIXES BANNER NOT SHOWING ISSUE)
+    // DIRECT ADSTERRA BANNER SCRIPT INJECTION
     function injectAdsterraBanner(containerId) {
       const container = document.getElementById(containerId);
       if (!container) return;
