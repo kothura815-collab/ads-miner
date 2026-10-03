@@ -53,7 +53,7 @@
   <div class="container">
     <div class="header">
       <h1>ADS MINER</h1>
-      <p>Watch Premium Ads & Mine TON Rewards</p>
+      <p>Watch Premium Ads & Mine GRAM Rewards</p>
     </div>
 
     <!-- TOP ADSTERRA BANNER -->
@@ -65,13 +65,21 @@
       <p style="font-size:10px;color:var(--sub);">Reserve: 300 Pts | Min Cashout: 150 Pts</p>
     </div>
 
+    <!-- UPDATED WITHDRAW CARD: GRAM / TON KEEPER PAYOUT -->
     <div class="card" style="border: 1px solid rgba(34,197,94,0.3);">
-      <h3 style="font-size:14px;margin-bottom:6px;">Withdraw (TON Wallet)</h3>
+      <h3 style="font-size:14px;margin-bottom:4px;color:#22c55e;">Withdraw Rewards (GRAM / TON Chain)</h3>
+      <p style="font-size:10px;color:var(--sub);margin-bottom:8px;">150 Points = 0.0045 GRAM | Paid via Tonkeeper</p>
+      
       <input type="text" id="tgUsername" class="input" placeholder="@username or Name" />
-      <input type="text" id="tonWallet" class="input" placeholder="TON Wallet Address (EQD...)" />
+      <input type="text" id="tonWallet" class="input" placeholder="Tonkeeper Address (UQ... or EQ...)" />
       <input type="number" id="withdrawPts" class="input" placeholder="150" min="150" />
-      <button id="saveWalletBtn" class="btn btn-warn" style="margin-bottom:6px;" onclick="saveWallet()"><span>Save Details</span><span>Save</span></button>
-      <button class="btn btn-green" id="withdrawBtn" onclick="processWithdrawal()"><span>Withdraw</span><span>Submit</span></button>
+      
+      <button id="saveWalletBtn" class="btn btn-warn" style="margin-bottom:6px;" onclick="saveWallet()">
+        <span>Save Wallet Details</span><span>Save</span>
+      </button>
+      <button class="btn btn-green" id="withdrawBtn" onclick="processWithdrawal()">
+        <span>Withdraw GRAM</span><span>Submit</span>
+      </button>
     </div>
 
     <div class="card" style="text-align:center;border:1px solid rgba(245,158,11,0.4);">
@@ -117,22 +125,18 @@
   </div>
 
   <script>
-    // ANTI-HACK: BLOCK CONSOLE, INSPECT ELEMENT & RIGHT-CLICK
+    // ANTI-HACK SECURITY
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.onkeydown = e => { 
       if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67))) return false; 
     };
 
     const CONFIG = {
-      // 2 ADSTERRA SMART LINKS
       adsterra_smartlink_1: "https://asiafilm.org/4/0c97bc9c66375105d41880b754957475",
-      adsterra_smartlink_2: "https://plump-plastic.com/ZjLmfX", // 2nd High-eCPM Direct Link
+      adsterra_smartlink_2: "https://plump-plastic.com/ZjLmfX",
       hilltop_smartlink: "https://plump-plastic.com/ZjLmfX",
-      
-      // ADSGRAM BLOCK ID 51560 INCLUDED
       adsgram_block_id: "51560", 
       interstitial_id: "int-51559",
-      
       backend_api: "/api/withdraw",
       secret_key: "alta_ads_miner_secure_hash_2026"
     };
@@ -143,7 +147,6 @@
       if (tg.enableClosingConfirmation) tg.enableClosingConfirmation();
     }
 
-    // HIGH SECURITY ENCRYPTED STORAGE (PREVENT CHEATING / CONSOLE MODS)
     const SEC = {
       getBal: () => {
         try {
@@ -277,7 +280,6 @@
       else if (num === 3) targetUrl = CONFIG.hilltop_smartlink;
 
       if (num === 4) {
-        // TASK 4: ADSGRAM TASK (BLOCK ID: 51560)
         showModal("Processing Ad", "Loading Adsgram Video...", false);
         if (window.Adsgram) {
           window.Adsgram.init({ blockId: CONFIG.adsgram_block_id }).show()
@@ -306,7 +308,6 @@
       }, 1000);
     }
 
-    // ANTI-BOT TIME VALIDATION & REWARD LOGIC
     function reward(num) {
       const elapsed = (Date.now() - state.startTime) / 1000;
       if (num !== 4 && elapsed < 14) {
@@ -331,26 +332,36 @@
     function saveWallet() {
       const u = document.getElementById('tgUsername').value.trim();
       const w = document.getElementById('tonWallet').value.trim();
-      if (!u || !/^(EQ|UQ)[a-zA-Z0-9_-]{46}$/.test(w)) { showModal("Error", "Enter valid Username and TON Wallet (EQ/UQ)."); return; }
+      if (!u || !/^(EQ|UQ)[a-zA-Z0-9_-]{46}$/.test(w)) { 
+        showModal("Error", "Enter valid Telegram Username and Tonkeeper Address (UQ.../EQ...)."); 
+        return; 
+      }
       state.user = u; state.wallet = w; save();
       document.getElementById('tgUsername').disabled = true;
       document.getElementById('tonWallet').disabled = true;
       document.getElementById('saveWalletBtn').style.display = 'none';
-      showModal("Saved", "Wallet details locked.");
+      showModal("Saved", "Tonkeeper details locked.");
     }
 
     async function processWithdrawal() {
       const pts = parseFloat(document.getElementById('withdrawPts').value);
-      if (!state.wallet || isNaN(pts) || pts < 150) { showModal("Error", "Min cashout is 150 Points with saved wallet."); return; }
-      if ((state.balance - pts) < 300) { showModal("Error", "300 Points reserve fund must remain in balance."); return; }
+      if (!state.wallet || isNaN(pts) || pts < 150) { 
+        showModal("Error", "Min cashout is 150 Points with saved Tonkeeper wallet."); 
+        return; 
+      }
+      if ((state.balance - pts) < 300) { 
+        showModal("Error", "300 Points reserve fund must remain in balance."); 
+        return; 
+      }
 
+      // 150 POINTS = 0.0045 GRAM CALCULATION
+      const gramAmount = ((pts / 150) * 0.0045).toFixed(4);
       const timestamp = Date.now();
-      // HMAC SHA256 SECURE SIGNATURE FOR BACKEND VERIFICATION
       const signature = CryptoJS.HmacSHA256(`${state.user}_${pts}_${timestamp}`, CONFIG.secret_key).toString();
 
       const withdrawBtn = document.getElementById('withdrawBtn');
       withdrawBtn.disabled = true;
-      showModal("Processing", "Submitting secure withdrawal request...", false);
+      showModal("Processing", "Submitting withdrawal request...", false);
 
       try {
         const response = await fetch(CONFIG.backend_api, {
@@ -360,7 +371,8 @@
             username: state.user,
             wallet: state.wallet,
             points: pts,
-            amountUsd: (pts * 0.00003).toFixed(5),
+            gramAmount: gramAmount,
+            currency: "GRAM",
             timestamp: timestamp,
             signature: signature
           })
@@ -380,7 +392,6 @@
       }
     }
 
-    // DIRECT ADSTERRA BANNER SCRIPT INJECTION
     function injectAdsterraBanner(containerId) {
       const container = document.getElementById(containerId);
       if (!container) return;
