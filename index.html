@@ -143,7 +143,7 @@
       adsterra_smartlink_2: "https://plump-plastic.com/ZjLmfX",
       hilltop_smartlink: "https://plump-plastic.com/ZjLmfX",
       adsgram_block_id: "51748", 
-      interstitial_id: "Int-51750",
+      interstitial_id: "int-51750",
       backend_api: "/api/withdraw",
       secret_key: "alta_ads_miner_secure_hash_2026"
     };
@@ -274,6 +274,22 @@
       }
     }
 
+    function runExternalAdFallback(num) {
+      openExternalLink(CONFIG.adsterra_smartlink_1);
+      showModal("Processing Ad", "Please wait 15 seconds while ad completes...", false);
+
+      let timer = 15;
+      const interval = setInterval(() => {
+        timer--;
+        if (timer > 0) {
+          document.getElementById('mMsg').innerText = `Please wait ${timer} seconds while ad completes...`;
+        } else {
+          clearInterval(interval);
+          reward(num);
+        }
+      }, 1000);
+    }
+
     function startTask(num) {
       const now = Date.now();
       if (state.resetTime > now || now < state.cdEnd || isTaskActive) return;
@@ -291,9 +307,12 @@
         if (window.Adsgram) {
           window.Adsgram.init({ blockId: CONFIG.adsgram_block_id }).show()
             .then(() => reward(4))
-            .catch(() => { isTaskActive = false; closeModal(); });
+            .catch((err) => {
+              console.log("Adsgram Video Error / No Ads, running fallback: ", err);
+              runExternalAdFallback(4);
+            });
         } else {
-          reward(4);
+          runExternalAdFallback(4);
         }
         return;
       }
@@ -309,7 +328,9 @@
         } else {
           clearInterval(interval);
           if (window.Adsgram) {
-            window.Adsgram.init({ blockId: CONFIG.interstitial_id }).show().then(() => reward(num)).catch(() => reward(num));
+            window.Adsgram.init({ blockId: CONFIG.interstitial_id }).show()
+              .then(() => reward(num))
+              .catch(() => reward(num));
           } else { reward(num); }
         }
       }, 1000);
