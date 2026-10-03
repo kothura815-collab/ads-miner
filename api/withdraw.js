@@ -52,7 +52,7 @@ app.post('/api/withdraw', async (req, res) => {
 
 👤 *User:* ${username}
 💎 *Points Redeemed:* ${points} Ads Point
-💵 *Estimated Value:* ~$${amountUsd || (points * 0.002).toFixed(2)} USD
+💵 *Estimated Value:* ~$${amountUsd || (points * 0.00003).toFixed(5)} USD
 🏦 *TON Wallet:* \`${wallet}\`
 ⏰ *Time:* ${new Date().toUTCString()}
 
