@@ -9,13 +9,14 @@ app.use(express.json());
 
 // CONFIGURATION
 const BOT_TOKEN = process.env.BOT_TOKEN || "8889834203:AAGGO2SD_WXXd_J_mU5e7Iww73zCEqmwMb4";
-const HISTORY_CHANNEL_ID = process.env.HISTORY_CHANNEL_ID || "@Allwithdrawhistory";
+// Channel ID or Username (Bot must be ADMIN in this channel)
+const HISTORY_CHANNEL_ID = process.env.HISTORY_CHANNEL_ID || "@Allwithdrawhistory"; 
 const SECRET_KEY = process.env.SECRET_KEY || "alta_ads_miner_secure_hash_2026";
 
 // SECURE WITHDRAWAL ENDPOINT WITH SIGNATURE VERIFICATION
 app.post('/api/withdraw', async (req, res) => {
   try {
-    const { username, wallet, points, amountUsd, timestamp, signature } = req.body;
+    const { username, wallet, points, gramAmount, timestamp, signature } = req.body;
 
     // 1. FIELD VALIDATION
     if (!username || !wallet || !points || !timestamp || !signature) {
@@ -27,7 +28,7 @@ app.post('/api/withdraw', async (req, res) => {
       return res.status(403).json({ success: false, message: "Security violation: Request expired." });
     }
 
-    // 3. HMAC SIGNATURE VERIFICATION (PREVENTS API BOT ATTACKS)
+    // 3. HMAC SIGNATURE VERIFICATION
     const expectedSignature = crypto.createHmac('sha256', SECRET_KEY)
       .update(`${username}_${points}_${timestamp}`)
       .digest('hex');
@@ -36,28 +37,32 @@ app.post('/api/withdraw', async (req, res) => {
       return res.status(401).json({ success: false, message: "Security violation: Invalid HMAC signature." });
     }
 
-    // 4. TON WALLET REGEX CHECK
+    // 4. TON / TONKEEPER WALLET REGEX CHECK (UQ... / EQ...)
     const tonRegex = /^(EQ|UQ)[a-zA-Z0-9_-]{46}$/;
     if (!tonRegex.test(wallet)) {
-      return res.status(400).json({ success: false, message: "Invalid TON wallet address format." });
+      return res.status(400).json({ success: false, message: "Invalid Tonkeeper wallet address format." });
     }
 
     if (parseFloat(points) < 150) {
       return res.status(400).json({ success: false, message: "Minimum cashout threshold is 150 points." });
     }
 
-    // TELEGRAM CHANNEL MESSAGE FORMAT
+    // CALCULATE GRAM AMOUNT IF NOT PASSED
+    const finalGram = gramAmount || ((points / 150) * 0.0045).toFixed(4);
+
+    // TELEGRAM CHANNEL MESSAGE FORMAT (HTML PARSE MODE TO PREVENT ERRORS)
     const message = `
-🚀 *NEW WITHDRAWAL REQUEST* 🚀
+🚀 <b>NEW WITHDRAWAL REQUEST</b> 🚀
 
-👤 *User:* ${username}
-💎 *Points Redeemed:* ${points} Ads Point
-💵 *Estimated Value:* ~$${amountUsd || (points * 0.00003).toFixed(5)} USD
-🏦 *TON Wallet:* \`${wallet}\`
-⏰ *Time:* ${new Date().toUTCString()}
+👤 <b>User:</b> ${username}
+💎 <b>Points Redeemed:</b> ${points} Ads Point
+💎 <b>Payout Amount:</b> ${finalGram} GRAM
+🌐 <b>Network:</b> TON Chain (Tonkeeper)
+🏦 <b>Wallet:</b> <code>${wallet}</code>
+⏰ <b>Time:</b> ${new Date().toUTCString()}
 
-✅ *Status:* Pending Review
-🔒 *Security Status:* HMAC Verified
+✅ <b>Status:</b> Pending Approval
+🔒 <b>Security:</b> HMAC SHA256 Verified
     `;
 
     // SEND LOG TO TELEGRAM CHANNEL
@@ -66,7 +71,7 @@ app.post('/api/withdraw', async (req, res) => {
     await axios.post(telegramApiUrl, {
       chat_id: HISTORY_CHANNEL_ID,
       text: message,
-      parse_mode: 'Markdown'
+      parse_mode: 'HTML'
     });
 
     return res.status(200).json({
@@ -78,7 +83,8 @@ app.post('/api/withdraw', async (req, res) => {
     console.error("Withdraw Error:", error.response?.data || error.message);
     return res.status(500).json({
       success: false,
-      message: "Failed to log withdrawal to Telegram channel."
+      message: "Failed to log withdrawal to Telegram channel.",
+      errorDetails: error.response?.data?.description || error.message
     });
   }
 });
