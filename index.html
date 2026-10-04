@@ -53,9 +53,20 @@
     .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11,15,25,0.92); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 9999; }
     .modal-box { background: #151d30; border: 1px solid rgba(56,189,248,0.3); border-radius: 14px; padding: 18px; width: 85%; max-width: 320px; text-align: center; }
     .bottom-banner { position: fixed; bottom: 0; left: 0; width: 100%; height: 55px; background: rgba(11,15,25,0.95); border-top: 1px dashed rgba(56,189,248,0.3); display: flex; justify-content: center; align-items: center; z-index: 8000; overflow: hidden; }
+    
+    /* OFFLINE OVERLAY */
+    #offlineOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11,15,25,0.98); z-index: 10000; display: none; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; }
+    #offlineOverlay h2 { color: #ef4444; margin-bottom: 8px; font-size: 20px; }
+    #offlineOverlay p { color: var(--sub); font-size: 13px; }
   </style>
 </head>
 <body>
+
+  <!-- OFFLINE INTERNET BLOCKER OVERLAY -->
+  <div id="offlineOverlay">
+    <h2>⚠️️ Internet Connection Lost</h2>
+    <p>Please turn on your Wi-Fi or Mobile Data to continue using Ads Miner.</p>
+  </div>
 
   <div class="container">
     <div class="header">
@@ -132,6 +143,18 @@
   </div>
 
   <script>
+    // INTERNET CONNECTION MONITORING
+    function checkNetworkStatus() {
+      const overlay = document.getElementById('offlineOverlay');
+      if (!navigator.onLine) {
+        overlay.style.display = 'flex';
+      } else {
+        overlay.style.display = 'none';
+      }
+    }
+    window.addEventListener('online', checkNetworkStatus);
+    window.addEventListener('offline', checkNetworkStatus);
+
     // ANTI-HACK SECURITY
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.onkeydown = e => { 
@@ -143,7 +166,7 @@
       adsterra_smartlink_2: "https://plump-plastic.com/ZjLmfX",
       hilltop_smartlink: "https://plump-plastic.com/ZjLmfX",
       adsgram_block_id: "51748", 
-      interstitial_id: "int-51750",
+      interstitial_id: "Int-51750",
       backend_api: "/api/withdraw",
       secret_key: "alta_ads_miner_secure_hash_2026"
     };
@@ -274,23 +297,12 @@
       }
     }
 
-    function runExternalAdFallback(num) {
-      openExternalLink(CONFIG.adsterra_smartlink_1);
-      showModal("Processing Ad", "Please wait 15 seconds while ad completes...", false);
-
-      let timer = 15;
-      const interval = setInterval(() => {
-        timer--;
-        if (timer > 0) {
-          document.getElementById('mMsg').innerText = `Please wait ${timer} seconds while ad completes...`;
-        } else {
-          clearInterval(interval);
-          reward(num);
-        }
-      }, 1000);
-    }
-
     function startTask(num) {
+      if (!navigator.onLine) {
+        checkNetworkStatus();
+        return;
+      }
+
       const now = Date.now();
       if (state.resetTime > now || now < state.cdEnd || isTaskActive) return;
 
@@ -307,12 +319,9 @@
         if (window.Adsgram) {
           window.Adsgram.init({ blockId: CONFIG.adsgram_block_id }).show()
             .then(() => reward(4))
-            .catch((err) => {
-              console.log("Adsgram Video Error / No Ads, running fallback: ", err);
-              runExternalAdFallback(4);
-            });
+            .catch(() => { isTaskActive = false; closeModal(); });
         } else {
-          runExternalAdFallback(4);
+          reward(4);
         }
         return;
       }
@@ -328,9 +337,7 @@
         } else {
           clearInterval(interval);
           if (window.Adsgram) {
-            window.Adsgram.init({ blockId: CONFIG.interstitial_id }).show()
-              .then(() => reward(num))
-              .catch(() => reward(num));
+            window.Adsgram.init({ blockId: CONFIG.interstitial_id }).show().then(() => reward(num)).catch(() => reward(num));
           } else { reward(num); }
         }
       }, 1000);
@@ -351,6 +358,7 @@
     }
 
     function claimVip() {
+      if (!navigator.onLine) { checkNetworkStatus(); return; }
       state.balance = (parseFloat(state.balance) || 0) + 100;
       state.vipCd = Date.now() + (24 * 3600 * 1000);
       save(); updateUI();
@@ -372,6 +380,8 @@
     }
 
     async function processWithdrawal() {
+      if (!navigator.onLine) { checkNetworkStatus(); return; }
+
       const pts = parseFloat(document.getElementById('withdrawPts').value);
       if (!state.wallet || isNaN(pts) || pts < 150) { 
         showModal("Error", "Min cashout is 150 Points with saved Tonkeeper wallet."); 
@@ -421,6 +431,7 @@
     }
 
     function injectAdsterraBanner(containerId) {
+      if (!navigator.onLine) return;
       const container = document.getElementById(containerId);
       if (!container) return;
       container.innerHTML = '';
@@ -449,6 +460,7 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      checkNetworkStatus();
       if (state.wallet) {
         document.getElementById('tgUsername').value = state.user;
         document.getElementById('tonWallet').value = state.wallet;
